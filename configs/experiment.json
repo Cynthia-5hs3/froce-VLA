@@ -1,0 +1,25 @@
+{
+  "status": "prepared_not_force_vla_trained",
+  "policy_checkpoint": "models/pi05_sft",
+  "tokenizer": "models/tokenizer",
+  "history_seconds": 2.0,
+  "history_frames": 10,
+  "wrench_state_slice": [
+    10,
+    16
+  ],
+  "action_dim": 10,
+  "future_steps": 50,
+  "force_loss_weight_proposal": 0.1,
+  "history_token_dim_proposal": 1024,
+  "datasets": {
+    "sft_100": "datasets/raw/franka_single_left_rgb_block",
+    "rlt_full_113": "datasets/raw/gamepad_task3_20260909_online_c20_full",
+    "prior_sft_102": "datasets/raw/franka_single_left_gamepad_task3__raw"
+  },
+  "rlt_80_subset": null,
+  "sft_100_task_text": "111",
+  "annotation_status": "requires_human_confirmed_language_labels",
+  "copied_checkpoint_configs": "unaltered historical records; use explicit local path overrides",
+  "force_model_status": "not_implemented; smoke test is auxiliary MLP only"
+}

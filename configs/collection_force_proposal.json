@@ -1,0 +1,37 @@
+{
+  "status": "proposal_only_not_applied_to_any_collector",
+  "raw_state": {
+    "keep_existing_29d": true,
+    "wrench_slice": [10, 16],
+    "tcp_velocity_slice": [16, 22],
+    "joint_position_slice": [22, 29]
+  },
+  "new_fields": {
+    "observation.joint_torque_raw": {"source": "robot_state.tau_J", "shape": [7], "unit": "N*m", "priority": "required_for_joint_torque_route"},
+    "observation.external_joint_torque": {"source": "robot_state.tau_ext_hat_filtered", "shape": [7], "unit": "N*m", "priority": "recommended_not_paper_required"},
+    "observation.joint_velocity": {"source": "robot_state.dq", "shape": [7], "unit": "rad/s", "priority": "optional_diagnostics"}
+  },
+  "training_mapping": {
+    "official_effort_key": "observation.effort",
+    "proposed_source": "observation.joint_torque_raw",
+    "effort_dim": 7,
+    "alternative_existing_data_source": "observation.state[10:16]",
+    "alternative_effort_dim": 6,
+    "alternative_is_joint_torque": false
+  },
+  "temporal_alignment": {
+    "nominal_fps": 30,
+    "history_seconds": 2.0,
+    "history_frames": 10,
+    "nominal_history_frame_offsets": [-60, -53, -47, -40, -33, -27, -20, -13, -7, 0],
+    "action_frame_offsets_inclusive": [0, 49],
+    "official_code_future_effort_offsets_inclusive": [1, 50],
+    "prefer_measured_timestamps": true,
+    "retain_robot_host_camera_command_time_bases": true,
+    "no_cross_episode_or_control_discontinuity": true,
+    "normalization_fit_on_training_split_only": true
+  },
+  "required_session_metadata": ["joint_order", "units", "robot_time_to_host_time_mapping", "camera_time_to_host_time_mapping", "F_T_EE", "EE_T_K", "payload_mass_and_center_of_mass", "control_mode", "filter_settings", "task_instruction"],
+  "required_episode_metadata": ["task", "success_or_failure", "human_intervention_intervals", "action_validity"],
+  "documentation": "docs/TA_VLA_COLLECTION_AND_REPRODUCTION.md"
+}

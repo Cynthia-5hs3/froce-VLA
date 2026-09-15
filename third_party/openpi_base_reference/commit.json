@@ -1,0 +1,106 @@
+{
+  "sha": "cd82848a997b67ed96d1200637133a89b2a22aae",
+  "node_id": "C_kwDONDnnXtoAKGNkODI4NDhhOTk3YjY3ZWQ5NmQxMjAwNjM3MTMzYTg5YjJhMjJhYWU",
+  "commit": {
+    "author": {
+      "name": "Michael Equi",
+      "email": "32988490+Michael-Equi@users.noreply.github.com",
+      "date": "2025-02-14T19:15:58Z"
+    },
+    "committer": {
+      "name": "GitHub",
+      "email": "noreply@github.com",
+      "date": "2025-02-14T19:15:58Z"
+    },
+    "message": "Update convert aloha to save images in RGB (#304)",
+    "tree": {
+      "sha": "8285fd7916dd64348f652b888dd9a7ec3ad9aa27",
+      "url": "https://api.github.com/repos/Physical-Intelligence/openpi/git/trees/8285fd7916dd64348f652b888dd9a7ec3ad9aa27"
+    },
+    "url": "https://api.github.com/repos/Physical-Intelligence/openpi/git/commits/cd82848a997b67ed96d1200637133a89b2a22aae",
+    "comment_count": 0,
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJnr5ZvCRC1aQ7uu5UhlAAA1KMQAKYGaBq1CdpC/nTB5P4R2l6D\nVgMGCTsT2H8YzeyXTs2RMalHC1xgHnXvv/93q0PS1ENp7odW3keM7o+puHoeT1pC\nZ8kcLrPXhv14Fc7VnW5WLGjCPO3Dd8jcW038181HKf3noI1S4Yq/WEcktehFKnNu\nOeE4cbJYtoraeVRsD+giIBV04v+BWQKhqtSpaBNYU0MPHDLtz3WMe1Cw4um5YJ9A\nnPyQoh7PuPU6OXkDfmKWyW5LWSoBu1B6R5e1pfw9alk2u8wGiD8B/SsT+6KyVt44\nkM+jlNc8A5dcVf/bcJPAze7eoXL+omEygeouyZMvOKVyYf0mE2Hqe5/P46EeIDbN\nmu9Jd/TWz6t7TI+cgleShHdjLIbEWMqvg0bs3t0khTuhHVfIIHY4UJZruGel/KlN\n+8e+7yT5Y/Px+iMC3M6l+WNRY0q4vpLSYa3UOQ3VQKl1gxwRDhivDYI6llQM5sng\nwJD5EouGvzmfP31C+PVEMNrkOEtZdvaX2HROLFipTYu92+zSVnHocbV9YsgsYK/s\nLlZclcLRYR9tHksk5UhAfdjG5e9TxR8/7p8oFecgodsAWe7NUCocBjxMnGakxIyA\nRVLAHoLpHqUmr2vCWQzOu1H9Q4cJKYffl8/QYarBWUNW6AGbzb91VOr28oE6SHoy\n2dXHDpvTMP1I4tJJrtSu\n=doyB\n-----END PGP SIGNATURE-----\n",
+      "payload": "tree 8285fd7916dd64348f652b888dd9a7ec3ad9aa27\nparent 90b87cc42c03f235e8af718a878629bf21b106b3\nparent 8d288e4b41a4d2b4bbb3a979779360676ab28519\nauthor Michael Equi <32988490+Michael-Equi@users.noreply.github.com> 1739560558 -0800\ncommitter GitHub <noreply@github.com> 1739560558 -0800\n\nUpdate convert aloha to save images in RGB (#304)\n\n",
+      "verified_at": "2025-02-14T19:16:31Z"
+    }
+  },
+  "url": "https://api.github.com/repos/Physical-Intelligence/openpi/commits/cd82848a997b67ed96d1200637133a89b2a22aae",
+  "html_url": "https://github.com/Physical-Intelligence/openpi/commit/cd82848a997b67ed96d1200637133a89b2a22aae",
+  "comments_url": "https://api.github.com/repos/Physical-Intelligence/openpi/commits/cd82848a997b67ed96d1200637133a89b2a22aae/comments",
+  "author": {
+    "login": "Michael-Equi",
+    "id": 32988490,
+    "node_id": "MDQ6VXNlcjMyOTg4NDkw",
+    "avatar_url": "https://avatars.githubusercontent.com/u/32988490?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Michael-Equi",
+    "html_url": "https://github.com/Michael-Equi",
+    "followers_url": "https://api.github.com/users/Michael-Equi/followers",
+    "following_url": "https://api.github.com/users/Michael-Equi/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Michael-Equi/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Michael-Equi/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Michael-Equi/subscriptions",
+    "organizations_url": "https://api.github.com/users/Michael-Equi/orgs",
+    "repos_url": "https://api.github.com/users/Michael-Equi/repos",
+    "events_url": "https://api.github.com/users/Michael-Equi/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Michael-Equi/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "committer": {
+    "login": "web-flow",
+    "id": 19864447,
+    "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/web-flow",
+    "html_url": "https://github.com/web-flow",
+    "followers_url": "https://api.github.com/users/web-flow/followers",
+    "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+    "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+    "organizations_url": "https://api.github.com/users/web-flow/orgs",
+    "repos_url": "https://api.github.com/users/web-flow/repos",
+    "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/web-flow/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "90b87cc42c03f235e8af718a878629bf21b106b3",
+      "url": "https://api.github.com/repos/Physical-Intelligence/openpi/commits/90b87cc42c03f235e8af718a878629bf21b106b3",
+      "html_url": "https://github.com/Physical-Intelligence/openpi/commit/90b87cc42c03f235e8af718a878629bf21b106b3"
+    },
+    {
+      "sha": "8d288e4b41a4d2b4bbb3a979779360676ab28519",
+      "url": "https://api.github.com/repos/Physical-Intelligence/openpi/commits/8d288e4b41a4d2b4bbb3a979779360676ab28519",
+      "html_url": "https://github.com/Physical-Intelligence/openpi/commit/8d288e4b41a4d2b4bbb3a979779360676ab28519"
+    }
+  ],
+  "stats": {
+    "total": 2,
+    "additions": 1,
+    "deletions": 1
+  },
+  "files": [
+    {
+      "sha": "a3a8ddcb24bbc5340b9cb179a0b43fccc46646f6",
+      "filename": "examples/aloha_real/convert_aloha_data_to_lerobot.py",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "blob_url": "https://github.com/Physical-Intelligence/openpi/blob/cd82848a997b67ed96d1200637133a89b2a22aae/examples%2Faloha_real%2Fconvert_aloha_data_to_lerobot.py",
+      "raw_url": "https://github.com/Physical-Intelligence/openpi/raw/cd82848a997b67ed96d1200637133a89b2a22aae/examples%2Faloha_real%2Fconvert_aloha_data_to_lerobot.py",
+      "contents_url": "https://api.github.com/repos/Physical-Intelligence/openpi/contents/examples%2Faloha_real%2Fconvert_aloha_data_to_lerobot.py?ref=cd82848a997b67ed96d1200637133a89b2a22aae",
+      "patch": "@@ -155,7 +155,7 @@ def load_raw_images_per_camera(ep: h5py.File, cameras: list[str]) -> dict[str, n\n             # load one compressed image after the other in RAM and uncompress\n             imgs_array = []\n             for data in ep[f\"/observations/images/{camera}\"]:\n-                imgs_array.append(cv2.imdecode(data, 1))\n+                imgs_array.append(cv2.cvtColor(cv2.imdecode(data, 1), cv2.COLOR_BGR2RGB))\n             imgs_array = np.array(imgs_array)\n \n         imgs_per_cam[camera] = imgs_array"
+    }
+  ]
+}

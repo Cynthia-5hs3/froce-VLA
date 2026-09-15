@@ -1,0 +1,1166 @@
+{
+  "sha": "149d4be296530172eb09a5ca7ddd72413502924a",
+  "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/149d4be296530172eb09a5ca7ddd72413502924a",
+  "tree": [
+    {
+      "path": ".dockerignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ec1aa779b37954b1a1908b977ded41335663b7b2",
+      "size": 23,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/ec1aa779b37954b1a1908b977ded41335663b7b2"
+    },
+    {
+      "path": ".github",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d5b223fdc61822a1316abd08e2d92ce06c4675e3",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/d5b223fdc61822a1316abd08e2d92ce06c4675e3"
+    },
+    {
+      "path": ".github/CODEOWNERS",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "185f437f4ffd6a2ba27dad223eac5a994084e304",
+      "size": 670,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/185f437f4ffd6a2ba27dad223eac5a994084e304"
+    },
+    {
+      "path": ".github/workflows",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "263828ec63d594b2c5e6d65982eb787aac9ae7b6",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/263828ec63d594b2c5e6d65982eb787aac9ae7b6"
+    },
+    {
+      "path": ".github/workflows/pre-commit.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "157755c29c97eb062acc5561c0db257b92caf801",
+      "size": 308,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/157755c29c97eb062acc5561c0db257b92caf801"
+    },
+    {
+      "path": ".github/workflows/test.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2ab52b86b06250a7a4e6286e3908f7c15a427bb5",
+      "size": 495,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/2ab52b86b06250a7a4e6286e3908f7c15a427bb5"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d7e3933f2bb9d8d92013c07ee0f36543709683dd",
+      "size": 3194,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/d7e3933f2bb9d8d92013c07ee0f36543709683dd"
+    },
+    {
+      "path": ".gitmodules",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4abd60e9771ae91ae0e3ee18d3641526df714991",
+      "size": 237,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/4abd60e9771ae91ae0e3ee18d3641526df714991"
+    },
+    {
+      "path": ".pre-commit-config.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f98be5a132f617e321aa5dd3ac42b2b878eff089",
+      "size": 336,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/f98be5a132f617e321aa5dd3ac42b2b878eff089"
+    },
+    {
+      "path": ".python-version",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "902b2c90c86bce733594862f9a5893c7315b6441",
+      "size": 4,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/902b2c90c86bce733594862f9a5893c7315b6441"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a8f3e80bab3c6a5fc45ed251173f3eebd829a959",
+      "size": 3364,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/a8f3e80bab3c6a5fc45ed251173f3eebd829a959"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f49a4e16e68b128803cc2dcea614603632b04eac",
+      "size": 11356,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/f49a4e16e68b128803cc2dcea614603632b04eac"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1abbdb6d1f30a52c95993b7913934d2c61bb57ae",
+      "size": 4816,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/1abbdb6d1f30a52c95993b7913934d2c61bb57ae"
+    },
+    {
+      "path": "docs",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "fb4321e8a71c9cf1be2943a18a2eb56784bd015c",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/fb4321e8a71c9cf1be2943a18a2eb56784bd015c"
+    },
+    {
+      "path": "docs/docker.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6449278019e8c596e444def91f96771f836453cf",
+      "size": 1989,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/6449278019e8c596e444def91f96771f836453cf"
+    },
+    {
+      "path": "docs/norm_stats.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b4d6dbe24ba45538bfc84e48742c008d2a562e12",
+      "size": 5246,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/b4d6dbe24ba45538bfc84e48742c008d2a562e12"
+    },
+    {
+      "path": "docs/remote_inference.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "504eea8ea918017bc3bc87ce183c9c17d8896b25",
+      "size": 3598,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/504eea8ea918017bc3bc87ce183c9c17d8896b25"
+    },
+    {
+      "path": "examples",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1796f6906668547e4776f37fab873110e9952c44",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/1796f6906668547e4776f37fab873110e9952c44"
+    },
+    {
+      "path": "examples/aloha_real",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "634a7293adb58c132263d246c026dc8d981150ce",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/634a7293adb58c132263d246c026dc8d981150ce"
+    },
+    {
+      "path": "examples/aloha_real/Dockerfile",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c8d5ba775f5384f071534325b97aa2528c5c5e0a",
+      "size": 2650,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/c8d5ba775f5384f071534325b97aa2528c5c5e0a"
+    },
+    {
+      "path": "examples/aloha_real/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3addd4f580c2a665bd2a63ea7923825b89158f5c",
+      "size": 6515,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/3addd4f580c2a665bd2a63ea7923825b89158f5c"
+    },
+    {
+      "path": "examples/aloha_real/compose.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4e1e4ba927a2ef5a7f950083b85ae158b287c456",
+      "size": 1440,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/4e1e4ba927a2ef5a7f950083b85ae158b287c456"
+    },
+    {
+      "path": "examples/aloha_real/constants.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a2ea59f56a73464e348792387356ce695648fbf1",
+      "size": 3296,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/a2ea59f56a73464e348792387356ce695648fbf1"
+    },
+    {
+      "path": "examples/aloha_real/convert_aloha_data_to_lerobot.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a3a8ddcb24bbc5340b9cb179a0b43fccc46646f6",
+      "size": 7515,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/a3a8ddcb24bbc5340b9cb179a0b43fccc46646f6"
+    },
+    {
+      "path": "examples/aloha_real/convert_self_data_to_lerobot.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2bab896c92c8c23aa618896825c42e417530a42d",
+      "size": 8240,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/2bab896c92c8c23aa618896825c42e417530a42d"
+    },
+    {
+      "path": "examples/aloha_real/env.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "399092f87e630fa85a9f32249cebce975df07007",
+      "size": 1741,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/399092f87e630fa85a9f32249cebce975df07007"
+    },
+    {
+      "path": "examples/aloha_real/main.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "25a0631d8baba100c1fef4a20a962d82b6f1db53",
+      "size": 1408,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/25a0631d8baba100c1fef4a20a962d82b6f1db53"
+    },
+    {
+      "path": "examples/aloha_real/real_env.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "47d90af2c670eede97d5ca2bdc3ef2f39058d6fa",
+      "size": 8347,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/47d90af2c670eede97d5ca2bdc3ef2f39058d6fa"
+    },
+    {
+      "path": "examples/aloha_real/requirements.in",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2c4d11fd9b453e2a146c60af1c10e1b197526761",
+      "size": 168,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/2c4d11fd9b453e2a146c60af1c10e1b197526761"
+    },
+    {
+      "path": "examples/aloha_real/requirements.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ab297340cb6dad81c78448e3178973576296985",
+      "size": 3337,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/7ab297340cb6dad81c78448e3178973576296985"
+    },
+    {
+      "path": "examples/aloha_real/robot_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "965a11eaae29c7cbf4bd7233b20aeb6cc40a84df",
+      "size": 9867,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/965a11eaae29c7cbf4bd7233b20aeb6cc40a84df"
+    },
+    {
+      "path": "examples/aloha_real/video_display.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ad79ddd30965d842e82f2c6cf3b89fdc43bf844",
+      "size": 958,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/9ad79ddd30965d842e82f2c6cf3b89fdc43bf844"
+    },
+    {
+      "path": "examples/aloha_sim",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "16de177353ccd98f905ed565dde17bb99fe99fee",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/16de177353ccd98f905ed565dde17bb99fe99fee"
+    },
+    {
+      "path": "examples/aloha_sim/Dockerfile",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1f18790a2abf42377d597162daada4fe459c6bb4",
+      "size": 1488,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/1f18790a2abf42377d597162daada4fe459c6bb4"
+    },
+    {
+      "path": "examples/aloha_sim/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c6d4c5bc80103c0d1fdb5f7387ae2a39836bfc9",
+      "size": 732,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/0c6d4c5bc80103c0d1fdb5f7387ae2a39836bfc9"
+    },
+    {
+      "path": "examples/aloha_sim/compose.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c56e4dea137e0bbb84d68745047997932080b27d",
+      "size": 963,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/c56e4dea137e0bbb84d68745047997932080b27d"
+    },
+    {
+      "path": "examples/aloha_sim/env.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "af2d5b6ac38e4c5c1671dfbc9323dcc541e9cb2d",
+      "size": 1942,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/af2d5b6ac38e4c5c1671dfbc9323dcc541e9cb2d"
+    },
+    {
+      "path": "examples/aloha_sim/main.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d76122ab35e98ecf8e3e9da7080f14c655435115",
+      "size": 1370,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/d76122ab35e98ecf8e3e9da7080f14c655435115"
+    },
+    {
+      "path": "examples/aloha_sim/requirements.in",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "172a04ee244167d1eb0f32057cc343df72d02327",
+      "size": 76,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/172a04ee244167d1eb0f32057cc343df72d02327"
+    },
+    {
+      "path": "examples/aloha_sim/requirements.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a1087f1b3b9cd58264eb7f46f0e02eafe3380222",
+      "size": 2629,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/a1087f1b3b9cd58264eb7f46f0e02eafe3380222"
+    },
+    {
+      "path": "examples/aloha_sim/saver.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bd7f2c5d3365c9bdf32a44ba4cdec9bfe195366f",
+      "size": 1270,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/bd7f2c5d3365c9bdf32a44ba4cdec9bfe195366f"
+    },
+    {
+      "path": "examples/droid",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ca47bd7337d32960daeca83cbb25d9620337bb27",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/ca47bd7337d32960daeca83cbb25d9620337bb27"
+    },
+    {
+      "path": "examples/droid/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "33a8167fb1b1b862c5e4ef063dc413f1a2d5fc47",
+      "size": 4842,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/33a8167fb1b1b862c5e4ef063dc413f1a2d5fc47"
+    },
+    {
+      "path": "examples/droid/main.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "93b76546cedb58e51487431a8ebe83cc87caee5a",
+      "size": 9825,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/93b76546cedb58e51487431a8ebe83cc87caee5a"
+    },
+    {
+      "path": "examples/inference.ipynb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2108424cc8e2973022f6769c8e06a3d824dcb633",
+      "size": 4102,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/2108424cc8e2973022f6769c8e06a3d824dcb633"
+    },
+    {
+      "path": "examples/libero",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9fec68023d14ec62ff9bdce143cf462bdf2efb4d",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/9fec68023d14ec62ff9bdce143cf462bdf2efb4d"
+    },
+    {
+      "path": "examples/libero/Dockerfile",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ab462ee4fa73c0f701d3bb657d3f7cb2e245abe8",
+      "size": 2402,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/ab462ee4fa73c0f701d3bb657d3f7cb2e245abe8"
+    },
+    {
+      "path": "examples/libero/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "81074e192f134486636c7de14dc288bc2c5e8675",
+      "size": 1988,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/81074e192f134486636c7de14dc288bc2c5e8675"
+    },
+    {
+      "path": "examples/libero/compose.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "40ab2a20885ab1c8acc54ae0387a946ea8a8b9e3",
+      "size": 1193,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/40ab2a20885ab1c8acc54ae0387a946ea8a8b9e3"
+    },
+    {
+      "path": "examples/libero/convert_libero_data_to_lerobot.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a569a42d835fbcfc4ab164684016111731df1a1d",
+      "size": 3858,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/a569a42d835fbcfc4ab164684016111731df1a1d"
+    },
+    {
+      "path": "examples/libero/main.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dc015a61740f2d3174152bebb60176fac52f3f40",
+      "size": 9194,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/dc015a61740f2d3174152bebb60176fac52f3f40"
+    },
+    {
+      "path": "examples/libero/requirements.in",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "149006564d32ef12d0e7e48af917b9dbfa584730",
+      "size": 177,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/149006564d32ef12d0e7e48af917b9dbfa584730"
+    },
+    {
+      "path": "examples/libero/requirements.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1a52b42887cefefdad0f04da876f48a7c09be3a7",
+      "size": 2842,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/1a52b42887cefefdad0f04da876f48a7c09be3a7"
+    },
+    {
+      "path": "examples/policy_records.ipynb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ee6f268cf733b93fc732d2e7e754bf77b3dceb30",
+      "size": 3395,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/ee6f268cf733b93fc732d2e7e754bf77b3dceb30"
+    },
+    {
+      "path": "examples/simple_client",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "46829b1976f702bf59fb082f26ca987d327aed08",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/46829b1976f702bf59fb082f26ca987d327aed08"
+    },
+    {
+      "path": "examples/simple_client/Dockerfile",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eebca3963ccf1fbf97a5e930ddd01939a2cfde57",
+      "size": 1253,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/eebca3963ccf1fbf97a5e930ddd01939a2cfde57"
+    },
+    {
+      "path": "examples/simple_client/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc381c1d7a7d2ebcf60d8136a303ec9c0b67496a",
+      "size": 589,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/bc381c1d7a7d2ebcf60d8136a303ec9c0b67496a"
+    },
+    {
+      "path": "examples/simple_client/compose.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "977e361f73276502bbf42254db66b159560fefdd",
+      "size": 968,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/977e361f73276502bbf42254db66b159560fefdd"
+    },
+    {
+      "path": "examples/simple_client/main.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "15a1971b93306c6a6daa3707bdc535035f57bec0",
+      "size": 2612,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/15a1971b93306c6a6daa3707bdc535035f57bec0"
+    },
+    {
+      "path": "examples/simple_client/requirements.in",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "276b90175d9aeebc8cfa9562e1886151a60ebdf6",
+      "size": 10,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/276b90175d9aeebc8cfa9562e1886151a60ebdf6"
+    },
+    {
+      "path": "examples/simple_client/requirements.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b9777da096c00e37ca643a9164f1259a1ba5c8a1",
+      "size": 690,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/b9777da096c00e37ca643a9164f1259a1ba5c8a1"
+    },
+    {
+      "path": "examples/ur5",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "42482b3dea944e55b70592181eb21fd7b483a585",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/42482b3dea944e55b70592181eb21fd7b483a585"
+    },
+    {
+      "path": "examples/ur5/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "88c6d7a818d9a7e0cc54da40c5024ecd5ed852e3",
+      "size": 6325,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/88c6d7a818d9a7e0cc54da40c5024ecd5ed852e3"
+    },
+    {
+      "path": "packages",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c2a603b5e251cd9b5bde45d0a79c6984310dd34a",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/c2a603b5e251cd9b5bde45d0a79c6984310dd34a"
+    },
+    {
+      "path": "packages/openpi-client",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1c00fdda5543f47674d2872505bde4e9d1b6df4e",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/1c00fdda5543f47674d2872505bde4e9d1b6df4e"
+    },
+    {
+      "path": "packages/openpi-client/pyproject.toml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "553f7ef37aea9c55c6fd35043aa71cbe5da97d26",
+      "size": 409,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/553f7ef37aea9c55c6fd35043aa71cbe5da97d26"
+    },
+    {
+      "path": "packages/openpi-client/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4b5755464a7f10e4cc3001d3bb4dbfbd71b192f0",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/4b5755464a7f10e4cc3001d3bb4dbfbd71b192f0"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "6b435715fa635f0df04d7149e6f8b20c11249186",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/6b435715fa635f0df04d7149e6f8b20c11249186"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3dc1f76bc69e3f559bee6253b24fc93acee9e1f9",
+      "size": 22,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/3dc1f76bc69e3f559bee6253b24fc93acee9e1f9"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client/action_chunk_broker.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f95cdada02ec1061a52914777ad2b8ec4a4083d2",
+      "size": 1276,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/f95cdada02ec1061a52914777ad2b8ec4a4083d2"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client/base_policy.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f4290651b1b7bab3bd9549b47876838f5b51629",
+      "size": 271,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/2f4290651b1b7bab3bd9549b47876838f5b51629"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client/image_tools.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7a971b9d5f6b1495fd6cdea202ffa607d8b34bf0",
+      "size": 2426,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/7a971b9d5f6b1495fd6cdea202ffa607d8b34bf0"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client/image_tools_test.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8d4b4b92030ea869712b312581e26243035aafba",
+      "size": 1411,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/8d4b4b92030ea869712b312581e26243035aafba"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client/msgpack_numpy.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "007f755edf54565579376b077eec7f7f715e1b96",
+      "size": 1944,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/007f755edf54565579376b077eec7f7f715e1b96"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client/msgpack_numpy_test.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4c774ba468aa6948e154cb2008bac8f6128a4593",
+      "size": 1643,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/4c774ba468aa6948e154cb2008bac8f6128a4593"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client/runtime",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "432d63351202d4be2057bfe0cea7164e5668f66b",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/432d63351202d4be2057bfe0cea7164e5668f66b"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client/runtime/agent.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a2c3ab66ef618ad9ecbff7b81ad9340a4604128c",
+      "size": 465,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/a2c3ab66ef618ad9ecbff7b81ad9340a4604128c"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client/runtime/agents",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "85ee04b5f86eb15f1c13b7e8f4b46940687d4460",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/85ee04b5f86eb15f1c13b7e8f4b46940687d4460"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client/runtime/agents/policy_agent.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65227c44dae667d9b2743b6bc1026e791cec35c4",
+      "size": 509,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/65227c44dae667d9b2743b6bc1026e791cec35c4"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client/runtime/environment.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "664ac4678aaaa3aecf52268a6a09d1d1fc974226",
+      "size": 1044,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/664ac4678aaaa3aecf52268a6a09d1d1fc974226"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client/runtime/runtime.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9552be091a26e163d60cab8071df4716524bf2e8",
+      "size": 3049,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/9552be091a26e163d60cab8071df4716524bf2e8"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client/runtime/subscriber.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c69edaa8e814dfcfe56b78b774578fe37f79428",
+      "size": 500,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/7c69edaa8e814dfcfe56b78b774578fe37f79428"
+    },
+    {
+      "path": "packages/openpi-client/src/openpi_client/websocket_client_policy.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e309fbb93ed2d66af3f2241c2f228335ac137293",
+      "size": 1744,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/e309fbb93ed2d66af3f2241c2f228335ac137293"
+    },
+    {
+      "path": "pyproject.toml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ba8826ba7e2689626c3494e88abef218cdfe3ba2",
+      "size": 2644,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/ba8826ba7e2689626c3494e88abef218cdfe3ba2"
+    },
+    {
+      "path": "scripts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "51d68d005bd388b7eda351ee043a765e2ceda43d",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/51d68d005bd388b7eda351ee043a765e2ceda43d"
+    },
+    {
+      "path": "scripts/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "scripts/compute_norm_stats.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1a69c98a590f12b0fce91a40ac6c7d21c6ea5817",
+      "size": 3569,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/1a69c98a590f12b0fce91a40ac6c7d21c6ea5817"
+    },
+    {
+      "path": "scripts/docker",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0950b9ca7dfd4e9f8eaa1f47cccc3a0e6bcf5905",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/0950b9ca7dfd4e9f8eaa1f47cccc3a0e6bcf5905"
+    },
+    {
+      "path": "scripts/docker/compose.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "564d276e26bdcfd6397e666f2c73b9b5b353a6ac",
+      "size": 814,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/564d276e26bdcfd6397e666f2c73b9b5b353a6ac"
+    },
+    {
+      "path": "scripts/docker/install_docker_ubuntu22.sh",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "38873b3e379ee40e6f80fe86a88be7dae494e05b",
+      "size": 1529,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/38873b3e379ee40e6f80fe86a88be7dae494e05b"
+    },
+    {
+      "path": "scripts/docker/install_nvidia_container_toolkit.sh",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a4c67f1d5bcc6655f7ae2084a8866037b819b4f0",
+      "size": 985,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/a4c67f1d5bcc6655f7ae2084a8866037b819b4f0"
+    },
+    {
+      "path": "scripts/docker/serve_policy.Dockerfile",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f96b660ce76b16d8567de4a43d1874644d1713e1",
+      "size": 1541,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/f96b660ce76b16d8567de4a43d1874644d1713e1"
+    },
+    {
+      "path": "scripts/serve_policy.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0ec6581661bb30e0fc868138369b8bc26403b526",
+      "size": 3701,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/0ec6581661bb30e0fc868138369b8bc26403b526"
+    },
+    {
+      "path": "scripts/train.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2792156cf91db2c7637e1e53b77d9ab662cf068f",
+      "size": 10200,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/2792156cf91db2c7637e1e53b77d9ab662cf068f"
+    },
+    {
+      "path": "scripts/train_test.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1a1e1fd6e0c8549e3d4117c240a171a398afa7c8",
+      "size": 713,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/1a1e1fd6e0c8549e3d4117c240a171a398afa7c8"
+    },
+    {
+      "path": "src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2de9a12358755395ad097c5315d769d197f20446",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/2de9a12358755395ad097c5315d769d197f20446"
+    },
+    {
+      "path": "src/openpi",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "40056d77d15d4d0e9eaeaa64de09c6b15731553d",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/40056d77d15d4d0e9eaeaa64de09c6b15731553d"
+    },
+    {
+      "path": "src/openpi/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "src/openpi/conftest.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5002b629de77953e03f24157f6ba4c88fc448468",
+      "size": 339,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/5002b629de77953e03f24157f6ba4c88fc448468"
+    },
+    {
+      "path": "src/openpi/models",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "cb9a0405061c4d99fa337705f311e8f9e5f54656",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/cb9a0405061c4d99fa337705f311e8f9e5f54656"
+    },
+    {
+      "path": "src/openpi/models/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "src/openpi/models/gemma.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2527d300961e6f918f53dbb76b2c3aa4f5430b1a",
+      "size": 15730,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/2527d300961e6f918f53dbb76b2c3aa4f5430b1a"
+    },
+    {
+      "path": "src/openpi/models/gemma_fast.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eee39b4317dd3f42aa4d73e11dceee37e394c39d",
+      "size": 15643,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/eee39b4317dd3f42aa4d73e11dceee37e394c39d"
+    },
+    {
+      "path": "src/openpi/models/lora.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3dfff5b4f22ff42f73298037a77df900c6b11d75",
+      "size": 5342,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/3dfff5b4f22ff42f73298037a77df900c6b11d75"
+    },
+    {
+      "path": "src/openpi/models/lora_test.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "48b65b6ae282c6bb0e6a410ee71204a4837ffc48",
+      "size": 3138,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/48b65b6ae282c6bb0e6a410ee71204a4837ffc48"
+    },
+    {
+      "path": "src/openpi/models/model.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8ad294de91b734edc0ce33e5ad7c6a7e76ed300a",
+      "size": 12319,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/8ad294de91b734edc0ce33e5ad7c6a7e76ed300a"
+    },
+    {
+      "path": "src/openpi/models/model_test.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "897b41a572318c757a10a7e9bd9ac411821535f6",
+      "size": 2938,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/897b41a572318c757a10a7e9bd9ac411821535f6"
+    },
+    {
+      "path": "src/openpi/models/pi0.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9a3a26996b0fcd9d8053e2502f31645ade8fd18a",
+      "size": 20972,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/9a3a26996b0fcd9d8053e2502f31645ade8fd18a"
+    },
+    {
+      "path": "src/openpi/models/pi0_fast.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fc74cf6442b8236b2a1bcf077b258a5daf8cfe9f",
+      "size": 12826,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/fc74cf6442b8236b2a1bcf077b258a5daf8cfe9f"
+    },
+    {
+      "path": "src/openpi/models/pi0_test.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "31350ec3a342bee447edf5b4eb56863221379d12",
+      "size": 1582,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/31350ec3a342bee447edf5b4eb56863221379d12"
+    },
+    {
+      "path": "src/openpi/models/siglip.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c74c99e75fa45308fcadff115a7fd4ed12c9e96c",
+      "size": 12078,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/c74c99e75fa45308fcadff115a7fd4ed12c9e96c"
+    },
+    {
+      "path": "src/openpi/models/tokenizer.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "29451c07ff2375f52c0e715af0d8d689bf15c16b",
+      "size": 5981,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/29451c07ff2375f52c0e715af0d8d689bf15c16b"
+    },
+    {
+      "path": "src/openpi/models/tokenizer_test.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "092c4ae3b2330db9f89344dc4bae150457fa4310",
+      "size": 807,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/092c4ae3b2330db9f89344dc4bae150457fa4310"
+    },
+    {
+      "path": "src/openpi/models/vit.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b7901d097b86d36e3564d2b664ed50af8a194080",
+      "size": 10266,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/b7901d097b86d36e3564d2b664ed50af8a194080"
+    },
+    {
+      "path": "src/openpi/policies",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9426b43b6054a5a8b7d5ffe7013f084e9142d11c",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/9426b43b6054a5a8b7d5ffe7013f084e9142d11c"
+    },
+    {
+      "path": "src/openpi/policies/aloha_policy.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f1e53265b83d2715b67b64ccdd66075335ff0843",
+      "size": 7623,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/f1e53265b83d2715b67b64ccdd66075335ff0843"
+    },
+    {
+      "path": "src/openpi/policies/droid_policy.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d6d00606855b1a3cc476ee6789b3b529d02f7c66",
+      "size": 2982,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/d6d00606855b1a3cc476ee6789b3b529d02f7c66"
+    },
+    {
+      "path": "src/openpi/policies/libero_policy.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5b69983680fa509fa1a63981c7f7a4e338cdf1a1",
+      "size": 5319,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/5b69983680fa509fa1a63981c7f7a4e338cdf1a1"
+    },
+    {
+      "path": "src/openpi/policies/policy.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ff1635a974224c080ee0a11811e0dd7c5d2d4fe4",
+      "size": 2935,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/ff1635a974224c080ee0a11811e0dd7c5d2d4fe4"
+    },
+    {
+      "path": "src/openpi/policies/policy_config.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d2635727d8eb9a8b888f127ff09cc9803a768a4d",
+      "size": 3337,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/d2635727d8eb9a8b888f127ff09cc9803a768a4d"
+    },
+    {
+      "path": "src/openpi/policies/policy_test.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f729c50aea0a79a2c17884a04ed94da097321c67",
+      "size": 1127,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/f729c50aea0a79a2c17884a04ed94da097321c67"
+    },
+    {
+      "path": "src/openpi/policies/tavla_policy.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "171328568aaeda9a12d4465266106728d31bc8dc",
+      "size": 2414,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/171328568aaeda9a12d4465266106728d31bc8dc"
+    },
+    {
+      "path": "src/openpi/py.typed",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "src/openpi/serving",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8afc17326587c20401c853a06ccdbb9acc820580",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/8afc17326587c20401c853a06ccdbb9acc820580"
+    },
+    {
+      "path": "src/openpi/serving/websocket_policy_server.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "33ebd14560b7fa08ed5ffb27b98a24b94712b755",
+      "size": 2089,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/33ebd14560b7fa08ed5ffb27b98a24b94712b755"
+    },
+    {
+      "path": "src/openpi/shared",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "dfd87cb852c19b11b5592541203a284ca7dceb1d",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/dfd87cb852c19b11b5592541203a284ca7dceb1d"
+    },
+    {
+      "path": "src/openpi/shared/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "src/openpi/shared/array_typing.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3c95930725bfb67074a76267b089f7ef02ef7abe",
+      "size": 3330,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/3c95930725bfb67074a76267b089f7ef02ef7abe"
+    },
+    {
+      "path": "src/openpi/shared/download.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a80e60be2f826233ccc4995912f92c7911c0b0e8",
+      "size": 13076,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/a80e60be2f826233ccc4995912f92c7911c0b0e8"
+    },
+    {
+      "path": "src/openpi/shared/download_test.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0bfcdce3405ba6aac90bbbb50b9e900fb5a1a3b9",
+      "size": 1490,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/0bfcdce3405ba6aac90bbbb50b9e900fb5a1a3b9"
+    },
+    {
+      "path": "src/openpi/shared/effort_type.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb2e5ea0e65246e7289b1ec2696c4ee63284b284",
+      "size": 1562,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/cb2e5ea0e65246e7289b1ec2696c4ee63284b284"
+    },
+    {
+      "path": "src/openpi/shared/image_tools.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4d63e1c710cfeb64bf994b2c6323cd26888a80a4",
+      "size": 1901,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/4d63e1c710cfeb64bf994b2c6323cd26888a80a4"
+    },
+    {
+      "path": "src/openpi/shared/image_tools_test.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c19bee2ed1ca8aacb1f29cb8c7154037c7ce8d0c",
+      "size": 1418,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/c19bee2ed1ca8aacb1f29cb8c7154037c7ce8d0c"
+    },
+    {
+      "path": "src/openpi/shared/nnx_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "29df222bcbc0e815d0b6bec046a2893e3b2b18a5",
+      "size": 2844,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/29df222bcbc0e815d0b6bec046a2893e3b2b18a5"
+    },
+    {
+      "path": "src/openpi/shared/normalize.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5c6049a3ed63ac9643ae2ce42ae4628b6f3cb18c",
+      "size": 5522,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/5c6049a3ed63ac9643ae2ce42ae4628b6f3cb18c"
+    },
+    {
+      "path": "src/openpi/shared/normalize_test.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65722d8bc35aeccc14f7bbd415fd3320ee529f99",
+      "size": 753,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/65722d8bc35aeccc14f7bbd415fd3320ee529f99"
+    },
+    {
+      "path": "src/openpi/training",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0c7fa01316178c676ceb6881bef83e0622c68214",
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/trees/0c7fa01316178c676ceb6881bef83e0622c68214"
+    },
+    {
+      "path": "src/openpi/training/checkpoints.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1c9db2ac61417c61c34540fe6a71bb175e900e71",
+      "size": 6267,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/1c9db2ac61417c61c34540fe6a71bb175e900e71"
+    },
+    {
+      "path": "src/openpi/training/config.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a752d4ed3f395a96d4c7b5ca6f2bb04ecbae6b97",
+      "size": 42350,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/a752d4ed3f395a96d4c7b5ca6f2bb04ecbae6b97"
+    },
+    {
+      "path": "src/openpi/training/data_loader.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1c7052c08114bf68f663ec0cb10aac80eca5b5b8",
+      "size": 11645,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/1c7052c08114bf68f663ec0cb10aac80eca5b5b8"
+    },
+    {
+      "path": "src/openpi/training/data_loader_test.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8ef6f900e4a2cf23e7156584e0470bfbb24b06e3",
+      "size": 2459,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/8ef6f900e4a2cf23e7156584e0470bfbb24b06e3"
+    },
+    {
+      "path": "src/openpi/training/optimizer.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "183daa4ecea74864d34546efb69e64233422659d",
+      "size": 3093,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/183daa4ecea74864d34546efb69e64233422659d"
+    },
+    {
+      "path": "src/openpi/training/sharding.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2c54a5c125ef0e17a8fc0d3afc206e14f9831a1c",
+      "size": 4100,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/2c54a5c125ef0e17a8fc0d3afc206e14f9831a1c"
+    },
+    {
+      "path": "src/openpi/training/utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fe7f94db1843b4b817cf24a007ca0b400946a066",
+      "size": 1217,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/fe7f94db1843b4b817cf24a007ca0b400946a066"
+    },
+    {
+      "path": "src/openpi/training/weight_loaders.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "792647f0c1efe3f221c00d9b49bf5dae8a4bb61e",
+      "size": 5176,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/792647f0c1efe3f221c00d9b49bf5dae8a4bb61e"
+    },
+    {
+      "path": "src/openpi/transforms.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "84a015e2b9c9967c6d5cf648f005de00ef57c3a2",
+      "size": 14572,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/84a015e2b9c9967c6d5cf648f005de00ef57c3a2"
+    },
+    {
+      "path": "src/openpi/transforms_test.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54b1fe94f9b501685050f5b4f3f233cf3e7c6b0e",
+      "size": 4111,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/54b1fe94f9b501685050f5b4f3f233cf3e7c6b0e"
+    },
+    {
+      "path": "uv.lock",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0390062e78434b1bcadbe69682fd4734a3bfd1d8",
+      "size": 600996,
+      "url": "https://api.github.com/repos/ZZongzheng0918/TA-VLA/git/blobs/0390062e78434b1bcadbe69682fd4734a3bfd1d8"
+    }
+  ],
+  "truncated": false
+}
