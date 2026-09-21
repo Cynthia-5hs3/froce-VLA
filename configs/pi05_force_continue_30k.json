@@ -1,0 +1,20 @@
+{
+  "source_checkpoint": "outputs/pi05_force_sft_v1/checkpoint-003000",
+  "total_steps": 30000,
+  "micro_batch_size": 1,
+  "gradient_accumulation_steps": 4,
+  "learning_rate": 0.00001,
+  "warmup_start_lr": 0.0000025,
+  "minimum_lr": 0.000001,
+  "warmup_steps": 500,
+  "validation_every": 1000,
+  "validation_windows_per_episode": 32,
+  "save_every": 1000,
+  "inference_every": 5000,
+  "inference_windows_per_episode": 3,
+  "final_inference_windows_per_episode": 16,
+  "inference_seeds": [12345, 23456],
+  "inference_steps": 10,
+  "history_variants": ["measured", "zero_nm", "other_episode"],
+  "torch_threads": 4
+}

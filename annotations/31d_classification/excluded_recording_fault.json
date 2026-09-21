@@ -1,0 +1,10 @@
+{
+  "dataset": "data/franka_single_left_31d",
+  "raw_data_modified": false,
+  "episode_indices": [
+    70,
+    128
+  ],
+  "count": 2,
+  "selection_rule": "derived from episode_success, failure_reason, and length; review before training"
+}

@@ -1,0 +1,32 @@
+{
+  "dataset_root": "data/franka_single_left_31d",
+  "selection_manifest": "annotations/31d_classification/sft_candidate.json",
+  "window_output": "outputs/force_vla_31d_windows",
+  "fps": 30,
+  "history_offsets_frames": [-60, -53, -47, -40, -33, -27, -20, -13, -7, 0],
+  "future_action_offsets_frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49],
+  "future_torque_offsets_frames": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50],
+  "model_input": {
+    "ta_vla_effort_type": "EXPERT_HIS_C_FUT",
+    "images": ["base", "left_wrist"],
+    "task_text": true,
+    "state_features": "tcp_pose_gripper",
+    "state_dim": 10,
+    "effort_source": "measured_joint_torque",
+    "effort_dim": 7,
+    "effort_history_shape": [10, 7]
+  },
+  "training_targets": {
+    "action_shape": [50, 10],
+    "future_effort_source": "measured_joint_torque",
+    "future_effort_shape": [50, 7],
+    "future_effort_loss_weight_initial": 0.1
+  },
+  "external_joint_torque": {
+    "stored_in_window_dataset": true,
+    "used_in_first_training": false,
+    "reason": "tau_ext_hat_filtered is an estimate derived from model dynamics and may be noisy or redundant with measured joint torque; retain it for ablation after the measured-torque baseline is verified"
+  },
+  "normalization": "fit per feature on training episodes only; do not normalize validation episodes independently",
+  "split": "episode-level; never split windows from one episode across train and validation"
+}

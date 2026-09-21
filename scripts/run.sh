@@ -16,6 +16,7 @@ fi
 exec /usr/bin/env -i PATH=/usr/bin:/bin LANG=C.UTF-8 /usr/bin/bwrap \
     --ro-bind / / --bind "$ROOT" "$ROOT" \
     --ro-bind "$ROOT/datasets" "$ROOT/datasets" \
+    --ro-bind "$ROOT/data" "$ROOT/data" \
     --ro-bind "$ROOT/models" "$ROOT/models" \
     --ro-bind "$ROOT/reference" "$ROOT/reference" \
     --proc /proc --dev /dev "${GPU_ARGS[@]}" --tmpfs /tmp \

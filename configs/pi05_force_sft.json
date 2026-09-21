@@ -1,0 +1,30 @@
+{
+  "model_type": "pi05_force",
+  "base_checkpoint": "models/pi05_sft",
+  "tokenizer": "models/tokenizer",
+  "dataset_windows": "outputs/force_vla_31d_windows/windows.parquet",
+  "state_dim": 10,
+  "torque_dim": 7,
+  "torque_history_steps": 10,
+  "future_steps": 50,
+  "max_action_dim": 32,
+  "action_dim": 10,
+  "future_torque_loss_weight": 0.1,
+  "use_external_torque": false,
+  "training": {
+    "initialize_from_pi05": true,
+    "freeze_vision_encoder": true,
+    "train_expert_only": true,
+    "trainable": "adapters",
+    "steps": 3000,
+    "seed": 42,
+    "validation_every": 100,
+    "validation_batches": 8,
+    "save_every": 500,
+    "gradient_checkpointing": true,
+    "compile_model": false,
+    "dtype": "bfloat16",
+    "learning_rate": 0.000025,
+    "batch_size": 1
+  }
+}

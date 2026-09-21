@@ -2,6 +2,12 @@
 
 工作目录：`/data0/wx/force-VLA`。目标是在PI0.5中加入力历史输入和未来力预测辅助损失。
 
+累计30000步扩展训练使用独立入口 `scripts/train_force_pi05_30k.sh`，继承第3000步并增加轨迹均衡验证、完整采样推理及力矩历史对照。预算、启动和指标解释见 [三万步训练说明](docs/FORCE_TRAINING_30K.md)。训练结束不自动等同于真机部署就绪。
+
+真机测试使用独立的观测/动作入口，步骤和安全门控见 [实时部署说明](docs/FORCE_REALTIME_DEPLOYMENT.md)。原 Evo-RLT 部署器不直接加载 force adapter checkpoint。
+
+第一轮3000步训练已完成，模型位于 `outputs/pi05_force_sft_v1/checkpoint-003000`，使用独立Conda前缀 `env/`。旧训练入口 `scripts/train_force_pi05.sh` 保留；新运行必须指定未使用的输出目录。数据划分、归一化、环境检查及保存/恢复见 [训练说明](docs/FORCE_TRAINING.md)。旧 `src/lab.py smoke` 仅为早期六维MLP测试。
+
 ## 当前31D采集与仓库范围（2026-09-15）
 
 本项目 GitHub：`https://github.com/Cynthia-5hs3/froce-VLA`（远端名称为 `froce-VLA`）。
@@ -10,12 +16,13 @@
 克隆仓库不会自动获得上述本地资产；原文件位置见下表、`configs/collection_31d/PROVENANCE.md` 和 `provenance/`。运行 `scripts/run.sh` 前需独立准备本地环境和所需数据、模型及参考目录。
 
 最新数据为 `data/franka_single_left_31d`，复制自 `/data0/sht/Evo-RLT/datacollection/franka_robotiq_single_left/rollout_dataset_franky_31d`。
-元信息记录152条、148448帧、30Hz，两路RGB视频、31D状态与10D动作，包含成功、失败及控制中断记录；尚未完成清洗与逐条质量确认。
+元信息记录184条、177384帧、30Hz，两路RGB视频、31D状态与10D动作，包含成功、失败及控制中断记录；分类清单保留原始数据不变，训练前仍需完成视频、时间戳和力矩同步检查。
 31D状态：TCP位置3 + rot6d姿态6 + 夹爪宽度1（米）+ measured joint torque 7（Nm）+ external joint torque 7（Nm）+ joint velocity 7（rad/s）。动作的夹爪通道为开度比例。
 对齐论文力矩路线时，按时间戳构建过去约2秒的10个力矩样本以及未来50步动作/力矩目标，不跨episode边界；采集时间同步与可用窗口仍需验证。
 
 `src/collection_31d/` 和 `configs/collection_31d/` 是独立采集代码及格式来源副本，保留Evo-RLT依赖，不能视为克隆后即可独立运行的采集器。
-复制的10D特征配置仅供参考，尚无可直接使用的31D完整VLA训练配置；现有 `configs/experiment.json` 和MLP测试仍为六维wrench原型，不是七关节力矩VLA训练。
+数据分类清单位于 `annotations/31d_classification/`：当前包括101条成功SFT候选、30条人工失败候选、51条控制器异常和2条录制时序异常；新增批次为episode 152-183，其中episode 170因 `cartesian_reflex` 明确排除。
+`configs/pi05_force_sft.json`、`src/force_vla/pi05/` 和 `src/force_vla/pi05/train_pi05_force.py` 已接通七关节力矩SFT：整轨迹划分、训练集归一化、视觉文本输入、优化与保存恢复。真实PI0.5两步验证已通过；训练收敛和任务效果仍需正式实验。
 以下29D数据、六维wrench方案及相关检查描述保留为早期实验记录；成功/失败标签本身也不代表数据已满足RLT训练条件。
 
 ## 需要的数据
@@ -40,7 +47,7 @@ RLT及旧SFT的任务文本是`Place the white lid firmly onto the jig.`。失�
 ## 模型框架与来源
 
 参考arXiv:2509.07962v1 TA-VLA：将力历史压缩为一个token注入动作解码器，同时预测未来动作与力信号。
-本实验拟采用PI0.5 + 6D wrench历史MLP + 解码器融合 + 未来wrench辅助损失；现有模型本身只使用10D状态，尚未接入力。
+本实验采用 PI0.5 + `10×7` measured joint torque 历史适配器 + 状态融合 token + action expert 注入 + `50×7` 未来关节力矩辅助损失；机器人执行动作仍保持10D。
 PI0.5把状态离散化为文本，简单改成22D/29D不等价于论文方案。机器人执行动作保持10D，预测的力不作为力控命令。
 
 | 本目录副本                  | 原文件路径                                                                                                                    | 内容与用途                                                             |
@@ -57,9 +64,9 @@ PI0.5把状态离散化为文本，简单改成22D/29D不等价于论文方案�
 ## 环境与配置
 
 - 原环境：`/data0/miniconda3/envs/evo-rlt`；新环境：`/data0/wx/force-VLA/env`，离线`--clone --copy`独立复制。
-- 依赖基线：Python 3.12、PyTorch 2.10.0 + CUDA 12.8、LeRobot 0.5.1。宿主机有RTX 4090；完整VLA训练显存尚未验证，建议先做LoRA小批量实验。
+- 依赖基线：Python 3.12、PyTorch 2.10.0 + CUDA 12.8、LeRobot 0.5.1。当前GPU为RTX 4090；冻结骨干、batch=1的完整模型短程验证，PyTorch显存分配峰值约9.0 GiB，不能外推到全量微调。
 - 实际软件包版本清单：`provenance/python-packages.json`。
-- 配置：`configs/experiment.json`。历史2秒/10帧、wrench 6D、动作10D、未来50步；辅助损失权重0.1是待验证起点。
+- 配置：`configs/pi05_force_sft.json`。历史2秒/10帧、measured joint torque 7D、动作10D、未来50步；辅助损失权重0.1是待验证起点。
 - 新代码放`src/`，结果放`outputs/`；HOME、Conda/pip/HF/PyTorch缓存均在`runtime/`。
 - 必须经`scripts/run.sh`运行：原工作区和原环境强制只读，清除ROS/Python环境继承，默认断网并隐藏机器人设备。副本数据、模型和参考源码在实验时也只读。
 
@@ -76,7 +83,7 @@ bash scripts/run.sh python src/lab.py smoke --steps 20
 
 `inspect`生成`outputs/data_readiness.json`。`smoke`用真实力历史训练一个小型未来力预测MLP，验证读取、窗口构建和反向传播；不加载PI0.5、不使用图像语言，不代表已完成VLA训练。
 GPU实验在启动器后加`--gpu`，例如`bash scripts/run.sh --gpu python src/lab.py smoke --device cuda`。
-后续工作：确认文本及80条RLT范围、实现解码器力token和辅助损失、开展无力/单帧力/力历史/联合预测消融。
+后续实验：开展无力/单帧力/力历史/联合预测消融；旧80条RLT选择仍需确认，与本次31D成功示范SFT无关。
 
 ## 论文代码与新增采集项
 

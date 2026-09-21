@@ -1,0 +1,51 @@
+{
+  "scope": "force-VLA local model implementation",
+  "raw_sources_are_read_only": true,
+  "files": [
+    {
+      "source": "/data0/miniconda3/envs/evo-rlt/lib/python3.12/site-packages/lerobot/policies/pi05/modeling_pi05.py",
+      "copy": "src/force_vla/pi05/modeling_pi05_base.py",
+      "purpose": "PI0.5 model and attention-mask baseline used by the force subclass"
+    },
+    {
+      "source": "/data0/miniconda3/envs/evo-rlt/lib/python3.12/site-packages/lerobot/policies/pi05/configuration_pi05.py",
+      "copy": "src/force_vla/pi05/configuration_pi05_base.py",
+      "purpose": "PI0.5 configuration baseline"
+    },
+    {
+      "source": "reference/evo-rlt/src/evo_rlt/adapters/lerobot/pi05_adapter.py",
+      "original_path": "/data0/sht/Evo-RLT/src/evo_rlt/adapters/lerobot/pi05_adapter.py",
+      "copy": "src/force_vla/evo_pi05_adapter_reference.py",
+      "purpose": "Evo-RLT adapter flow reference; not imported by the force model"
+    },
+    {
+      "source": "reference/evo-rlt/src/evo_rlt/cli/train_franka_pi05_sft.py",
+      "original_path": "/data0/sht/Evo-RLT/src/evo_rlt/cli/train_franka_pi05_sft.py",
+      "copy": "src/force_vla/evo_train_franka_pi05_sft_reference.py",
+      "purpose": "Evo-RLT training-entry reference; the force training helper is independent"
+    },
+    {
+      "source": "third_party/ta_vla_149d4be/src/openpi/models/pi0.py",
+      "copy": "third_party/ta_vla_149d4be/src/openpi/models/pi0.py",
+      "purpose": "TA-VLA effort-token and future-effort loss reference"
+    }
+  ],
+  "modified_scope": [
+    "src/force_vla/",
+    "configs/pi05_force_sft.json",
+    "docs/PI05_FORCE_MODEL.md",
+    "tests/test_torque_adapter.py",
+    "tests/test_force_pi05_training.py",
+    "scripts/run.sh",
+    "scripts/train_force_pi05.sh",
+    "scripts/check_training_environment.py",
+    "configs/force_vla_environment.yml",
+    "configs/training-tools.txt",
+    "docs/FORCE_TRAINING.md"
+  ],
+  "forbidden_mutations": [
+    "/data0/sht/Evo-RLT",
+    "/data0/miniconda3/envs/evo-rlt",
+    "shared model directories"
+  ]
+}

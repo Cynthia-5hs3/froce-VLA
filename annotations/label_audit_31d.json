@@ -1,0 +1,606 @@
+{
+  "dataset": "data/franka_single_left_31d",
+  "raw_data_modified": false,
+  "episode_count": 184,
+  "missing_label_episode_indices": [],
+  "missing_label_count": 0,
+  "success_count": 101,
+  "failure_count": 83,
+  "failure_reason_groups": {
+    "discard_requested_text": 101,
+    "controller_low_success_rate": 49,
+    "operator_failure": 30,
+    "recording_timing_fault": 2,
+    "controller_poll_fault": 2
+  },
+  "success_with_failure_reason_text": [
+    1,
+    2,
+    5,
+    6,
+    8,
+    11,
+    13,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    23,
+    25,
+    27,
+    31,
+    33,
+    34,
+    36,
+    39,
+    40,
+    41,
+    45,
+    50,
+    51,
+    54,
+    57,
+    59,
+    61,
+    62,
+    63,
+    67,
+    68,
+    69,
+    71,
+    72,
+    75,
+    78,
+    80,
+    84,
+    88,
+    89,
+    91,
+    93,
+    94,
+    95,
+    97,
+    98,
+    99,
+    100,
+    108,
+    111,
+    113,
+    115,
+    120,
+    122,
+    123,
+    127,
+    129,
+    130,
+    135,
+    136,
+    138,
+    139,
+    142,
+    143,
+    144,
+    146,
+    147,
+    152,
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169,
+    171,
+    172,
+    173,
+    174,
+    175,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183
+  ],
+  "attempt_status_counts": {
+    "committed": 184,
+    "discarded": 77,
+    "recording": 2
+  },
+  "stale_or_incomplete_attempts": [
+    {
+      "episode_index": 169,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 182,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 167,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 181,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 181,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 181,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 182,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 181,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 0,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    },
+    {
+      "episode_index": 162,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 181,
+      "status": "recording",
+      "reason": null,
+      "error": {
+        "error": "ValueError('need at least 12 complete frames, got 1')",
+        "episode_index": 181
+      }
+    },
+    {
+      "episode_index": 81,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    },
+    {
+      "episode_index": 173,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 173,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 16,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    },
+    {
+      "episode_index": 179,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 21,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    },
+    {
+      "episode_index": 157,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 182,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 181,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 116,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 152,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 170,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 130,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 91,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    },
+    {
+      "episode_index": 164,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 175,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 169,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 181,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 178,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 0,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    },
+    {
+      "episode_index": 181,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 0,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    },
+    {
+      "episode_index": 175,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 107,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    },
+    {
+      "episode_index": 173,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 171,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 16,
+      "status": "recording",
+      "reason": null,
+      "error": {
+        "error": "ValueError('need at least 12 complete frames, got 1')",
+        "episode_index": 16
+      }
+    },
+    {
+      "episode_index": 164,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 181,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 38,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    },
+    {
+      "episode_index": 175,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 173,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 179,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 181,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 170,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 181,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 166,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 159,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    },
+    {
+      "episode_index": 167,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 173,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 44,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    },
+    {
+      "episode_index": 173,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 157,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 172,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 180,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 174,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 120,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 148,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 172,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 0,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    },
+    {
+      "episode_index": 182,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 173,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 181,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 138,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 181,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 182,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 182,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 57,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    },
+    {
+      "episode_index": 173,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 169,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 181,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 23,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    },
+    {
+      "episode_index": 179,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 101,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    },
+    {
+      "episode_index": 171,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 158,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 178,
+      "status": "discarded",
+      "reason": "operator paused",
+      "error": null
+    },
+    {
+      "episode_index": 87,
+      "status": "discarded",
+      "reason": "operator discarded episode",
+      "error": null
+    }
+  ]
+}

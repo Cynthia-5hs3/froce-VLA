@@ -1,0 +1,56 @@
+robot:
+  id: fr3-left-force-vla-speed-test
+  robot_ip: 172.16.0.2
+  cameras:
+    base:
+      serial: "260722303785"
+    left_wrist:
+      serial: "346222073620"
+  camera_width: 640
+  camera_height: 480
+  camera_fps: 30
+  image_size: 224
+  camera_timeout_s: 1.0
+  camera_max_pair_skew_s: 0.050
+  observation_max_image_age_s: 0.100
+  gripper:
+    port: /dev/serial/by-id/usb-FTDI_USB_TO_RS-485_DABC0KC0-if00-port0
+    baudrate: 115200
+    bytesize: 8
+    parity: N
+    stopbits: 1
+    device_id: 9
+    timeout_s: 0.2
+    state_timeout_s: 0.5
+    deadband: 0.01
+    max_delta_per_s: 2.0
+    speed: 128
+    force: 128
+    action_threshold: 0.75
+    close_trigger: 0.75
+    open_trigger: 0.875
+    post_close_lock_s: 2.0
+    startup_open_fraction: 0.95
+    startup_open_timeout_s: 5.0
+  workspace:
+    min: [0.10, -0.55, 0.05]
+    max: [0.80, 0.50, 0.75]
+  control_frequency: 30.0
+  dynamics_factor: 0.05
+  max_linear_velocity: 0.05
+  max_angular_velocity: 0.12
+  target_smoothing_alpha: 0.15
+  velocity_smoothing: 0.20
+  smooth_angular_velocity: true
+  velocity_tracking_tau_s: 0.15
+  velocity_motion_duration_ms: 125
+  min_command_position_delta: 0.0008
+  min_command_rotation_delta: 0.005
+  max_consecutive_motion_failures: 3
+  realtime_cpu: 6
+
+deployment:
+  task: Place the white lid firmly onto the jig.
+  torch_num_threads: 1
+  torch_num_interop_threads: 1
+  housekeeping_cpus: 0-4,8-23

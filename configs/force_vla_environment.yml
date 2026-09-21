@@ -1,0 +1,6 @@
+name: force-vla
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - pip
