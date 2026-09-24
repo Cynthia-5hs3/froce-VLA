@@ -1,0 +1,13 @@
+{
+  "dataset": "data/franka_single_left_31d_v2",
+  "raw_data_modified": false,
+  "episode_indices": [12, 22, 23, 24],
+  "count": 4,
+  "reasons": {
+    "12": "cartesian_reflex",
+    "22": "low Franka command success rate",
+    "23": "communication_constraints_violation; 28 frames",
+    "24": "low Franka command success rate"
+  },
+  "用途": "从SFT和恢复训练中排除，保留故障追溯"
+}

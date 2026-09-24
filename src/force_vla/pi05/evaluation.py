@@ -6,19 +6,25 @@ import numpy as np
 import torch
 
 from .training import prepare_batch
+from .phases import phase_name, phase_values
 
 
-def select_episode_windows(dataset, indices, per_episode):
+def select_episode_windows(dataset, indices, per_episode, phase_balanced=False):
     if per_episode < 1:
         raise ValueError("per_episode must be positive")
     episodes = np.asarray(dataset.table["episode_index"])
     frames = np.asarray(dataset.table["anchor_frame"])
+    phases = phase_values(dataset)
     selected = []
     for episode in np.unique(episodes[indices]):
         candidates = indices[episodes[indices] == episode]
         candidates = candidates[np.argsort(frames[candidates], kind="stable")]
-        positions = np.linspace(0, len(candidates) - 1, min(per_episode, len(candidates)), dtype=int)
-        selected.extend(candidates[positions].tolist())
+        groups = [candidates]
+        if phase_balanced:
+            groups = [candidates[phases[candidates] == value] for value in (0, 1)]
+        for group in groups:
+            positions = np.linspace(0, len(group) - 1, min(per_episode, len(group)), dtype=int)
+            selected.extend(group[positions].tolist())
     if not selected:
         raise ValueError("No evaluation windows")
     return np.asarray(selected, dtype=int)
@@ -40,8 +46,23 @@ def summarize_records(records, fields):
     return {"episode_macro_mean": means, "per_episode": per_episode, "records": records}
 
 
-def evaluate_loss(policy, dataset, indices, normalizer, tokenizer, device, per_episode):
-    selected = select_episode_windows(dataset, indices, per_episode)
+def summarize_phases(records, fields):
+    result = {}
+    for name in ("marked_critical", "unmarked"):
+        subset = [record for record in records if phase_name(record["anchor_phase"]) == name]
+        summary = summarize_records(subset, fields)
+        result[name] = {
+            "record_count": len(subset),
+            "window_count": len({(record["episode"], record["frame"]) for record in subset}),
+            "episode_count": len(summary["per_episode"]),
+            "episode_macro_mean": summary["episode_macro_mean"], "per_episode": summary["per_episode"],
+        }
+    return result
+
+
+def evaluate_loss(policy, dataset, indices, normalizer, tokenizer, device, per_episode, phase_balanced=False):
+    selected = select_episode_windows(dataset, indices, per_episode, phase_balanced)
+    phases = phase_values(dataset)
     records = []
     was_training = policy.training
     policy.eval()
@@ -56,6 +77,7 @@ def evaluate_loss(policy, dataset, indices, normalizer, tokenizer, device, per_e
                     raise ValueError("Nonfinite validation loss")
                 records.append({"episode": int(batch["episode_index"].item()),
                                 "frame": int(batch["anchor_frame"].item()),
+                                "anchor_phase": float(phases[index]),
                                 **{key: metrics[key] for key in ("loss", "action_loss", "torque_loss")}})
                 if len(records) % 32 == 0:
                     print(f"Validation windows: {len(records)}/{len(selected)}", flush=True)
@@ -63,6 +85,8 @@ def evaluate_loss(policy, dataset, indices, normalizer, tokenizer, device, per_e
         policy.train(was_training)
     result = summarize_records(records, ("loss", "action_loss", "torque_loss"))
     result.update(window_count=len(selected), episode_count=len(result["per_episode"]))
+    result["by_anchor_phase"] = summarize_phases(records, ("loss", "action_loss", "torque_loss"))
+    result["selection"] = "episode_and_phase" if phase_balanced else "episode"
     return result
 
 
@@ -106,7 +130,9 @@ def physical_metrics(actions, target, torque, target_torque):
 
 
 def evaluate_samples(policy, dataset, indices, normalizer, tokenizer, device, options):
-    selected = select_episode_windows(dataset, indices, options["inference_windows_per_episode"])
+    selected = select_episode_windows(dataset, indices, options["inference_windows_per_episode"],
+                                      options.get("phase_balanced_evaluation", False))
+    phases = phase_values(dataset)
     episodes = np.asarray(dataset.table["episode_index"])
     variants = options["history_variants"]
     if not set(variants) <= {"measured", "zero_nm", "other_episode"} or "measured" not in variants:
@@ -155,13 +181,17 @@ def evaluate_samples(policy, dataset, indices, normalizer, tokenizer, device, op
                                                    target["future_joint_torque"].numpy())
                         records[variant].append({"episode": int(episodes[index]),
                                                  "frame": int(target["anchor_frame"]), "seed": seed,
+                                                 "anchor_phase": float(phases[index]),
                                                  "sampling_ms": elapsed_ms, "preparation_ms": preparation_ms,
                                                  **metrics})
                 print(f"Sampled inference windows: {ordinal + 1}/{len(selected)}", flush=True)
     finally:
         policy.train(was_training)
-    fields = [key for key in records["measured"][0] if key not in ("episode", "frame", "seed")]
+    fields = [key for key in records["measured"][0] if key not in ("episode", "frame", "seed", "anchor_phase")]
     return {"window_count": len(selected), "inference_steps": options["inference_steps"],
             "seeds": options["inference_seeds"], "hardware_tested": False,
             "note": "Offline sampled outputs; not a task success rate or deployment approval. Latency includes first-call warmup.",
-            "variants": {variant: summarize_records(value, fields) for variant, value in records.items()}}
+            "selection": "episode_and_phase" if options.get("phase_balanced_evaluation", False) else "episode",
+            "variants": {variant: {**summarize_records(value, fields),
+                                   "by_anchor_phase": summarize_phases(value, fields)}
+                         for variant, value in records.items()}}

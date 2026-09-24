@@ -1,5 +1,7 @@
 # 独立环境与训练
 
+2026-09-21 新增独立token与双Transformer LoRA配置及关键阶段抽样/评估，见 [TA-VLA对齐说明](TA_VLA_ALIGNMENT.md)。下文默认配置和已完成训练记录仍指旧的fused adapter模型；新配置尚未启动训练。
+
 全部工作位于 `/data0/wx/force-VLA`。沿用 Evo 所用 PI0.5 的源码副本、视觉/语言骨干、action expert、流匹配目标及 LeRobot AdamW/余弦学习率预设。历史与未来力矩窗口通过独立离线SFT入口接入；不调用原Evo的RLT或部署流程。
 
 ## 环境

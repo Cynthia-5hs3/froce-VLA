@@ -18,9 +18,18 @@ class ForcePI05Config(PI05Config):
     torque_history_steps: int = 10
     future_torque_loss_weight: float = 0.1
     use_external_torque: bool = False
+    conditioning_layout: str = "fused"
+    lora_rank: int = 16
+    lora_alpha: float = 16.0
+    lora_expert_rank: int = 32
+    lora_expert_alpha: float = 32.0
 
     def __post_init__(self) -> None:
         super().__post_init__()
+        if self.conditioning_layout not in ("fused", "separate"):
+            raise ValueError("conditioning_layout must be fused or separate")
+        if min(self.lora_rank, self.lora_expert_rank) < 1 or min(self.lora_alpha, self.lora_expert_alpha) <= 0:
+            raise ValueError("LoRA rank and alpha must be positive")
         if not 0 < self.action_dim <= self.max_action_dim:
             raise ValueError("invalid action_dim")
         if self.compile_model or self.rtc_config is not None:

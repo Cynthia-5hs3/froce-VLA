@@ -16,10 +16,10 @@ import time
 from datacollection.start_teleop.gamepad_teleop import (
     AsyncReporter, GamepadTeleop, JoyReceiver, JoySidecars, keyboard, preflight, _interrupt,
 )
-from datacollection.start_teleop.gamepad_recording_31d import (
+from collection_31d.gamepad_recording_31d import (
     CriticalPhase, RecordingStore, command_from_debug, load_recording_config, validate_snapshot,
 )
-from datacollection.start_teleop.robot_31d import FrankaRobotiq31DRobot
+from collection_31d.robot_31d import FrankaRobotiq31DRobot
 from datacollection.start_teleop.gamepad_preview import CameraPreview
 
 

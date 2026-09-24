@@ -1,0 +1,8 @@
+{
+  "dataset": "data/franka_single_left_31d_v2",
+  "raw_data_modified": false,
+  "episode_indices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 16, 17, 18, 19, 21, 25, 27, 28, 29, 30, 31, 32, 34, 35],
+  "count": 28,
+  "selection_rule": "episode_success=true; finite 31D state/action; timestamp continuity checked; episode length >= 60",
+  "用途": "成功示范的窗口构建和SFT训练"
+}

@@ -6,8 +6,9 @@ that copy in `modeling_pi05_force.py`; no file under `/data0/sht/Evo-RLT` or
 the shared Conda environment is imported for mutation.
 
 The implementation adapts TA-VLA's `EXPERT_HIS_C_FUT` to PyTorch PI0.5.
-TA-VLA uses separate effort/state tokens; this experiment fuses them into one
-condition token as requested, while retaining PI0.5's state text prompt:
+TA-VLA uses separate effort/state tokens (DePost). The original experiment
+and existing 30k checkpoints use the default `conditioning_layout="fused"`,
+while retaining PI0.5's state text prompt:
 
 ```text
 state (10) ───────────────┐
@@ -61,5 +62,40 @@ The current first version uses measured joint torque only. External torque is
 retained in the window parquet for a later ablation and is deliberately
 rejected by `ForcePI05Config.use_external_torque` until a separate comparison
 is defined.
+
+## Paper-aligned configuration
+
+`configs/pi05_force_tavla_aligned.json` selects `conditioning_layout="separate"`:
+
+```text
+10 samples over 2 seconds × 7 Nm → MLP → torque token
+10D state → projection → state token
+decoder suffix = [torque token, state token, 50 noisy action/torque tokens]
+```
+
+The suffix block mask is `[1, 1, 1, 0, ..., 0]`. The torque token cannot see
+state/actions, the state token can see torque, and action tokens can see both.
+This follows the official `EXPERT_HIS_C_FUT` sequence and mask. Concatenation
+here is along the **token sequence**, not merging both features into one state
+token. Paper Sec. 4.1 also evaluates DePre, which concatenates torque into state,
+but Sec. 6 adopts DePost-1 Token. The legacy fused model is a separate experiment.
+
+The new `training.trainable="lora"` mode trains low-rank updates in both the
+PaliGemma language transformer and the action expert, plus the torque/state/flow
+projections and time MLP. Q/K/V/O and gate/up/down projections receive LoRA.
+Encoder rank/alpha=16/16 and expert rank/alpha=32/32 follow the official Gemma
+variant settings. Base transformer parameters and SigLIP stay frozen; this is
+parameter-efficient fine-tuning, not full fine-tuning. The local PI0.5/SigLIP
+freezing, two cameras and TCP state remain embodiment/implementation adaptations
+to the paper's main PI0 setup, not a bit-identical JAX reproduction.
+
+New token layout and LoRA parameters require a new training run. Do not load
+the old fused adapter as a complete separate-token model. Old configurations
+without `conditioning_layout` continue to restore as fused; the checkpoint
+loader requires an exact match of trainable parameter names.
+
+Sparse critical marks can select training windows and evaluation groups. They
+are not needed at inference and are not labels of physical contact/no-contact.
+See [alignment and phase evaluation](TA_VLA_ALIGNMENT.md).
 
 独立环境、数据准备、训练和保存/恢复步骤见 [训练说明](FORCE_TRAINING.md)。

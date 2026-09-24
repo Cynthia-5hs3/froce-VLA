@@ -36,14 +36,14 @@ robot:
     min: [0.10, -0.55, 0.05]
     max: [0.80, 0.50, 0.75]
   control_frequency: 30.0
-  dynamics_factor: 0.05
-  max_linear_velocity: 0.03
+  dynamics_factor: 0.04
+  max_linear_velocity: 0.05
   max_angular_velocity: 0.12
-  target_smoothing_alpha: 0.60
-  velocity_smoothing: 0.70
+  target_smoothing_alpha: 0.45
+  velocity_smoothing: 0.45
   smooth_angular_velocity: true
-  velocity_tracking_tau_s: 0.35
-  velocity_motion_duration_ms: 350
+  velocity_tracking_tau_s: 0.25
+  velocity_motion_duration_ms: 150
   min_command_position_delta: 0.0008
   min_command_rotation_delta: 0.005
   max_consecutive_motion_failures: 3

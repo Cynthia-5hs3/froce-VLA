@@ -15,7 +15,7 @@ from force_vla.pi05 import modeling_pi05_base as base
 from force_vla.pi05.configuration_pi05_force import ForcePI05Config
 from force_vla.pi05.modeling_pi05_force import ForcePI05Model, ForcePI05Policy, load_pi05_backbone
 from force_vla.pi05.preparation import ROOT, ForceNormalizer, fit_statistics, split_episodes
-from force_vla.pi05.training import TRAINABLE_PREFIXES, configure_trainable, save_checkpoint, restore_training_state
+from force_vla.pi05.training import TRAINABLE_PREFIXES, configure_trainable, load_delta, save_checkpoint, restore_training_state
 from force_vla.pi05.train_pi05_force import load_force_config
 
 
@@ -153,6 +153,61 @@ class ForceTrainingTests(unittest.TestCase):
                 torch.testing.assert_close(value, expected[name])
                 self.assertEqual(optimizer.state[value]["step"].item(), 1)
             self.assertAlmostEqual(scheduler.get_last_lr()[0], 0.0009)
+
+    def test_separate_tokens_attention_and_cached_decoder(self):
+        self.config.conditioning_layout = "separate"
+        with patch.object(base.PI05Pytorch, "__init__", tiny_init):
+            model = ForcePI05Model(self.config).eval()
+        noisy = torch.randn(2, 50, 39)
+        time = torch.tensor([.5, .8])
+        with torch.no_grad():
+            prefix = model.embed_prefix([], [], self.tokens, self.mask)
+            suffix = model.embed_suffix(noisy, time, self.state, self.history)
+            self.assertEqual(suffix[0].shape[1], 52)
+            attention = base.make_att_2d_masks(suffix[1], suffix[2])
+            self.assertFalse(attention[:, 0, 1:].any())
+            self.assertTrue(attention[:, 1, 0].all())
+            self.assertFalse(attention[:, 1, 2:].any())
+            self.assertTrue(attention[:, 2:, :2].all())
+            full = model._run_expert(*prefix, *suffix)
+            expected = torch.cat((model.flow_action_out_proj(full), model.torque_out_proj(full)), -1)
+            model.paligemma_with_expert.paligemma.model.language_model.config._attn_implementation = "eager"
+            _, cache = model.paligemma_with_expert(
+                attention_mask=model._prepare_attention_masks_4d(base.make_att_2d_masks(prefix[1], prefix[2])),
+                position_ids=prefix[1].cumsum(1) - 1, inputs_embeds=[prefix[0], None], use_cache=True)
+            actual = model.denoise_step(prefix[1], cache, noisy, time, self.state, self.history)
+            torch.testing.assert_close(actual, expected, atol=2e-5, rtol=2e-4)
+
+    def test_lora_both_transformers_receive_gradients_and_restore(self):
+        config = load_force_config("configs/pi05_force_tavla_aligned.json")
+        config.gradient_checkpointing = False
+        with patch.object(base.PI05Pytorch, "__init__", tiny_init):
+            policy = ForcePI05Policy(config)
+        parameters = configure_trainable(policy, "lora")
+        self.assertFalse(any("state_torque_fusion" in name for name in parameters))
+        self.assertFalse(any("q_proj.weight" in name for name in parameters))
+        batch = {"observation.language.tokens": self.tokens, "observation.language.attention_mask": self.mask,
+                 "observation.state": self.state, "joint_torque_history": self.history,
+                 "future_joint_torque": torch.randn(2, 50, 7), "action": torch.randn(2, 50, 10)}
+        optimizer = torch.optim.AdamW(parameters.values(), lr=.001)
+        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, .9)
+        with patch.object(policy, "_preprocess_images", return_value=([], [])):
+            loss, _ = policy(batch)
+            loss.backward()
+        for family in ("paligemma.model.language_model", "gemma_expert.model"):
+            gradients = [value.grad for name, value in parameters.items() if family in name and name.endswith("lora_up")]
+            self.assertTrue(any(gradient is not None and gradient.abs().sum() > 0 for gradient in gradients), family)
+        optimizer.step()
+        with tempfile.TemporaryDirectory(dir=ROOT / "outputs") as directory:
+            checkpoint = Path(directory) / "lora"
+            expected = {name: value.detach().clone() for name, value in parameters.items()}
+            save_checkpoint(checkpoint, policy, optimizer, scheduler, {"step": 1}, {"settings": {}})
+            with torch.no_grad():
+                for value in parameters.values():
+                    value.zero_()
+            load_delta(policy, checkpoint)
+            for name, value in parameters.items():
+                torch.testing.assert_close(value, expected[name])
 
 
 if __name__ == "__main__":

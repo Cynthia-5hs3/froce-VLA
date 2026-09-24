@@ -1,0 +1,13 @@
+{
+  "dataset": "data/franka_single_left_31d_v2",
+  "raw_data_modified": false,
+  "total_episodes": 36,
+  "sft_candidate": 28,
+  "failure_candidate": 1,
+  "excluded_controller_fault": 4,
+  "excluded_recording_fault": 3,
+  "excluded_total": 7,
+  "minimum_window_frames": 60,
+  "window_contract": "10 historical torque frames and 50 future action/torque frames at 30Hz; no episode crossing",
+  "note": "episode 23 is both a controller fault and shorter than the minimum window length"
+}

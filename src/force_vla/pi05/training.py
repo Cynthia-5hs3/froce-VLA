@@ -12,18 +12,25 @@ from transformers import AutoTokenizer
 from .preparation import ForceNormalizer, digest, load_contract, local_path, output_path, prepare, write_json
 from .train_pi05_force import build_force_policy, check_window_contract, load_force_config
 from .window_dataset import ForceVLAWindowDataset, attach_visual_language_inputs, collate_force_windows
+from .lora import install_lora
+from .phases import phase_values, training_epoch_order
 
 TRAINABLE_PREFIXES = ("torque_adapter.", "state_proj.", "state_torque_fusion.", "flow_in_proj.",
                       "flow_action_out_proj.", "torque_out_proj.")
 
 
 def configure_trainable(policy, mode):
-    if mode not in ("adapters", "expert"):
-        raise ValueError("trainable must be adapters or expert")
+    if mode not in ("adapters", "expert", "lora"):
+        raise ValueError("trainable must be adapters, expert or lora")
+    if mode == "lora":
+        install_lora(policy.model, policy.config.lora_rank, policy.config.lora_alpha,
+                     policy.config.lora_expert_rank, policy.config.lora_expert_alpha)
+        policy.model.paligemma_with_expert.train_expert_only = False
     policy.requires_grad_(False)
     for name, parameter in policy.model.named_parameters():
         if name.startswith(TRAINABLE_PREFIXES) or (mode == "expert" and
-                name.startswith(("paligemma_with_expert.gemma_expert.model.", "time_mlp_"))):
+                name.startswith(("paligemma_with_expert.gemma_expert.model.", "time_mlp_"))) or (
+                mode == "lora" and (name.endswith((".lora_down", ".lora_up")) or name.startswith("time_mlp_"))):
             parameter.requires_grad_(True)
     return {name: parameter for name, parameter in policy.named_parameters() if parameter.requires_grad}
 
@@ -116,6 +123,9 @@ def run_training(args, dataset):
     episodes = np.asarray(dataset.table["episode_index"])
     train_rows = np.flatnonzero(np.isin(episodes, contract["train_episodes"]))
     validation_rows = np.flatnonzero(np.isin(episodes, contract["validation_episodes"]))
+    phases = phase_values(dataset)
+    critical_fraction = options.get("critical_sample_fraction")
+    training_epoch_order(train_rows, options["seed"], phases, critical_fraction)
     destination = output_path(args.output)
     destination.mkdir(parents=True, exist_ok=False)
     torch.set_num_threads(4)
@@ -148,7 +158,7 @@ def run_training(args, dataset):
     policy.train()
     print(f"Training {len(train_rows)} windows; {run_info['trainable_parameters']} trainable parameters", flush=True)
     while progress["step"] < total_steps:
-        order = np.random.default_rng(options["seed"] + progress["epoch"]).permutation(train_rows)
+        order = training_epoch_order(train_rows, options["seed"] + progress["epoch"], phases, critical_fraction)
         if progress["cursor"] >= len(order):
             progress["epoch"] += 1
             progress["cursor"] = 0
@@ -168,7 +178,13 @@ def run_training(args, dataset):
             for prefix in TRAINABLE_PREFIXES:
                 gradients = [value.grad for name, value in parameters.items()
                              if name.startswith("model." + prefix) and value.grad is not None]
-                gradient_report[prefix] = sum(float(value.float().norm()) for value in gradients)
+                if any(name.startswith("model." + prefix) for name in parameters):
+                    gradient_report[prefix] = sum(float(value.float().norm()) for value in gradients)
+            if options["trainable"] == "lora":
+                for family in ("paligemma.model.language_model", "gemma_expert.model"):
+                    gradient_report[family] = sum(float(value.grad.float().norm())
+                        for name, value in parameters.items()
+                        if family in name and name.endswith(".lora_up") and value.grad is not None)
             if not all(value > 0 for value in gradient_report.values()):
                 raise RuntimeError(f"Missing conditioning/head gradients: {gradient_report}")
             write_json(destination / "gradients.json", gradient_report)
@@ -178,8 +194,18 @@ def run_training(args, dataset):
         progress["cursor"] += len(selected)
         metrics.update(step=progress["step"], grad_norm=float(gradient_norm), lr=scheduler.get_last_lr()[0])
         if progress["step"] % options["validation_every"] == 0 or progress["step"] == total_steps:
-            metrics["validation"] = evaluate(policy, dataset, validation_rows, normalizer, tokenizer,
-                                              args.device, 1 if args.smoke else options["validation_batches"])
+            if options.get("phase_balanced_evaluation", False):
+                from .evaluation import evaluate_loss
+
+                validation = evaluate_loss(policy, dataset, validation_rows, normalizer, tokenizer,
+                    args.device, 1 if args.smoke else options.get("validation_windows_per_episode", 16),
+                    phase_balanced=True)
+                write_json(destination / f"validation-{progress['step']:06d}.json", validation)
+                metrics["validation"] = validation["episode_macro_mean"]
+                metrics["validation_by_anchor_phase"] = validation["by_anchor_phase"]
+            else:
+                metrics["validation"] = evaluate(policy, dataset, validation_rows, normalizer, tokenizer,
+                                                  args.device, 1 if args.smoke else options["validation_batches"])
         with (destination / "metrics.jsonl").open("a") as stream:
             stream.write(json.dumps(metrics) + "\n")
         print(json.dumps({key: value for key, value in metrics.items() if key != "loss_per_dim"}), flush=True)

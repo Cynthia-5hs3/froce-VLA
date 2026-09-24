@@ -1,0 +1,8 @@
+{
+  "dataset": "data/franka_single_left_31d_v2",
+  "raw_data_modified": false,
+  "episode_indices": [11],
+  "count": 1,
+  "reasons": {"11": "operator marked failure"},
+  "用途": "保留为失败/恢复评估，不直接作为成功SFT目标"
+}

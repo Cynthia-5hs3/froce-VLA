@@ -51,7 +51,7 @@ class ForcePI05Model(PI05Pytorch):
             nn.Linear(2 * width, width),
             nn.SiLU(),
             nn.Linear(width, width),
-        )
+        ) if config.conditioning_layout == "fused" else None
         self.flow_in_proj = nn.Linear(flow_dim, width)
         self.flow_action_out_proj = nn.Linear(width, config.max_action_dim)
         self.torque_out_proj = nn.Linear(width, config.torque_dim)
@@ -88,6 +88,12 @@ class ForcePI05Model(PI05Pytorch):
         torque_token = self.torque_adapter(torque_history)
         return self.state_torque_fusion(torch.cat((state_token, torque_token), dim=-1))
 
+    def _conditioning_tokens(self, state: Tensor, torque_history: Tensor) -> Tensor:
+        if self.config.conditioning_layout == "fused":
+            return self._conditioning_token(state, torque_history)[:, None, :]
+        self._validate_conditioning(state, torque_history)
+        return torch.stack((self.torque_adapter(torque_history), self.state_proj(state)), dim=1)
+
     def embed_suffix(
         self,
         noisy_actions_and_torque: Tensor,
@@ -95,7 +101,7 @@ class ForcePI05Model(PI05Pytorch):
         state: Tensor,
         torque_history: Tensor,
     ) -> tuple[Tensor, Tensor, Tensor, Tensor]:
-        """Build ``[state+torque token, action/torque flow tokens]`` for the expert."""
+        """Prepend either the legacy fused token or separate torque/state tokens."""
         expected_flow_dim = self.config.max_action_dim + self.config.torque_dim
         if noisy_actions_and_torque.ndim != 3 or noisy_actions_and_torque.shape[-1] != expected_flow_dim:
             raise ValueError(
@@ -121,7 +127,7 @@ class ForcePI05Model(PI05Pytorch):
             return F.silu(value)
 
         time_emb = self._apply_checkpoint(time_mlp, time_emb)
-        condition_token = self._conditioning_token(state, torque_history)[:, None, :]
+        condition_token = self._conditioning_tokens(state, torque_history)
         embeddings = torch.cat((condition_token, action_torque_emb), dim=1)
         batch_size = embeddings.shape[0]
         pad_masks = torch.ones(
@@ -131,7 +137,7 @@ class ForcePI05Model(PI05Pytorch):
             device=embeddings.device,
         )
         att_masks = torch.tensor(
-            [1, 1, *([0] * (self.config.chunk_size - 1))],
+            [*([1] * (condition_token.shape[1] + 1)), *([0] * (self.config.chunk_size - 1))],
             dtype=embeddings.dtype,
             device=embeddings.device,
         )[None, :].expand(batch_size, -1)

@@ -62,6 +62,8 @@ class ForceVLAWindowDataset(Dataset):
             "task": str(self.table["task_text"][index].as_py()),
             "episode_index": int(self.table["episode_index"][index].as_py()),
             "anchor_frame": int(self.table["anchor_frame"][index].as_py()),
+            "anchor_phase": float(self.table["anchor_phase"][index].as_py())
+            if "anchor_phase" in self.table.column_names else 0.0,
         }
         if self.include_images:
             for camera in ("base", "left_wrist"):
@@ -84,6 +86,7 @@ def collate_force_windows(items: list[dict[str, Any]]) -> dict[str, Any]:
         "task": [item["task"] for item in items],
         "episode_index": torch.tensor([item["episode_index"] for item in items], dtype=torch.long),
         "anchor_frame": torch.tensor([item["anchor_frame"] for item in items], dtype=torch.long),
+        "anchor_phase": torch.tensor([item.get("anchor_phase", 0.0) for item in items], dtype=torch.float32),
     }
     for key in ("base_video_path", "left_wrist_video_path"):
         if key in items[0]:

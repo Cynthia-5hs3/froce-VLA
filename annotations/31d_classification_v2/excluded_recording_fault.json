@@ -1,0 +1,12 @@
+{
+  "dataset": "data/franka_single_left_31d_v2",
+  "raw_data_modified": false,
+  "episode_indices": [20, 26, 33],
+  "count": 3,
+  "reasons": {
+    "20": "camera/recording interval exceeded 1.5 frame periods",
+    "26": "camera/recording interval exceeded 1.5 frame periods",
+    "33": "camera/recording interval exceeded 1.5 frame periods"
+  },
+  "用途": "从SFT中排除，保留录制质量问题追溯"
+}

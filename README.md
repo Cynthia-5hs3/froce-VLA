@@ -8,6 +8,82 @@
 
 第一轮3000步训练已完成，模型位于 `outputs/pi05_force_sft_v1/checkpoint-003000`，使用独立Conda前缀 `env/`。旧训练入口 `scripts/train_force_pi05.sh` 保留；新运行必须指定未使用的输出目录。数据划分、归一化、环境检查及保存/恢复见 [训练说明](docs/FORCE_TRAINING.md)。旧 `src/lab.py smoke` 仅为早期六维MLP测试。
 
+## 新样本采集、训练和推理
+
+下面的流程只使用 `/data0/wx/force-VLA` 的代码和输出目录。采集命令会连接真实机器人，因此必须先确认急停、工作区和相机状态；它不会写入 `/data0/sht/Evo-RLT`。采集使用原 Evo-RLT 的硬件依赖，但输出固定写入新的 `data/franka_single_left_31d_v2`，避免与已清洗的旧批次混用。
+
+### 1. 启动31D手柄遥操采集
+
+在机器人主机的交互终端执行，不要使用 `scripts/run.sh`（该启动器会隐藏硬件设备）：
+
+```bash
+cd /data0/wx/force-VLA
+env -u PYTHONPATH \
+  PYTHONPATH=/data0/wx/force-VLA/src:/data0/wx/force-VLA/reference/evo-rlt:/data0/wx/force-VLA/reference/evo-rlt/src \
+  CUDA_VISIBLE_DEVICES='' \
+  /data0/wx/force-VLA/env/bin/python -m collection_31d.gamepad_record_31d \
+  --config /data0/wx/force-VLA/configs/collection_31d/single_left_gamepad_31d.yaml \
+  --execute \
+  --dataset-root /data0/wx/force-VLA/data/franka_single_left_31d_v2 \
+  --task 'Place the white lid firmly onto the jig.'
+```
+
+启动后先按 `s` 启用遥操，再按 `n` 开始一条示范。`RB` 切换关键阶段标记；完成后按 `y` 保存成功，按 `x` 丢弃当前示范，异常或失败示范按脚本提示保留失败标记。结束采集按 `c` 或 `Esc`；未提交的轨迹不会作为完整样本保存。若发生录制故障，先退出程序，再对同一目录使用 `--resume` 恢复；正常新增批次不要使用 `--resume`。
+
+采集完成后，将成功、失败和控制中断分别记录到 `annotations/31d_classification_v2/`。成功修正示范可用于SFT；只有失败结果、没有正确修正动作的轨迹不要直接作为成功SFT目标，但可作为失败/恢复评估数据保留。
+
+### 2. 重建窗口和数据合同
+
+新旧数据混训前必须重新构建窗口、划分episode和计算训练集归一化统计。默认只把新批次的成功样本写入新窗口目录：
+
+```bash
+cd /data0/wx/force-VLA
+bash scripts/run.sh python src/build_force_vla_windows.py \
+  --dataset-root data/franka_single_left_31d_v2 \
+  --classification annotations/31d_classification_v2/sft_candidate.json \
+  --output-dir outputs/force_vla_31d_windows_v2 \
+  --future-steps 50 --fps 30
+bash scripts/run.sh python -m force_vla.pi05.train_pi05_force \
+  --prepare \
+  --config configs/pi05_force_tavla_aligned.json \
+  --windows outputs/force_vla_31d_windows_v2/windows.parquet \
+  --output outputs/pi05_force_prepared_v2
+```
+
+若要混合旧的101条成功样本和新样本，应先生成合并后的窗口文件，再把该文件同时传给 `--windows`；不能只替换原始数据目录，也不能用旧 `data_contract.json` 恢复新增数据后的训练。
+
+### 3. 训练力反馈VLA
+
+下面从本地 PI0.5 SFT 基座初始化，使用LoRA训练力矩适配器、状态融合和相关输出层；不会修改 `models/pi05_sft`。将 `--windows` 和 `--contract` 指向同一批次对应的文件，并使用新的输出目录：
+
+```bash
+cd /data0/wx/force-VLA
+bash scripts/train_force_pi05.sh \
+  --train \
+  --config configs/pi05_force_tavla_aligned.json \
+  --windows outputs/force_vla_31d_windows_v2/windows.parquet \
+  --contract outputs/pi05_force_prepared_v2/data_contract.json \
+  --output outputs/pi05_force_new_run
+```
+
+训练使用视觉、任务文本、10D状态、过去2秒10个7D `tau_J` 力矩历史，预测未来50步10D动作并计算未来力矩辅助损失。训练前可把 `--steps 30000` 加入命令覆盖配置中的步数；新数据合同改变后不要直接使用旧checkpoint的普通 `--resume`，应从 PI0.5基座开始新的混合数据训练，或单独实现经过验证的增量恢复。
+
+### 4. 真机推理测试
+
+训练完成后先使用 `--mode observe` 验证相机、状态和模型加载，再执行动作。下面的命令会先打开夹爪，输入 `ARM` 后持续推理；按 `q`、`x` 或 `Esc` 停止。`FORCE_VLA_HARDWARE=1` 是硬件访问开关，部署命令不要在机器人未准备好时执行：
+
+```bash
+cd /data0/wx/force-VLA
+FORCE_VLA_HARDWARE=1 bash scripts/run_force_realtime.sh \
+  --mode execute --allow-hardware --startup-open --continuous \
+  --checkpoint outputs/pi05_force_new_run/checkpoint-030000 \
+  --robot-config configs/deployment_force_vla_speed_test.yaml \
+  --device cuda --rate-hz 8 --inference-steps 10 \
+  --log outputs/realtime_execute_new_run.jsonl
+```
+
+推理的 `checkpoint` 必须替换为实际保存的完整checkpoint目录。模型预测的未来力矩只用于辅助输出和日志，不直接发送为力控命令；实时观测异常会暂停重试，超过安全超时才退出。真机测试前应先用短时 `--max-steps 1` 或 `3` 验证方向、幅度和夹爪行为，再使用 `--continuous`。
+
 ## 当前31D采集与仓库范围（2026-09-15）
 
 本项目 GitHub：`https://github.com/Cynthia-5hs3/froce-VLA`（远端名称为 `froce-VLA`）。
@@ -15,8 +91,8 @@
 `third_party/lerobot_6674e36/tests/data/` 的上游测试样本仅保留本地，不纳入Git；其中LFS文件仅有来源归档内的指针文本，没有对应实体。测试源码仍保留，运行依赖这些样本的上游测试前需另行从上游获取实体；来源清单描述的是下载归档，不代表测试样本已上传至本仓库。
 克隆仓库不会自动获得上述本地资产；原文件位置见下表、`configs/collection_31d/PROVENANCE.md` 和 `provenance/`。运行 `scripts/run.sh` 前需独立准备本地环境和所需数据、模型及参考目录。
 
-最新数据为 `data/franka_single_left_31d`，复制自 `/data0/sht/Evo-RLT/datacollection/franka_robotiq_single_left/rollout_dataset_franky_31d`。
-元信息记录184条、177384帧、30Hz，两路RGB视频、31D状态与10D动作，包含成功、失败及控制中断记录；分类清单保留原始数据不变，训练前仍需完成视频、时间戳和力矩同步检查。
+最新清洗后的31D数据曾位于 `data/franka_single_left_31d`，复制自 `/data0/sht/Evo-RLT/datacollection/franka_robotiq_single_left/rollout_dataset_franky_31d`；该目录及其数据文件已按重新采集要求清理，不作为当前可用数据资产。新采样应写入上文的 `data/franka_single_left_31d_v2`。
+历史元信息记录184条、177384帧、30Hz，两路RGB视频、31D状态与10D动作，包含成功、失败及控制中断记录；分类清单保留原始追溯信息，训练前仍需完成视频、时间戳和力矩同步检查。
 31D状态：TCP位置3 + rot6d姿态6 + 夹爪宽度1（米）+ measured joint torque 7（Nm）+ external joint torque 7（Nm）+ joint velocity 7（rad/s）。动作的夹爪通道为开度比例。
 对齐论文力矩路线时，按时间戳构建过去约2秒的10个力矩样本以及未来50步动作/力矩目标，不跨episode边界；采集时间同步与可用窗口仍需验证。
 
@@ -35,11 +111,11 @@
 
 | 本目录副本                                                                        | 原文件路径                                                                                 | 数据内容与用途                                                                          |
 | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
-| `datasets/raw/franka_single_left_rgb_block`                                       | `/data0/sht/Evo-RLT/datasets/raw/franka_single_left_rgb_block`                             | 最新100条人工示范、69,481帧；用于带力SFT。文本为`111`，需人工确认标注                   |
-| `datasets/raw/gamepad_task3_20260909_online_c20_full`                             | `/data0/sht/Evo-RLT/datasets/raw/gamepad_task3_20260909_online_c20_full`                   | 113条RLT、55,672帧，81成功/32失败，含人工介入；用于接触动态学习及后续RL。未擅自选取80条 |
-| `datasets/raw/franka_single_left_gamepad_task3__raw`                              | `/data0/sht/Evo-RLT/datasets/raw/franka_single_left_gamepad_task3__raw`                    | 此前102条29D原始示范、81,052帧；保留已有SFT的数据来源及力通道                           |
-| `datasets/sft_reference/franka_single_left_gamepad_task3_20260908_split_seed1000` | `/data0/sht/Evo-RLT/datasets/sft/franka_single_left_gamepad_task3_20260908_split_seed1000` | 旧SFT的92/10训练验证划分；10D状态无力，仅作复现基线参考                                 |
-| `reference/rlt/replay.sqlite3`                                                    | `/data0/sht/Evo-RLT/outputs/ac/gamepad_task3_20260909_online_c20_full/replay.sqlite3`      | 26,427条transition；压缩状态不含原始力，供RLT流程参考                                   |
+| `data/franka_single_left_31d_v2`                                                  | 当前目录新采集目标                                                                  | 新31D成功/失败示范；成功修正轨迹用于SFT，失败轨迹用于恢复评估和后续筛选                 |
+| `outputs/force_vla_31d_windows_v2`                                                | 由 `data/franka_single_left_31d_v2` 构建                                              | 过去10帧力矩到未来50步动作/力矩的训练窗口                                           |
+| `reference/rlt/replay.sqlite3`                                                    | `/data0/sht/Evo-RLT/outputs/ac/gamepad_task3_20260909_online_c20_full/replay.sqlite3` | 26,427条transition；压缩状态不含原始力，供RLT流程参考                                   |
+
+此前复制到 `datasets/` 的旧SFT/RLT数据已删除，不应按旧表格路径运行；原始来源路径只保留在历史 provenance 和文档中，当前训练以 `data/franka_single_left_31d_v2` 为准。
 
 RLT及旧SFT的任务文本是`Place the white lid firmly onto the jig.`。失败轨迹不能全部作为成功示范做行为克隆。
 新标注写入`annotations/`，不改原始副本。

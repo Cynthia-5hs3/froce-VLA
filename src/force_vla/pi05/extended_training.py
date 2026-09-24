@@ -15,6 +15,7 @@ from .preparation import ForceNormalizer, digest, local_path, output_path, write
 from .train_pi05_force import build_force_policy, load_force_config
 from .training import configure_trainable, load_delta, prepare_batch, restore_training_state, save_checkpoint
 from .window_dataset import ForceVLAWindowDataset
+from .phases import phase_values, training_epoch_order
 
 
 def continuation_scheduler(optimizer, options, steps):
@@ -37,7 +38,7 @@ def continuation_scheduler(optimizer, options, steps):
     return torch.optim.lr_scheduler.LambdaLR(optimizer, multiplier)
 
 
-def advance_rows(indices, progress, count, seed):
+def advance_rows(indices, progress, count, seed, phases=None, critical_fraction=None):
     if not len(indices) or count < 1 or not 0 <= progress["cursor"] <= len(indices):
         raise ValueError("Invalid sample cursor or batch size")
     selected = []
@@ -45,7 +46,7 @@ def advance_rows(indices, progress, count, seed):
         if progress["cursor"] >= len(indices):
             progress["epoch"] += 1
             progress["cursor"] = 0
-        order = np.random.default_rng(seed + progress["epoch"]).permutation(indices)
+        order = training_epoch_order(indices, seed + progress["epoch"], phases, critical_fraction)
         take = min(count - len(selected), len(order) - progress["cursor"])
         selected.extend(order[progress["cursor"]:progress["cursor"] + take].tolist())
         progress["cursor"] += take
@@ -97,6 +98,7 @@ def main():
         settings["training"][key] = options[key]
     settings["training"].pop("validation_batches", None)
     dataset = ForceVLAWindowDataset(settings["dataset_windows"], include_images=True)
+    phases = phase_values(dataset)
     contract = previous["data_contract"]
     if digest(dataset.parquet_path) != contract["sha256"]:
         raise ValueError("Window data changed since the source run")
@@ -167,7 +169,8 @@ def main():
 
     def evaluation_now(include_samples):
         result = evaluate_loss(policy, dataset, validation_rows, normalizer, tokenizer, args.device,
-                               options["validation_windows_per_episode"])
+                               options["validation_windows_per_episode"],
+                               phase_balanced=settings["training"].get("phase_balanced_evaluation", False))
         result["step"] = progress["step"]
         write_json(destination / f"validation-{progress['step']:06d}.json", result)
         checkpoint = checkpoint_now()
@@ -181,6 +184,7 @@ def main():
                           "windows": result["window_count"]}), flush=True)
         if include_samples:
             evaluation_options = dict(options)
+            evaluation_options["phase_balanced_evaluation"] = settings["training"].get("phase_balanced_evaluation", False)
             if progress["step"] == options["total_steps"]:
                 evaluation_options["inference_windows_per_episode"] = options.get(
                     "final_inference_windows_per_episode", options["inference_windows_per_episode"])
@@ -209,7 +213,8 @@ def main():
         dimension_losses = np.zeros(10)
         next_progress = dict(progress)
         for micro_step in range(options["gradient_accumulation_steps"]):
-            selected = advance_rows(train_rows, next_progress, options["micro_batch_size"], settings["training"]["seed"])
+            selected = advance_rows(train_rows, next_progress, options["micro_batch_size"], settings["training"]["seed"],
+                                    phases, settings["training"].get("critical_sample_fraction"))
             batch = prepare_batch(dataset, selected, normalizer, tokenizer, args.device)
             loss, output = policy(batch)
             if not torch.isfinite(loss):

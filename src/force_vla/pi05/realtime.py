@@ -3,14 +3,12 @@
 from __future__ import annotations
 
 import argparse
-from collections import deque
 import json
 import os
 from pathlib import Path
 import select
 import sys
 import termios
-import threading
 import time
 import tty
 
@@ -19,30 +17,36 @@ import torch
 import yaml
 
 from .preparation import local_path
-from .teleop_assist import XboxAssist, assist_action_from_state
+from .temporal import HISTORY_OFFSETS, SAMPLE_RATE_HZ
 from .training import restore_for_inference
 
 
 ROOT = Path(__file__).resolve().parents[3]
 TASK = "Place the white lid firmly onto the jig."
 ABORT_KEYS = frozenset(("q", "x", "\x1b"))
+RESTART_KEYS = frozenset(("r",))
 
 
 def is_abort_key(key: str) -> bool:
     return key in ABORT_KEYS
 
 
+def is_restart_key(key: str) -> bool:
+    return key in RESTART_KEYS
+
+
 class KeyboardStop:
     def __init__(self):
         self._fd = None
         self._attributes = None
+        self._restart_requested = False
 
     def __enter__(self):
         if sys.stdin.isatty():
             self._fd = sys.stdin.fileno()
             self._attributes = termios.tcgetattr(self._fd)
             tty.setcbreak(self._fd)
-            print("Press q, x, or Esc to stop the loop.", flush=True)
+            print("Press r to restart inference; q, x, or Esc stops the loop.", flush=True)
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -53,7 +57,18 @@ class KeyboardStop:
         if self._fd is None:
             return False
         readable, _, _ = select.select([sys.stdin], [], [], 0)
-        return bool(readable and is_abort_key(sys.stdin.read(1)))
+        if not readable:
+            return False
+        key = sys.stdin.read(1).lower()
+        if is_restart_key(key):
+            self._restart_requested = True
+            return False
+        return is_abort_key(key)
+
+    def restart_requested(self) -> bool:
+        requested = self._restart_requested
+        self._restart_requested = False
+        return requested
 
     def wait(self, duration_s: float) -> bool:
         deadline = time.monotonic() + max(0.0, duration_s)
@@ -62,80 +77,6 @@ class KeyboardStop:
                 return True
             time.sleep(min(0.01, max(0.0, deadline - time.monotonic())))
         return False
-
-
-class AsyncInferenceWorker:
-    def __init__(self, robot, policy, task, normalizer, tokenizer, device, inference_steps,
-                 max_position_jump, max_rotation_jump, rate_hz):
-        self.robot = robot
-        self.policy = policy
-        self.task = task
-        self.normalizer = normalizer
-        self.tokenizer = tokenizer
-        self.device = device
-        self.inference_steps = inference_steps
-        self.max_position_jump = max_position_jump
-        self.max_rotation_jump = max_rotation_jump
-        self.period_s = 1.0 / rate_hz
-        self.stop_event = threading.Event()
-        self.lock = threading.Lock()
-        self.latest = None
-        self.error = None
-        self.sequence = 0
-        self.thread = threading.Thread(target=self._run, name="force-vla-inference", daemon=True)
-
-    def start(self):
-        self.thread.start()
-
-    def _run(self):
-        history = deque(maxlen=10)
-        try:
-            snapshot = self.robot.get_rollout_snapshot()
-            for _ in range(10):
-                history.append(snapshot.joint_torques.copy())
-            next_deadline = time.monotonic()
-            while not self.stop_event.is_set():
-                if self.stop_event.wait(max(0.0, next_deadline - time.monotonic())):
-                    return
-                snapshot = self.robot.get_rollout_snapshot()
-                history.append(snapshot.joint_torques.copy())
-                action, predicted_torque, inference_ms = infer_one(
-                    self.policy, snapshot, np.stack(history), self.task,
-                    self.normalizer, self.tokenizer, self.device, self.inference_steps,
-                )
-                safe = safe_action(
-                    action, snapshot, self.robot.config,
-                    self.max_position_jump, self.max_rotation_jump,
-                )
-                with self.lock:
-                    self.sequence += 1
-                    self.latest = {
-                        "sequence": self.sequence,
-                        "snapshot": snapshot,
-                        "action": safe,
-                        "predicted_torque": predicted_torque,
-                        "inference_ms": inference_ms,
-                    }
-                next_deadline = max(next_deadline + self.period_s, time.monotonic())
-        except BaseException as error:
-            with self.lock:
-                self.error = error
-            self.stop_event.set()
-
-    def get_latest(self):
-        with self.lock:
-            if self.error is not None:
-                raise RuntimeError("asynchronous inference failed") from self.error
-            return self.latest
-
-    def close(self):
-        self.request_stop()
-        self.thread.join(timeout=10.0)
-        if self.thread.is_alive():
-            raise RuntimeError("asynchronous inference worker did not stop")
-
-    def request_stop(self):
-        self.stop_event.set()
 
 
 def load_robot_config(path: str):
@@ -232,7 +173,7 @@ def safe_action(action, snapshot, robot_config, max_position_jump, max_rotation_
     return value.astype(np.float32)
 
 
-def infer_one(policy, snapshot, history, task, normalizer, tokenizer, device, num_steps):
+def infer_chunk(policy, snapshot, history, task, normalizer, tokenizer, device, num_steps):
     batch = prepare_realtime_batch(snapshot, history, task, normalizer, tokenizer, device)
     images, image_masks = policy._preprocess_images(batch)
     started = time.perf_counter()
@@ -244,9 +185,26 @@ def infer_one(policy, snapshot, history, task, normalizer, tokenizer, device, nu
     if device.type == "cuda":
         torch.cuda.synchronize(device)
     elapsed_ms = 1000 * (time.perf_counter() - started)
-    action = normalizer.transform(output[0, 0, :10], "action", inverse=True).cpu().numpy()
-    predicted_torque = normalizer.transform(output[0, 0, -7:], "torque", inverse=True).cpu().numpy()
+    action = normalizer.transform(output[0, :, :10], "action", inverse=True).cpu().numpy()
+    predicted_torque = normalizer.transform(output[0, :, -7:], "torque", inverse=True).cpu().numpy()
     return action, predicted_torque, elapsed_ms
+
+
+def infer_one(policy, snapshot, history, task, normalizer, tokenizer, device, num_steps):
+    actions, torques, elapsed_ms = infer_chunk(
+        policy, snapshot, history, task, normalizer, tokenizer, device, num_steps)
+    return actions[0], torques[0], elapsed_ms
+
+
+def validate_temporal_contract(checkpoint):
+    run_info = json.loads((checkpoint / "run.json").read_text())
+    windows = local_path(run_info["data_contract"]["windows"])
+    metadata = json.loads(windows.with_name("metadata.json").read_text())
+    if (tuple(metadata["history_offsets_frames"]) != HISTORY_OFFSETS
+            or metadata["source_info"]["fps"] != SAMPLE_RATE_HZ
+            or metadata["future_action_offsets_frames"] != list(range(50))
+            or metadata["future_torque_offsets_frames"] != list(range(1, 51))):
+        raise ValueError("Checkpoint temporal contract differs from the real-time controller")
 
 
 def run(args):
@@ -260,6 +218,7 @@ def run(args):
     if args.mode != "check":
         robot_config = load_robot_config(str(config_path))
     checkpoint = local_path(args.checkpoint)
+    validate_temporal_contract(checkpoint)
     policy, normalizer = restore_for_inference(checkpoint, device=str(device))
     tokenizer_path = local_path(json.loads((checkpoint / "force_config.json").read_text())["tokenizer"])
     from transformers import AutoTokenizer
@@ -268,7 +227,10 @@ def run(args):
     task = load_task(str(config_path))
     if args.mode == "check":
         print(json.dumps({"checkpoint": str(checkpoint), "task": task, "device": str(device),
-                          "hardware_connected": False, "action_dim": 10, "torque_history": [10, 7]}, indent=2))
+                          "hardware_connected": False, "action_dim": 10, "torque_history": [10, 7],
+                          "history_offsets_seconds": [offset / SAMPLE_RATE_HZ for offset in HISTORY_OFFSETS],
+                          "control_hz": SAMPLE_RATE_HZ, "inference_request_hz": args.rate_hz,
+                          "action_execution": "timestamped_chunks"}, indent=2))
         return 0
 
     if not args.allow_hardware:
@@ -276,197 +238,27 @@ def run(args):
     from collection_31d.robot_31d import FrankaRobotiq31DRobot
 
     robot = FrankaRobotiq31DRobot(robot_config)
-    history = deque(maxlen=10)
     log_path = Path(args.log).resolve() if args.log else None
     stream = log_path.open("a", encoding="utf-8") if log_path else None
-    stopped_by_user = False
     try:
         print(f"Connecting observation path to {robot_config.robot_ip}; no robot motion is requested.", flush=True)
         robot.connect()
         if args.startup_open:
             opened = robot.prepare_for_control()
             print(f"Startup gripper open fraction: {opened:.3f}", flush=True)
-        snapshot = robot.get_rollout_snapshot()
-        for _ in range(10):
-            history.append(snapshot.joint_torques.copy())
         if args.mode == "execute":
             if not sys.stdin.isatty():
                 raise PermissionError("--execute requires an interactive terminal")
             if input("Type ARM to enable one-step/limited actions: ") != "ARM":
                 raise PermissionError("arming cancelled")
-        if args.async_inference:
-            worker = AsyncInferenceWorker(
-                robot, policy, task, normalizer, tokenizer, device, args.inference_steps,
-                args.max_position_jump, args.max_rotation_jump, args.rate_hz,
-            )
-            worker.start()
-            assist = None
-            if args.teleop_assist:
-                assist = XboxAssist(
-                    args.teleop_device,
-                    linear_speed=args.teleop_linear_speed,
-                    angular_speed=args.teleop_angular_speed,
-                )
-                try:
-                    assist.start()
-                except BaseException:
-                    worker.close()
-                    raise
-                print("Xbox assist enabled: sticks/buttons override the current model target while held.", flush=True)
-            try:
-                with KeyboardStop() as keyboard:
-                    step = 0
-                    while args.continuous or step < args.max_steps:
-                        if keyboard.requested():
-                            print("Keyboard stop requested; stopping worker and robot.", flush=True)
-                            stopped_by_user = True
-                            break
-                        result = worker.get_latest()
-                        if result is None:
-                            if keyboard.wait(0.01):
-                                print("Keyboard stop requested; stopping worker and robot.", flush=True)
-                                stopped_by_user = True
-                                break
-                            continue
-                        assist_command = assist.command() if assist is not None else None
-                        model_action = np.asarray(result["action"], dtype=np.float32).copy()
-                        action = model_action.copy()
-                        if assist_command is not None and assist_command.active:
-                            state = robot.get_control_state()
-                            action = assist_action_from_state(
-                                state, action, assist_command, 1.0 / args.rate_hz,
-                            )
-                            action[:3] = np.clip(
-                                action[:3], np.asarray(robot_config.workspace_min),
-                                np.asarray(robot_config.workspace_max),
-                            )
-                        robot.send_action(action)
-                        snapshot = result["snapshot"]
-                        command_debug = robot.command_debug_snapshot()
-                        motion_events = (
-                            robot.drain_motion_events()
-                            if hasattr(robot, "drain_motion_events") else []
-                        )
-                        record = {
-                            "step": step,
-                            "inference_sequence": result["sequence"],
-                            "mode": args.mode,
-                            "inference_ms": result["inference_ms"],
-                            "measured_tau_J": snapshot.joint_torques.tolist(),
-                            "measured_gripper_open_fraction": float(snapshot.gripper_open_fraction),
-                            "predicted_tau_J": result["predicted_torque"].tolist(),
-                            "model_action": model_action.tolist(),
-                            "model_xyz": model_action[:3].tolist(),
-                            "model_gripper": float(model_action[9]),
-                            "action": action.tolist(),
-                            "sent_xyz": action[:3].tolist(),
-                            "sent_gripper": float(action[9]),
-                            "camera_timestamps": snapshot.image_timestamps,
-                            "motion_sent": bool(command_debug.get("motion_command_sent", True)),
-                            "command_debug": command_debug,
-                            "motion_events": motion_events,
-                            "teleop_active": bool(assist_command is not None and assist_command.active),
-                        }
-                        if assist_command is not None:
-                            record.update({
-                                "teleop_linear_velocity": assist_command.linear_velocity.tolist(),
-                                "teleop_angular_velocity": assist_command.angular_velocity.tolist(),
-                                "teleop_gripper_target": assist_command.gripper_target,
-                            })
-                        if stream:
-                            stream.write(json.dumps(record, ensure_ascii=False) + "\n")
-                            stream.flush()
-                        print(json.dumps({key: record[key] for key in (
-                            "step", "inference_sequence", "inference_ms", "model_xyz",
-                            "model_gripper", "sent_xyz", "sent_gripper", "motion_sent",
-                            "teleop_active",
-                        )}), flush=True)
-                        step += 1
-                        if keyboard.wait(1.0 / args.rate_hz):
-                            print("Keyboard stop requested; stopping worker and robot.", flush=True)
-                            stopped_by_user = True
-                            break
-            finally:
-                worker.request_stop()
-                if assist is not None:
-                    assist.close()
-                try:
-                    robot.stop()
-                finally:
-                    worker.close()
-            return 0
-        with KeyboardStop() as keyboard:
-            step = 0
-            while args.continuous or step < args.max_steps:
-                if keyboard.requested():
-                    print("Keyboard stop requested; stopping robot.", flush=True)
-                    robot.stop()
-                    stopped_by_user = True
-                    break
-                if step and not args.continuous:
-                    time.sleep(max(0.0, 1.0 / args.rate_hz))
-                snapshot = robot.get_rollout_snapshot()
-                history.append(snapshot.joint_torques.copy())
-                action, predicted_torque, inference_ms = infer_one(
-                    policy, snapshot, np.stack(history), task, normalizer, tokenizer, device, args.inference_steps
-                )
-                if keyboard.requested():
-                    print("Keyboard stop requested; stopping robot.", flush=True)
-                    robot.stop()
-                    stopped_by_user = True
-                    break
-                safe = safe_action(action, snapshot, robot_config, args.max_position_jump, args.max_rotation_jump)
-                record = {"step": step, "mode": args.mode, "inference_ms": inference_ms,
-                          "measured_tau_J": snapshot.joint_torques.tolist(),
-                          "measured_gripper_open_fraction": float(snapshot.gripper_open_fraction),
-                          "predicted_tau_J": predicted_torque.tolist(), "action": safe.tolist(),
-                          "model_action": np.asarray(action, dtype=np.float32).tolist(),
-                          "model_xyz": np.asarray(action, dtype=np.float32)[:3].tolist(),
-                          "model_gripper": float(action[9]),
-                          "sent_xyz": safe[:3].tolist(),
-                          "sent_gripper": float(safe[9]),
-                          "camera_timestamps": snapshot.image_timestamps,
-                          "motion_sent": False}
-                if args.mode == "execute":
-                    robot.send_action(safe)
-                    record["command_debug"] = robot.command_debug_snapshot()
-                    record["motion_events"] = (
-                        robot.drain_motion_events()
-                        if hasattr(robot, "drain_motion_events") else []
-                    )
-                    record["motion_sent"] = bool(
-                        record["command_debug"].get("motion_command_sent", True)
-                    )
-                    motion_duration_s = float(robot_config.velocity_motion_duration_ms) / 1000.0
-                    if keyboard.wait(max(0.15, motion_duration_s + 0.05)):
-                        print("Keyboard stop requested; stopping robot.", flush=True)
-                        robot.stop()
-                        stopped_by_user = True
-                        if stream:
-                            stream.write(json.dumps(record, ensure_ascii=False) + "\n")
-                            stream.flush()
-                        break
-                if stream:
-                    stream.write(json.dumps(record, ensure_ascii=False) + "\n")
-                    stream.flush()
-                print(json.dumps({key: record[key] for key in (
-                    "step", "inference_ms", "model_xyz", "model_gripper",
-                    "sent_xyz", "sent_gripper", "motion_sent",
-                )}), flush=True)
-                step += 1
-            if args.hold_after_steps and args.mode == "execute" and not stopped_by_user:
-                print("Step budget reached; press q, x, or Esc to stop the robot.", flush=True)
-                while not keyboard.wait(0.25):
-                    pass
-                robot.stop()
-                stopped_by_user = True
+        from .realtime_control import run_control
+
+        run_control(args, robot, policy, normalizer, tokenizer, task, device, stream)
     except KeyboardInterrupt:
         print("Ctrl+C received; stopping robot.", flush=True)
-        robot.stop()
-        stopped_by_user = True
     finally:
         try:
-            if not stopped_by_user:
+            if args.mode == "execute":
                 robot.stop()
         finally:
             robot.disconnect()
@@ -483,7 +275,8 @@ def main():
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--allow-hardware", action="store_true")
     parser.add_argument("--startup-open", action="store_true")
-    parser.add_argument("--async-inference", action="store_true")
+    parser.add_argument("--async-inference", action="store_true", help="Compatibility flag; execution is always asynchronous")
+    parser.add_argument("--chunk-blend-steps", type=int, default=3)
     parser.add_argument("--teleop-assist", action="store_true")
     parser.add_argument(
         "--teleop-device",
@@ -494,20 +287,26 @@ def main():
     parser.add_argument("--max-steps", type=int, default=1)
     parser.add_argument("--continuous", action="store_true")
     parser.add_argument("--hold-after-steps", action="store_true")
-    parser.add_argument("--rate-hz", type=float, default=5.0)
+    parser.add_argument("--rate-hz", type=float, default=8.0, help="Requested inference rate; control follows the 30 Hz dataset")
     parser.add_argument("--inference-steps", type=int, default=10)
-    parser.add_argument("--max-position-jump", type=float, default=0.03)
+    parser.add_argument("--max-position-jump", type=float, default=0.08)
     parser.add_argument("--max-rotation-jump", type=float, default=0.20)
     parser.add_argument("--log")
+    parser.add_argument("--observation-retry-timeout-s", type=float, default=2.0)
+    parser.add_argument("--observation-retry-interval-s", type=float, default=0.02)
     args = parser.parse_args()
     if (not args.continuous and args.max_steps < 1) or args.rate_hz <= 0 or args.inference_steps < 1:
         parser.error("max-steps, rate-hz and inference-steps must be positive unless continuous mode is enabled")
     if args.continuous and args.mode != "execute":
         parser.error("continuous mode requires --mode execute")
-    if args.teleop_assist and not args.async_inference:
-        parser.error("teleop assist requires --async-inference")
+    if (args.teleop_assist or args.startup_open) and args.mode != "execute":
+        parser.error("teleop assist and startup-open require execute mode")
+    if args.chunk_blend_steps < 0 or args.chunk_blend_steps >= 50:
+        parser.error("chunk-blend-steps must be between 0 and 49")
     if args.teleop_linear_speed <= 0 or args.teleop_angular_speed <= 0:
         parser.error("teleop assist speeds must be positive")
+    if args.observation_retry_timeout_s <= 0 or args.observation_retry_interval_s <= 0:
+        parser.error("observation retry timeout and interval must be positive")
     raise SystemExit(run(args))
 
 

@@ -17,7 +17,7 @@ import numpy as np
 import yaml
 
 from datacollection.franka_robotiq_single_left import schema as base_schema
-from datacollection.franka_robotiq_single_left import schema_31d as schema
+from collection_31d import schema_31d as schema
 from datacollection.franka_robotiq_single_left.v30_writer import (
     V30DatasetWriter, atomic_json, _sync_directory,
 )

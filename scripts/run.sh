@@ -10,15 +10,18 @@ if [[ "${1:-}" == "--gpu" ]]; then
         fi
     done
 fi
+DATA_ARGS=()
+for path in datasets data models reference; do
+    if [[ -e "$ROOT/$path" ]]; then
+        DATA_ARGS+=(--ro-bind "$ROOT/$path" "$ROOT/$path")
+    fi
+done
 if [[ $# -eq 0 ]]; then
     set -- "$ROOT/env/bin/python" "$ROOT/src/lab.py" inspect
 fi
 exec /usr/bin/env -i PATH=/usr/bin:/bin LANG=C.UTF-8 /usr/bin/bwrap \
     --ro-bind / / --bind "$ROOT" "$ROOT" \
-    --ro-bind "$ROOT/datasets" "$ROOT/datasets" \
-    --ro-bind "$ROOT/data" "$ROOT/data" \
-    --ro-bind "$ROOT/models" "$ROOT/models" \
-    --ro-bind "$ROOT/reference" "$ROOT/reference" \
+    "${DATA_ARGS[@]}" \
     --proc /proc --dev /dev "${GPU_ARGS[@]}" --tmpfs /tmp \
     --unshare-net --die-with-parent --new-session --chdir "$ROOT" \
     /usr/bin/env -i \
