@@ -9,7 +9,7 @@
 ```bash
 cd /data0/wx/force-VLA
 bash scripts/run.sh python -m force_vla.pi05.telemetry_dashboard \
-  --log outputs/realtime_stage_A_3000.jsonl \
+  --log outputs/pi05_stage_measured_3k/realtime_stage_A_3000.jsonl \
   --output outputs/realtime_dashboard
 ```
 
@@ -53,7 +53,7 @@ FORCE_VLA_HARDWARE=1 bash scripts/run_force_realtime.sh \
   --checkpoint outputs/pi05_stage_measured_3k/checkpoint-003000 \
   --robot-config configs/deployment_force_vla_smooth_test.yaml \
   --device cuda:0 --rate-hz 8 --inference-steps 10 \
-  --log outputs/realtime_stage_A_3000.jsonl
+  --log outputs/pi05_stage_measured_3k/realtime_stage_A_3000.jsonl
 ```
 
 连接后先打开夹爪，再提示输入ARM；输入后等待完整2秒历史再发送策略动作。按q/x/Esc或Ctrl+C退出；按r作废旧预测、清空历史并重新等待，r不重载模型。可另加 `--teleop-assist` 启用原手柄接管。控制频率目标30Hz，异步推理请求上限8Hz，实际推理频率受模型耗时影响。
@@ -67,7 +67,7 @@ FORCE_VLA_HARDWARE=1 bash scripts/run_force_realtime.sh \
 ```bash
 cd /data0/wx/force-VLA
 bash scripts/run.sh python -m force_vla.pi05.torque_monitor \
-  --log outputs/realtime_execute_v3_continuous.jsonl
+  --log outputs/pi05_force_v3_resume_from_014000/realtime_execute_v3_continuous.jsonl
 ```
 
 监视器默认只显示启动后追加的数据；增加 `--from-start` 可从日志开头回放。按 `Ctrl+C` 只退出曲线监视器，不影响真机推理进程。

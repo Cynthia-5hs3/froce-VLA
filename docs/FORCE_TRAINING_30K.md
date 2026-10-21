@@ -6,7 +6,7 @@
 
 配置：`configs/pi05_force_continue_30k.json`。入口：`src/force_vla/pi05/extended_training.py`，原来的三千步训练入口和配置保持可用。
 
-- 继承 `outputs/pi05_force_sft_v1/checkpoint-003000` 的适配器、AdamW 动量、随机状态和样本游标；累计终点为30000，再执行27000次优化更新。
+- 继承 `outputs/pi05_force_sft_30k/pi05_force_sft_v1/checkpoint-003000` 的适配器、AdamW 动量、随机状态和样本游标；累计终点为30000，再执行27000次优化更新。
 - micro batch=1，梯度累积4次，有效batch=4。原3000个窗口加本阶段108000次窗口访问约为1.215次训练集遍历。保持原有91条训练/10条验证划分和归一化统计。
 - 原三千步余弦周期已结束。本阶段显式开启新的学习率周期：2.5e-6开始，500次更新预热至1e-5，然后余弦下降到1e-6。不把修改预算伪装成原训练的精确恢复。
 - 保持约548万适配器参数可训练，视觉语言骨干和action expert冻结；外部力矩、速度不增加输入，力矩损失权重仍为0.1。先控制变量判断增加训练量的收益。该阶段不保证冻结expert足以达到任务精度。
@@ -34,7 +34,7 @@ cd /data0/wx/force-VLA
 bash scripts/train_force_pi05_30k.sh --output outputs/pi05_force_sft_30k
 ```
 
-输出目录必须不存在，避免覆盖模型。后台任务的终端输出由启动方保存为 `outputs/pi05_force_sft_30k.console.log`。
+输出目录必须不存在，避免覆盖模型。后台任务的终端输出由启动方保存为 `outputs/pi05_force_sft_30k/pi05_force_sft_30k.console.log`。
 
 本次长程任务运行于独立tmux服务的 `force-30k` 会话，socket为 `runtime/tmux-30k.sock`；不会使用或改变原Evo的tmux会话。查看是否存活：
 
@@ -43,7 +43,7 @@ tmux -S /data0/wx/force-VLA/runtime/tmux-30k.sock list-sessions
 ```
 
 ```bash
-tail -f outputs/pi05_force_sft_30k.console.log
+tail -f outputs/pi05_force_sft_30k/pi05_force_sft_30k.console.log
 cat outputs/pi05_force_sft_30k/status.json
 cat outputs/pi05_force_sft_30k/best_validation.json
 ```

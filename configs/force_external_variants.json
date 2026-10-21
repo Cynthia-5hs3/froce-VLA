@@ -3,10 +3,10 @@
     "reference_checkpoint": "outputs/pi05_force_tavla_aligned_30k_resume/checkpoint-030000",
     "source_contract": "outputs/pi05_force_prepared/data_contract.json",
     "initialize_checkpoint": null,
-    "preparation_output": "outputs/external_success_30k_prepared",
+    "preparation_output": "outputs/pi05_external_success_30k/external_success_30k_prepared",
     "training_output": "outputs/pi05_external_success_30k",
-    "evaluation_output": "outputs/eval_external_success_30k",
-    "log": "outputs/realtime_external_success_30k.jsonl",
+    "evaluation_output": "outputs/pi05_external_success_30k/eval_external_success_30k",
+    "log": "outputs/pi05_external_success_30k/realtime_external_success_30k.jsonl",
     "steps": 30000,
     "description": "Original successful demonstrations only; repeat aligned LoRA training from the PI0.5 base with external history."
   },

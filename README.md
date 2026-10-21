@@ -2,11 +2,11 @@
 
 工作目录：`/data0/wx/force-VLA`。目标是在PI0.5中加入力历史输入和未来力预测辅助损失。
 
-本地训练结果按五版模型在[outputs原位分类](outputs/README.md)，文件和目录保持原路径；[分类清单](outputs/model_classification.json)记录训练、日志和评估产物，不新增分类目录。
+本地训练结果按五版模型归入[outputs中各自的训练根目录](outputs/README.md)；[分类清单](outputs/model_classification.json)记录训练、日志和评估产物的新旧路径。五版最终checkpoint路径保持不变。
 
 减少真机试错：[真实观测回放、松爪诊断与MuJoCo仿真方案](docs/MUJOCO_OFFLINE_EVALUATION_PLAN.md)。已确认旧成功LoRA30k为优先基线，阶段A3k为放置/释放对照；仿真尚未实施。
 
-2026-10-21整理入口：[各组训练产物分类](outputs/README.md)、[抓放判断与ForceVLA/ForceVLA2复现评估](docs/FORCE_METHODS_REVIEW_20261021.md)。清单按原路径归类，不迁移数据或权重；标注网页、草稿工具和临时审阅产物已归档后删除，训练依赖与已确认标注保留。[归档与恢复说明](archives/stage_cleanup_20261021/README.md)。
+2026-10-21整理入口：[各组训练产物分类](outputs/README.md)、[抓放判断与ForceVLA/ForceVLA2复现评估](docs/FORCE_METHODS_REVIEW_20261021.md)。各模型的早期运行、预检、日志和报告已归入对应现有训练根目录，共享窗口和跨模型评估保持原位；标注网页、草稿工具和临时审阅产物已归档后删除，训练依赖与已确认标注保留。[归档与恢复说明](archives/stage_cleanup_20261021/README.md)。
 
 外部关节力矩实验`success_30k`已于2026-10-20完成30k训练，模型在`outputs/pi05_external_success_30k/checkpoint-030000`；18k为本轮验证动作loss最低的候选。它沿用旧101条成功示范，从PI0.5基座重训；`stage_b`保留A组的已批准纠偏窗口和初始化，计划3k，尚未启动。两者输入过去2秒10点的`tau_J + tau_ext_hat_filtered`（10×14），未来输出仍为50×10动作和50×7实测力矩。完整模型检查命令为`bash scripts/force_external.sh success_30k model-check`（占用GPU，不连接机器人）。部署时选择整个checkpoint目录，入口自动加载14维历史与归一化，不单独替换权重文件；参数说明、18k/30k测试指令见 [两套外部力矩实验](docs/EXTERNAL_TORQUE_VARIANTS.md)。仅检查数据可运行`bash scripts/force_external.sh success_30k check`或`bash scripts/force_external.sh stage_b check`。
 
@@ -14,7 +14,7 @@
 
 真机测试使用独立的观测/动作入口，步骤和安全门控见 [实时部署说明](docs/FORCE_REALTIME_DEPLOYMENT.md)。原 Evo-RLT 部署器不直接加载 force adapter checkpoint。
 
-第一轮3000步训练已完成，模型位于 `outputs/pi05_force_sft_v1/checkpoint-003000`，使用独立Conda前缀 `env/`。旧训练入口 `scripts/train_force_pi05.sh` 保留；新运行必须指定未使用的输出目录。数据划分、归一化、环境检查及保存/恢复见 [训练说明](docs/FORCE_TRAINING.md)。旧 `src/lab.py smoke` 仅为早期六维MLP测试。
+第一轮3000步训练已完成，模型位于 `outputs/pi05_force_sft_30k/pi05_force_sft_v1/checkpoint-003000`，使用独立Conda前缀 `env/`。旧训练入口 `scripts/train_force_pi05.sh` 保留；新运行必须指定未使用的输出目录。数据划分、归一化、环境检查及保存/恢复见 [训练说明](docs/FORCE_TRAINING.md)。旧 `src/lab.py smoke` 仅为早期六维MLP测试。
 
 ## 新样本采集、训练和推理
 
@@ -80,7 +80,7 @@ bash scripts/train_force_pi05.sh \
 
 需要手柄纠正高度或对准时，在下方execute命令追加`--teleop-assist --teleop-latched --teleop-linear-speed 0.02 --teleop-angular-speed 0.10`。按LB或操作手柄接管，松手仍保持人工模式；控件回中后按RB交回模型，再等待2秒新力矩历史。Y/A升高/降低，左摇杆调整XY，LT/RT请求开/闭爪。仅记录运行日志，不微调模型；完整指令和按键见[外部力矩部署步骤](docs/EXTERNAL_TORQUE_VARIANTS.md)。
 
-实时曲线界面：另开终端运行 `bash scripts/run.sh python -m force_vla.pi05.telemetry_dashboard --log outputs/realtime_external_success_30k_test_20261020.jsonl --points 1800`，在本机浏览器打开 `outputs/realtime_dashboard/index.html`。请把`--log`改成当前推理实际使用的文件。页面可查看毫米级TCP位置、Roll/Pitch/Yaw角度、7个关节角、10D动作、7维实测/预测力矩和外部关节力矩，人工接管区间以淡橙色背景标识；推理终端不逐帧刷数字。关节角需更新后重新启动推理才能记录，旧日志缺失项留空。完整操作及最近日志选择命令见[外部力矩部署步骤](docs/EXTERNAL_TORQUE_VARIANTS.md)。
+实时曲线界面：另开终端运行 `bash scripts/run.sh python -m force_vla.pi05.telemetry_dashboard --log outputs/pi05_external_success_30k/realtime_external_success_30k_test_20261020.jsonl --points 1800`，在本机浏览器打开 `outputs/realtime_dashboard/index.html`。请把`--log`改成当前推理实际使用的文件。页面可查看毫米级TCP位置、Roll/Pitch/Yaw角度、7个关节角、10D动作、7维实测/预测力矩和外部关节力矩，人工接管区间以淡橙色背景标识；推理终端不逐帧刷数字。关节角需更新后重新启动推理才能记录，旧日志缺失项留空。完整操作及最近日志选择命令见[外部力矩部署步骤](docs/EXTERNAL_TORQUE_VARIANTS.md)。
 
 训练完成后先使用 `--mode observe` 验证相机、状态和模型加载，再执行动作。下面的命令会先打开夹爪，输入 `ARM` 后持续推理；按 `q`、`x` 或 `Esc` 停止。`FORCE_VLA_HARDWARE=1` 是硬件访问开关，部署命令不要在机器人未准备好时执行：
 
@@ -90,7 +90,7 @@ bash scripts/force_external.sh success_30k model-check
 FORCE_VLA_HARDWARE=1 bash scripts/force_external.sh success_30k observe --max-steps 300
 FORCE_VLA_HARDWARE=1 bash scripts/force_external.sh success_30k execute \
   --startup-open --continuous --rate-hz 8 --inference-steps 10 \
-  --log outputs/realtime_external_success_30k_test_20261020.jsonl
+  --log outputs/pi05_external_success_30k/realtime_external_success_30k_test_20261020.jsonl
 ```
 
 上述命令明确选择外部力矩success_30k模型：两路图像、任务文本、10D状态、过去2秒10点14维实测＋外部关节力矩，归一化从该checkpoint自动加载。直接调用旧`run_force_realtime.sh`且不传checkpoint时仍默认A组7维模型，不能与本命令混淆。模型预测的未来力矩只用于辅助输出和日志，不直接发送为力控命令；实时观测异常会暂停重试，超过安全超时才退出。`--startup-open` 会在输入ARM前打开夹爪。持续模式由操作者按 `q`、`x`、`Esc` 或 `Ctrl+C` 结束；按 `r` 清空旧动作和历史并重新等待2秒。短时测试可把 `--continuous` 换成 `--max-steps 30 --hold-after-steps`。18k候选通过`--checkpoint outputs/pi05_external_success_30k/checkpoint-018000`选择，并使用独立日志。

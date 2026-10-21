@@ -33,7 +33,7 @@ bash scripts/run.sh python -m unittest discover -s tests -v
 ```bash
 bash scripts/run.sh python -m force_vla.pi05.train_pi05_force --prepare --output outputs/pi05_force_prepared
 bash scripts/train_force_pi05.sh --smoke --steps 2 --output outputs/pi05_force_smoke_new
-bash scripts/train_force_pi05.sh --train --steps 3000 --output outputs/pi05_force_sft_v1
+bash scripts/train_force_pi05.sh --train --steps 3000 --output outputs/pi05_force_sft_30k/pi05_force_sft_v1
 ```
 
 配置为 `configs/pi05_force_sft.json`。默认batch=1，仅训练torque adapter、state投影/融合和新增的动作/力矩输入输出投影。视觉语言骨干与expert参数冻结，但梯度通过expert传到条件token。`training.trainable="expert"`可解冻expert；该模式显存需另测。
@@ -42,7 +42,7 @@ bash scripts/train_force_pi05.sh --train --steps 3000 --output outputs/pi05_forc
 
 每步记录动作/力矩损失与梯度范数，定期在验证轨迹上评估并保存。验证固定噪声种子并恢复训练随机状态。短程检查使用真实PI0.5、图像文本与力矩，仅证明链路可运行，不证明训练收敛或任务成功率；不会自动开始3000步正式训练。
 
-2026-09-20已通过19项本地测试和完整本地权重的两步GPU验证，所有新增模块有非零梯度，16个可训练张量更新，输出为1×50×10，验证联合损失0.20209。PyTorch显存分配峰值9,711,707,648字节（约9.0 GiB）。详细记录位于 `outputs/pi05_force_smoke_20260920/`；这是链路验证，非收敛结果。
+2026-09-20已通过19项本地测试和完整本地权重的两步GPU验证，所有新增模块有非零梯度，16个可训练张量更新，输出为1×50×10，验证联合损失0.20209。PyTorch显存分配峰值9,711,707,648字节（约9.0 GiB）。详细记录位于 `outputs/pi05_force_sft_30k/pi05_force_smoke_20260920/`；这是链路验证，非收敛结果。
 
 新进程重新加载基础模型与适配器后，也已用真实图像/文本/历史力矩验证推理，动作输出有限且为1×50×10，结果见同目录 `restore_result.json`。优化器、调度器、随机状态与样本游标的恢复由单元测试覆盖。
 
@@ -53,7 +53,7 @@ bash scripts/train_force_pi05.sh --train --steps 3000 --output outputs/pi05_forc
 checkpoint保存可训练参数 `adapter.safetensors`、优化器/调度器/随机状态 `training.pt`、配置、数据统计与基础权重SHA256。冻结骨干不重复保存，恢复必须保留 `models/pi05_sft`。`complete.json`标记完整保存。恢复使用新输出目录及相同配置/计划总步数，例如：
 
 ```bash
-bash scripts/train_force_pi05.sh --train --steps 3000 --resume outputs/pi05_force_sft_v1/checkpoint-000500 --output outputs/pi05_force_sft_resume
+bash scripts/train_force_pi05.sh --train --steps 3000 --resume outputs/pi05_force_sft_30k/pi05_force_sft_v1/checkpoint-000500 --output outputs/pi05_force_sft_resume
 ```
 
 离线推理使用 `force_vla.pi05.training.restore_for_inference(checkpoint, device)`，返回policy和normalizer。输入通过同一normalizer及`attach_visual_language_inputs`；动作输出通过`normalizer.transform(actions, "action", inverse=True)`恢复单位。预测力矩不作为机器人命令。本任务不启动硬件部署。

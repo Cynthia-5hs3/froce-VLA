@@ -207,8 +207,8 @@ loss = action_loss + 0.1 × torque_loss
 
 ```text
 tmux session: force-vla-train-v3
-output: outputs/pi05_force_v3_run
-log: outputs/force_vla_v3_train.log
+output: outputs/pi05_force_v3_resume_from_014000/pi05_force_v3_run
+log: outputs/pi05_force_v3_resume_from_014000/force_vla_v3_train.log
 ```
 
 启动命令：
@@ -220,7 +220,7 @@ bash scripts/train_force_pi05.sh \
   --config configs/pi05_force_tavla_aligned.json \
   --windows outputs/force_vla_31d_windows_v3/windows.parquet \
   --contract outputs/force_vla_prepared_v3/data_contract.json \
-  --output outputs/pi05_force_v3_run
+  --output outputs/pi05_force_v3_resume_from_014000/pi05_force_v3_run
 ```
 
 ## 6. 外部力矩/末端六维力分支状态

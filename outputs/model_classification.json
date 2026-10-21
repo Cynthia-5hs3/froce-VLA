@@ -1,8 +1,8 @@
 {
-  "schema": "force_vla_outputs_classification_v1",
+  "schema": "force_vla_outputs_classification_v2",
   "date": "2026-10-21",
-  "organization": "in_place_index_only",
-  "description": "Existing files and directories remain at their original outputs paths. No grouping directories or compatibility symlinks. Weights and logs are local-only; this file is a classification index.",
+  "organization": "grouped_under_existing_training_roots",
+  "description": "Model-specific artifacts are grouped under each existing final training root. Final checkpoint and shared-data paths stay unchanged. Original logs and checkpoint metadata retain historical paths; original_path maps them to current locations.",
   "model_count": 5,
   "models": [
     {
@@ -11,55 +11,98 @@
       "checkpoint": "outputs/pi05_force_sft_30k/checkpoint-030000",
       "artifacts": [
         {
-          "path": "outputs/pi05_force_sft_v1",
+          "path": "outputs/pi05_force_sft_30k/pi05_force_sft_v1",
           "kind": "training_run",
+          "original_path": "outputs/pi05_force_sft_v1",
+          "before_grouping": {
+            "files": 32,
+            "bytes": 396239669,
+            "tree_sha256": "e42752b546ec73a6fdd8be178b77f3e08c1ebb208c099dccc9423c298812b53b"
+          },
           "files": 32,
           "bytes": 396239669,
-          "tree_sha256": "e42752b546ec73a6fdd8be178b77f3e08c1ebb208c099dccc9423c298812b53b"
+          "tree_sha256": "7dfd8091e7de9e79bb1fc9be5e72d3d63b2482f031a7cc066efe110b7ceb197b"
         },
         {
           "path": "outputs/pi05_force_sft_30k",
-          "kind": "training_run",
-          "files": 184,
-          "bytes": 1860960713,
-          "tree_sha256": "2eba29e6fff1ca999a44c158a8ff627fe14add50f0e666d2f4aaadd1c7c6ee94"
+          "kind": "training_run_and_grouped_artifacts",
+          "original_path": "outputs/pi05_force_sft_30k",
+          "before_grouping": {
+            "files": 184,
+            "bytes": 1860960713,
+            "tree_sha256": "2eba29e6fff1ca999a44c158a8ff627fe14add50f0e666d2f4aaadd1c7c6ee94"
+          },
+          "files": 244,
+          "bytes": 2455519405,
+          "tree_sha256": "f89e0c7be21bde24d4087c1420285bf9783d064303ad71c95fc50143fcaec459"
         },
         {
-          "path": "outputs/pi05_force_sft_30k.console.log",
+          "path": "outputs/pi05_force_sft_30k/pi05_force_sft_30k.console.log",
           "kind": "log_or_process_record",
+          "original_path": "outputs/pi05_force_sft_30k.console.log",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 762659,
+            "tree_sha256": "db78d463811e72f9a08f587c36e3e25c89c4e421d5d1968ce2887790460d7ba5"
+          },
           "files": 1,
           "bytes": 762659,
-          "tree_sha256": "db78d463811e72f9a08f587c36e3e25c89c4e421d5d1968ce2887790460d7ba5"
+          "tree_sha256": "71764dbcce067b9c5bf63186243bccb829641b08174c3f3bc949e1d64d69e87d"
         },
         {
-          "path": "outputs/pi05_force_30k_preflight",
+          "path": "outputs/pi05_force_sft_30k/pi05_force_30k_preflight",
           "kind": "technical_check",
+          "original_path": "outputs/pi05_force_30k_preflight",
+          "before_grouping": {
+            "files": 15,
+            "bytes": 131676399,
+            "tree_sha256": "0fd5d815c120d68de40b71052e2058b17880293e513cbbe67b2f02046e119dda"
+          },
           "files": 15,
           "bytes": 131676399,
-          "tree_sha256": "0fd5d815c120d68de40b71052e2058b17880293e513cbbe67b2f02046e119dda"
+          "tree_sha256": "4e50eff246a0532095d0aa83d43d733e78022d39dfe340573e8edd973d31bbb9"
         },
         {
-          "path": "outputs/pi05_force_smoke_20260920",
+          "path": "outputs/pi05_force_sft_30k/pi05_force_smoke_20260920",
           "kind": "technical_check",
+          "original_path": "outputs/pi05_force_smoke_20260920",
+          "before_grouping": {
+            "files": 10,
+            "bytes": 65837601,
+            "tree_sha256": "0c259c3e393a731b0ae23fac622d8981e236762da773152486d2582f3f1dd797"
+          },
           "files": 10,
           "bytes": 65837601,
-          "tree_sha256": "0c259c3e393a731b0ae23fac622d8981e236762da773152486d2582f3f1dd797"
+          "tree_sha256": "a41d777db66f078185dd399c5ca35a217d9d54681d6280f82d3b7ab03ff5d2be"
         },
         {
-          "path": "outputs/phase_audit_20260921_loss.json",
+          "path": "outputs/pi05_force_sft_30k/phase_audit_20260921_loss.json",
           "kind": "analysis_or_evaluation",
+          "original_path": "outputs/phase_audit_20260921_loss.json",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 3826,
+            "tree_sha256": "4dbd9917b470a198a54a586251edfe1f3f50080aeef3b662e5a0e6ebec7c6e91"
+          },
           "files": 1,
           "bytes": 3826,
-          "tree_sha256": "4dbd9917b470a198a54a586251edfe1f3f50080aeef3b662e5a0e6ebec7c6e91"
+          "tree_sha256": "93e455528603b88ef2b201d17dd21531c66fd6e293f6b44a5f9231b22cd119ec"
         },
         {
-          "path": "outputs/phase_audit_20260921_samples.json",
+          "path": "outputs/pi05_force_sft_30k/phase_audit_20260921_samples.json",
           "kind": "analysis_or_evaluation",
+          "original_path": "outputs/phase_audit_20260921_samples.json",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 38538,
+            "tree_sha256": "116b24617db08ff0086450a8e79476c0a1a8bb0c0a9c36b60a82651c4049c3b1"
+          },
           "files": 1,
           "bytes": 38538,
-          "tree_sha256": "116b24617db08ff0086450a8e79476c0a1a8bb0c0a9c36b60a82651c4049c3b1"
+          "tree_sha256": "001fe654db1d8601383b74d3a6395ddfbb019034aa926f1b2bdce979cef53ec8"
         }
-      ]
+      ],
+      "root": "outputs/pi05_force_sft_30k"
     },
     {
       "id": "success_lora_30k",
@@ -67,48 +110,85 @@
       "checkpoint": "outputs/pi05_force_tavla_aligned_30k_resume/checkpoint-030000",
       "artifacts": [
         {
-          "path": "outputs/pi05_force_tavla_aligned_30k",
+          "path": "outputs/pi05_force_tavla_aligned_30k_resume/pi05_force_tavla_aligned_30k",
           "kind": "training_run",
+          "original_path": "outputs/pi05_force_tavla_aligned_30k",
+          "before_grouping": {
+            "files": 20,
+            "bytes": 754033492,
+            "tree_sha256": "b48e040adfc7d9a64e6e2c63807f5179c9d9fc6148e8be275c873867d82d4a57"
+          },
           "files": 20,
           "bytes": 754033492,
-          "tree_sha256": "b48e040adfc7d9a64e6e2c63807f5179c9d9fc6148e8be275c873867d82d4a57"
+          "tree_sha256": "c0a1156cddf962460c3f5f06d2106eca2c46d1ad8bb6d984972c70d23e0a3f32"
         },
         {
           "path": "outputs/pi05_force_tavla_aligned_30k_resume",
-          "kind": "training_run",
-          "files": 164,
-          "bytes": 6783839665,
-          "tree_sha256": "149079fa038c1736d802a65caf32457b4a64a196df10a79fbfbab994cc04c6b8"
+          "kind": "training_run_and_grouped_artifacts",
+          "original_path": "outputs/pi05_force_tavla_aligned_30k_resume",
+          "before_grouping": {
+            "files": 164,
+            "bytes": 6783839665,
+            "tree_sha256": "149079fa038c1736d802a65caf32457b4a64a196df10a79fbfbab994cc04c6b8"
+          },
+          "files": 197,
+          "bytes": 7793554926,
+          "tree_sha256": "cd71184a3989899cd0c4e6c9800022299ad2e6239d08de603b2a502076bead06"
         },
         {
-          "path": "outputs/pi05_force_tavla_aligned_30k_resume.log",
+          "path": "outputs/pi05_force_tavla_aligned_30k_resume/pi05_force_tavla_aligned_30k_resume.log",
           "kind": "log_or_process_record",
+          "original_path": "outputs/pi05_force_tavla_aligned_30k_resume.log",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 4874507,
+            "tree_sha256": "818f16f9546c678819a6b4c4e0033dc3b5bdf69cc99f7a3ecf89978e5b582646"
+          },
           "files": 1,
           "bytes": 4874507,
-          "tree_sha256": "818f16f9546c678819a6b4c4e0033dc3b5bdf69cc99f7a3ecf89978e5b582646"
+          "tree_sha256": "116ea0f1bc4bc86dd3b774f521e1a115d33a69f677b44d47e3c67a5412ba0152"
         },
         {
-          "path": "outputs/pi05_force_tavla_aligned_smoke",
+          "path": "outputs/pi05_force_tavla_aligned_30k_resume/pi05_force_tavla_aligned_smoke",
           "kind": "technical_check",
+          "original_path": "outputs/pi05_force_tavla_aligned_smoke",
+          "before_grouping": {
+            "files": 10,
+            "bytes": 250795259,
+            "tree_sha256": "b21588a96636e07964df466203865d24c41fe68348bb8ec0232d032f091a0d12"
+          },
           "files": 10,
           "bytes": 250795259,
-          "tree_sha256": "b21588a96636e07964df466203865d24c41fe68348bb8ec0232d032f091a0d12"
+          "tree_sha256": "d6832da129f37baf5fbcf241cb3ff60f54f14450d24be0dd3dbcd153579f3c0e"
         },
         {
-          "path": "outputs/ta_vla_alignment_audit_20260921.md",
+          "path": "outputs/pi05_force_tavla_aligned_30k_resume/ta_vla_alignment_audit_20260921.md",
           "kind": "analysis_or_evaluation",
+          "original_path": "outputs/ta_vla_alignment_audit_20260921.md",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 11465,
+            "tree_sha256": "4a6423ad5fa877435bdd7b0f1d243947878f1b4403241a56a372d441964ef1f5"
+          },
           "files": 1,
           "bytes": 11465,
-          "tree_sha256": "4a6423ad5fa877435bdd7b0f1d243947878f1b4403241a56a372d441964ef1f5"
+          "tree_sha256": "0a6a65be985b8a2a41631a359ea5dd89be238b7c4c59cbed7d98392904d9d221"
         },
         {
-          "path": "outputs/ta_vla_alignment_preflight_20260921.json",
+          "path": "outputs/pi05_force_tavla_aligned_30k_resume/ta_vla_alignment_preflight_20260921.json",
           "kind": "technical_check",
+          "original_path": "outputs/ta_vla_alignment_preflight_20260921.json",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 538,
+            "tree_sha256": "70d2541f42e75d842e81fa0267f1da8fcc8ee14a6277481db127af51616fa579"
+          },
           "files": 1,
           "bytes": 538,
-          "tree_sha256": "70d2541f42e75d842e81fa0267f1da8fcc8ee14a6277481db127af51616fa579"
+          "tree_sha256": "899cd1c14464565b6adf239f95f867aed6712f449be6beb7a5a6ffc76b6a9ea1"
         }
-      ]
+      ],
+      "root": "outputs/pi05_force_tavla_aligned_30k_resume"
     },
     {
       "id": "correction_lora_30k",
@@ -116,55 +196,98 @@
       "checkpoint": "outputs/pi05_force_v3_resume_from_014000/checkpoint-030000",
       "artifacts": [
         {
-          "path": "outputs/pi05_force_v3_run",
+          "path": "outputs/pi05_force_v3_resume_from_014000/pi05_force_v3_run",
           "kind": "training_run",
+          "original_path": "outputs/pi05_force_v3_run",
+          "before_grouping": {
+            "files": 86,
+            "bytes": 3516979028,
+            "tree_sha256": "49644208642a7b12e52663fe4bb6b85e8e2dd06747dd2e217d51a39d4deea4f3"
+          },
           "files": 86,
           "bytes": 3516979028,
-          "tree_sha256": "49644208642a7b12e52663fe4bb6b85e8e2dd06747dd2e217d51a39d4deea4f3"
+          "tree_sha256": "ed7fd2886e2e955ba165c8bfaf3fff7dd9da3c47e1e532c2b6bc759951a95fbf"
         },
         {
           "path": "outputs/pi05_force_v3_resume_from_014000",
-          "kind": "training_run",
-          "files": 98,
-          "bytes": 4019417761,
-          "tree_sha256": "0694ee850e0c835a3d8e272ee956b6025bc0c92fd6ba8518361847747c2dbb37"
+          "kind": "training_run_and_grouped_artifacts",
+          "original_path": "outputs/pi05_force_v3_resume_from_014000",
+          "before_grouping": {
+            "files": 98,
+            "bytes": 4019417761,
+            "tree_sha256": "0694ee850e0c835a3d8e272ee956b6025bc0c92fd6ba8518361847747c2dbb37"
+          },
+          "files": 189,
+          "bytes": 7646467788,
+          "tree_sha256": "8ccfb67d8c1f0884ce3a5d7da4068afbb5da709dcb6c58ce5855726822a180c2"
         },
         {
-          "path": "outputs/force_vla_v3_train.log",
+          "path": "outputs/pi05_force_v3_resume_from_014000/force_vla_v3_train.log",
           "kind": "log_or_process_record",
+          "original_path": "outputs/force_vla_v3_train.log",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 2500343,
+            "tree_sha256": "202f7cbe8497411574fa2a9913a638e09022eb21272340bdbf9fe12ca370ebf4"
+          },
           "files": 1,
           "bytes": 2500343,
-          "tree_sha256": "202f7cbe8497411574fa2a9913a638e09022eb21272340bdbf9fe12ca370ebf4"
+          "tree_sha256": "615b7c1dbf83c51d5a40a20b3db034de4b121e7245f867004851a65a87568bff"
         },
         {
-          "path": "outputs/force_vla_v3_resume_train.log",
+          "path": "outputs/pi05_force_v3_resume_from_014000/force_vla_v3_resume_train.log",
           "kind": "log_or_process_record",
+          "original_path": "outputs/force_vla_v3_resume_train.log",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 2873995,
+            "tree_sha256": "3affd4c3c1383cb59ac345a040576184a96f776458d0b399f4a6b3b9653174c1"
+          },
           "files": 1,
           "bytes": 2873995,
-          "tree_sha256": "3affd4c3c1383cb59ac345a040576184a96f776458d0b399f4a6b3b9653174c1"
+          "tree_sha256": "e47c12d67a01f221a3bb42134f90f68abc65d11e8ec5a57adba1d381f7ab3990"
         },
         {
-          "path": "outputs/force_vla_v3_resume.pid",
+          "path": "outputs/pi05_force_v3_resume_from_014000/force_vla_v3_resume.pid",
           "kind": "log_or_process_record",
+          "original_path": "outputs/force_vla_v3_resume.pid",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 8,
+            "tree_sha256": "8b5f75878d30e3fff95acc3b900e69295c017bae4bebe71ebdccc0ed0030b0e4"
+          },
           "files": 1,
           "bytes": 8,
-          "tree_sha256": "8b5f75878d30e3fff95acc3b900e69295c017bae4bebe71ebdccc0ed0030b0e4"
+          "tree_sha256": "df85d84b2ecfcb276602cf35fc2fb66cc397442089bb9989a96c55a829a87650"
         },
         {
-          "path": "outputs/realtime_execute_v3_continuous.jsonl",
+          "path": "outputs/pi05_force_v3_resume_from_014000/realtime_execute_v3_continuous.jsonl",
           "kind": "deployment_log",
+          "original_path": "outputs/realtime_execute_v3_continuous.jsonl",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 104610577,
+            "tree_sha256": "3d1de65780fff76efb7899d78d9cbbbddefb25da2909bb28a805b1e5a7588abc"
+          },
           "files": 1,
           "bytes": 104610577,
-          "tree_sha256": "3d1de65780fff76efb7899d78d9cbbbddefb25da2909bb28a805b1e5a7588abc"
+          "tree_sha256": "bab2575a8379c1cd65553a7d0ff53ca156f49d12bf53542ee45f7b4b83787e98"
         },
         {
-          "path": "outputs/realtime_execute_v3_step1_retry.jsonl",
+          "path": "outputs/pi05_force_v3_resume_from_014000/realtime_execute_v3_step1_retry.jsonl",
           "kind": "deployment_log",
+          "original_path": "outputs/realtime_execute_v3_step1_retry.jsonl",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 86076,
+            "tree_sha256": "ec5284b84f6d79d81108a5b582ec56ced3b1bcee6172227ad45c1ee2097f2761"
+          },
           "files": 1,
           "bytes": 86076,
-          "tree_sha256": "ec5284b84f6d79d81108a5b582ec56ced3b1bcee6172227ad45c1ee2097f2761"
+          "tree_sha256": "5b4953cf2b857b785b27b0a9cfdae383df1e23bbd0d804623a638820f66381af"
         }
-      ]
+      ],
+      "root": "outputs/pi05_force_v3_resume_from_014000"
     },
     {
       "id": "stage_a_3k",
@@ -173,47 +296,84 @@
       "artifacts": [
         {
           "path": "outputs/pi05_stage_measured_3k",
-          "kind": "training_run",
-          "files": 44,
-          "bytes": 1506184189,
-          "tree_sha256": "1e543976e35e228207a7a53bfbec502101784eb0b76fb83adcba042117f824d8"
+          "kind": "training_run_and_grouped_artifacts",
+          "original_path": "outputs/pi05_stage_measured_3k",
+          "before_grouping": {
+            "files": 44,
+            "bytes": 1506184189,
+            "tree_sha256": "1e543976e35e228207a7a53bfbec502101784eb0b76fb83adcba042117f824d8"
+          },
+          "files": 62,
+          "bytes": 1658758554,
+          "tree_sha256": "e3aa874e5f1ccbe8348b93d5eb688ab338eb59f06f1a4f0bc1ce2c12b7e4090f"
         },
         {
-          "path": "outputs/pi05_stage_measured_3k.log",
+          "path": "outputs/pi05_stage_measured_3k/pi05_stage_measured_3k.log",
           "kind": "log_or_process_record",
+          "original_path": "outputs/pi05_stage_measured_3k.log",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 546710,
+            "tree_sha256": "716b5c08fddb7c1cfd9a5b4079e7e621dfa4e628f947fe4a5cc19851110aac57"
+          },
           "files": 1,
           "bytes": 546710,
-          "tree_sha256": "716b5c08fddb7c1cfd9a5b4079e7e621dfa4e628f947fe4a5cc19851110aac57"
+          "tree_sha256": "f031d07e3870598e7c9ed260bec863677486537352d1cfc0b02fb31206438f7f"
         },
         {
-          "path": "outputs/stage_A_analysis_20261019",
+          "path": "outputs/pi05_stage_measured_3k/stage_A_analysis_20261019",
           "kind": "analysis_or_evaluation",
+          "original_path": "outputs/stage_A_analysis_20261019",
+          "before_grouping": {
+            "files": 7,
+            "bytes": 1942844,
+            "tree_sha256": "edb0a25021def707b6de140d33e709ec4b9bcfdb3a6ee26ccae8b0a5895647b8"
+          },
           "files": 7,
           "bytes": 1942844,
-          "tree_sha256": "edb0a25021def707b6de140d33e709ec4b9bcfdb3a6ee26ccae8b0a5895647b8"
+          "tree_sha256": "c4549df5d81d59fb6a548eb43912f95dbb4028970c38907d6731bce0612ad2b7"
         },
         {
-          "path": "outputs/realtime_A_diagnosis_20261019",
+          "path": "outputs/pi05_stage_measured_3k/realtime_A_diagnosis_20261019",
           "kind": "analysis_or_evaluation",
+          "original_path": "outputs/realtime_A_diagnosis_20261019",
+          "before_grouping": {
+            "files": 8,
+            "bytes": 5709803,
+            "tree_sha256": "38d9cd5a0e1d5d53d06f1791bbcf406ba0488c63c80b80b3b0a20c63d98ace7e"
+          },
           "files": 8,
-          "bytes": 5709803,
-          "tree_sha256": "38d9cd5a0e1d5d53d06f1791bbcf406ba0488c63c80b80b3b0a20c63d98ace7e"
+          "bytes": 5709826,
+          "tree_sha256": "ba4fd6ad434eba55659f6a11965e31dbece6eee7408bfd08406518968b317117"
         },
         {
-          "path": "outputs/realtime_check_stage_A_3000_20261019.log",
+          "path": "outputs/pi05_stage_measured_3k/realtime_check_stage_A_3000_20261019.log",
           "kind": "log_or_process_record",
+          "original_path": "outputs/realtime_check_stage_A_3000_20261019.log",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 582,
+            "tree_sha256": "4058f8f583f166a751d7049cecad290598fe83d5ca55ad5b6e6ef26ef1810926"
+          },
           "files": 1,
           "bytes": 582,
-          "tree_sha256": "4058f8f583f166a751d7049cecad290598fe83d5ca55ad5b6e6ef26ef1810926"
+          "tree_sha256": "52dec2dcd15dd53f759d1db234757f573fa941a26bb847cc159371381cf1373d"
         },
         {
-          "path": "outputs/realtime_stage_A_3000.jsonl",
+          "path": "outputs/pi05_stage_measured_3k/realtime_stage_A_3000.jsonl",
           "kind": "deployment_log",
+          "original_path": "outputs/realtime_stage_A_3000.jsonl",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 144374403,
+            "tree_sha256": "35fe2b8182dd82e8d52b07615bd281fed1f72e1766339d998052f32e3f9c53b2"
+          },
           "files": 1,
           "bytes": 144374403,
-          "tree_sha256": "35fe2b8182dd82e8d52b07615bd281fed1f72e1766339d998052f32e3f9c53b2"
+          "tree_sha256": "5923801172c226f5398b5e0f583ab3aad0c48fd77de90a3d3b49bbcd3af2c97c"
         }
-      ]
+      ],
+      "root": "outputs/pi05_stage_measured_3k"
     },
     {
       "id": "success_external_30k",
@@ -222,82 +382,149 @@
       "artifacts": [
         {
           "path": "outputs/pi05_external_success_30k",
-          "kind": "training_run",
-          "files": 182,
-          "bytes": 7589231442,
-          "tree_sha256": "86b8f6f5f3be4c94579f2b1eb5bebe019509533b930c383652a8776a5f1b5fe3"
+          "kind": "training_run_and_grouped_artifacts",
+          "original_path": "outputs/pi05_external_success_30k",
+          "before_grouping": {
+            "files": 182,
+            "bytes": 7589231442,
+            "tree_sha256": "86b8f6f5f3be4c94579f2b1eb5bebe019509533b930c383652a8776a5f1b5fe3"
+          },
+          "files": 212,
+          "bytes": 7689207679,
+          "tree_sha256": "298a88fe4cc055d1aa73be8b21e3960da2a1f8ca1a23e9927f7f814005935e71"
         },
         {
-          "path": "outputs/pi05_external_success_30k.log",
+          "path": "outputs/pi05_external_success_30k/pi05_external_success_30k.log",
           "kind": "log_or_process_record",
+          "original_path": "outputs/pi05_external_success_30k.log",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 5411578,
+            "tree_sha256": "eba8773d9bdb09925674effa514645f7672c10d4a67793fda6dcbf4f09587627"
+          },
           "files": 1,
           "bytes": 5411578,
-          "tree_sha256": "eba8773d9bdb09925674effa514645f7672c10d4a67793fda6dcbf4f09587627"
+          "tree_sha256": "ddfa0013d06a29c27077229b131ba1626ae26305777378176c77204386bd4ed9"
         },
         {
-          "path": "outputs/pi05_external_success_30k.exit",
+          "path": "outputs/pi05_external_success_30k/pi05_external_success_30k.exit",
           "kind": "log_or_process_record",
+          "original_path": "outputs/pi05_external_success_30k.exit",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 2,
+            "tree_sha256": "c624acd7a492e04a0311c9c37efd6a258f30b6095bdf33fc3bdd82fe2c173a75"
+          },
           "files": 1,
           "bytes": 2,
-          "tree_sha256": "c624acd7a492e04a0311c9c37efd6a258f30b6095bdf33fc3bdd82fe2c173a75"
+          "tree_sha256": "1ea18c0bfe30b9da6fe76666c57c73fc5e71366acb28091ca957e593dacf58ef"
         },
         {
-          "path": "outputs/external_success_30k_prepared",
+          "path": "outputs/pi05_external_success_30k/external_success_30k_prepared",
           "kind": "preparation",
+          "original_path": "outputs/external_success_30k_prepared",
+          "before_grouping": {
+            "files": 3,
+            "bytes": 5987,
+            "tree_sha256": "ae738d4ffdcd3cdbb528ae87ecc7af0dd76eb7bdb42034f6c7ffc3a9c78baed6"
+          },
           "files": 3,
-          "bytes": 5987,
-          "tree_sha256": "ae738d4ffdcd3cdbb528ae87ecc7af0dd76eb7bdb42034f6c7ffc3a9c78baed6"
+          "bytes": 6013,
+          "tree_sha256": "08ff00d4018c17309ee0e2ee6a273df3b905b6baac9f3b7fa76e093667a9cbae"
         },
         {
-          "path": "outputs/external_success_analysis_20261020",
+          "path": "outputs/pi05_external_success_30k/external_success_analysis_20261020",
           "kind": "analysis_or_evaluation",
+          "original_path": "outputs/external_success_analysis_20261020",
+          "before_grouping": {
+            "files": 16,
+            "bytes": 8830386,
+            "tree_sha256": "b3fd6c3627f6141ba13ee2a3e07c0d868e33c455258f1d52f749a63ba3cb2457"
+          },
           "files": 16,
-          "bytes": 8830386,
-          "tree_sha256": "b3fd6c3627f6141ba13ee2a3e07c0d868e33c455258f1d52f749a63ba3cb2457"
+          "bytes": 8830412,
+          "tree_sha256": "2ee8d2f9d791a68407f75984fcee3fc1acb008dfa2d8c0c7f40ec05367c5e7d9"
         },
         {
-          "path": "outputs/grasp_review_20261020",
+          "path": "outputs/pi05_external_success_30k/grasp_review_20261020",
           "kind": "analysis_or_evaluation",
+          "original_path": "outputs/grasp_review_20261020",
+          "before_grouping": {
+            "files": 4,
+            "bytes": 58456,
+            "tree_sha256": "537405c4f44fc35a8bc8f887d52270be50fc9a20eb11cbb3eaa5343854bffb7b"
+          },
           "files": 4,
-          "bytes": 58456,
-          "tree_sha256": "537405c4f44fc35a8bc8f887d52270be50fc9a20eb11cbb3eaa5343854bffb7b"
+          "bytes": 58482,
+          "tree_sha256": "1e3423b876eebf827d6fe617177d69448e3e1c9abe1262381f6359a528581ae6"
         },
         {
-          "path": "outputs/realtime_external_success_30k_20261020_102833.jsonl",
+          "path": "outputs/pi05_external_success_30k/realtime_external_success_30k_20261020_102833.jsonl",
           "kind": "deployment_log",
+          "original_path": "outputs/realtime_external_success_30k_20261020_102833.jsonl",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 8696746,
+            "tree_sha256": "13247fb256fbdc14a3fcda53d81e9b8fded9afc45812348693b07952738af695"
+          },
           "files": 1,
           "bytes": 8696746,
-          "tree_sha256": "13247fb256fbdc14a3fcda53d81e9b8fded9afc45812348693b07952738af695"
+          "tree_sha256": "698b3e832ab42809324477c8b4ed7a6bc383e6be8f71e2fe1e0bdd6ca69cef32"
         },
         {
-          "path": "outputs/realtime_external_success_30k_20261020_103246.jsonl",
+          "path": "outputs/pi05_external_success_30k/realtime_external_success_30k_20261020_103246.jsonl",
           "kind": "deployment_log",
+          "original_path": "outputs/realtime_external_success_30k_20261020_103246.jsonl",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 2898045,
+            "tree_sha256": "7981ce756a1b8fd6b518014b6fa68ae504203e726aee3fb4a29750d1549141ac"
+          },
           "files": 1,
           "bytes": 2898045,
-          "tree_sha256": "7981ce756a1b8fd6b518014b6fa68ae504203e726aee3fb4a29750d1549141ac"
+          "tree_sha256": "4b3ad7526b0c64bb8c288dc49aa77f29dbef55fe84612120df6878767c32c90a"
         },
         {
-          "path": "outputs/realtime_external_success_30k_20261020_103525.jsonl",
+          "path": "outputs/pi05_external_success_30k/realtime_external_success_30k_20261020_103525.jsonl",
           "kind": "deployment_log",
+          "original_path": "outputs/realtime_external_success_30k_20261020_103525.jsonl",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 3131919,
+            "tree_sha256": "8c7ea0af88c00c23d26065905d48bfb497080ee66c6c88b299ba3573d71bd2df"
+          },
           "files": 1,
           "bytes": 3131919,
-          "tree_sha256": "8c7ea0af88c00c23d26065905d48bfb497080ee66c6c88b299ba3573d71bd2df"
+          "tree_sha256": "2b7251741c4f871c7d62e5e57da9300f8df8e33daa651bf5d28959667437a542"
         },
         {
-          "path": "outputs/realtime_external_success_30k_assist_20261020_104857.jsonl",
+          "path": "outputs/pi05_external_success_30k/realtime_external_success_30k_assist_20261020_104857.jsonl",
           "kind": "deployment_log",
+          "original_path": "outputs/realtime_external_success_30k_assist_20261020_104857.jsonl",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 61512967,
+            "tree_sha256": "e96cefc8d674a68ede9a742500a6f31cfdae2631fc95364dc16c6e0e13cac686"
+          },
           "files": 1,
           "bytes": 61512967,
-          "tree_sha256": "e96cefc8d674a68ede9a742500a6f31cfdae2631fc95364dc16c6e0e13cac686"
+          "tree_sha256": "98993d54f57b05edc6823873833e93a828cb88fbf1488f3daf4c4b3d8cc5ae5f"
         },
         {
-          "path": "outputs/realtime_external_success_30k_assist_20261020_110449.jsonl",
+          "path": "outputs/pi05_external_success_30k/realtime_external_success_30k_assist_20261020_110449.jsonl",
           "kind": "deployment_log",
+          "original_path": "outputs/realtime_external_success_30k_assist_20261020_110449.jsonl",
+          "before_grouping": {
+            "files": 1,
+            "bytes": 9430073,
+            "tree_sha256": "c51562037cbc4b4f59a709c87244fd485d8b623d218022d325a07776396cb730"
+          },
           "files": 1,
           "bytes": 9430073,
-          "tree_sha256": "c51562037cbc4b4f59a709c87244fd485d8b623d218022d325a07776396cb730"
+          "tree_sha256": "976ea6cc0d1719bf7679711858ebf83e0e6f20292b86675f9e4571481abd0399"
         }
-      ]
+      ],
+      "root": "outputs/pi05_external_success_30k"
     }
   ],
   "shared_and_unconfirmed": [
@@ -379,6 +606,153 @@
     "旧成功LoRA30k是用户反馈抓取和下降放置较好的基线，早期适配器30k不是同一版本。",
     "阶段A3k放置较准确但松爪问题待离线核对。",
     "技术冒烟/预检、未训练B组和跨模型对照不单列为已完成模型。",
-    "GitHub只保存本分类清单和说明，不包含outputs里的训练权重、视频或日志。"
-  ]
+    "GitHub只保存本分类清单和说明，不包含outputs里的训练权重、视频或日志。",
+    "Five final checkpoint paths are unchanged; earlier runs, checks, model-specific preparation, logs and reports are nested under the corresponding final run.",
+    "Shared windows, contracts, cross-model evaluation, untrained stage B and unconfirmed historical logs remain at their existing outputs paths.",
+    "Historical logs, run.json, checkpoint force_config.json and numerical reports are preserved verbatim; resolve their original paths through moves when needed.",
+    "For strict resume, use the saved checkpoint force_config.json and explicitly pass --contract with the current path, plus a fresh --output; do not rewrite historical settings."
+  ],
+  "hash_algorithm": "SHA256 of sorted relative POSIX paths, NUL, file SHA256 hex, newline; a single file uses its basename. Directory snapshots recursively include grouped artifacts, so do not sum overlapping artifact sizes.",
+  "moves": [
+    {
+      "from": "outputs/pi05_force_sft_v1",
+      "to": "outputs/pi05_force_sft_30k/pi05_force_sft_v1"
+    },
+    {
+      "from": "outputs/pi05_force_sft_30k.console.log",
+      "to": "outputs/pi05_force_sft_30k/pi05_force_sft_30k.console.log"
+    },
+    {
+      "from": "outputs/pi05_force_30k_preflight",
+      "to": "outputs/pi05_force_sft_30k/pi05_force_30k_preflight"
+    },
+    {
+      "from": "outputs/pi05_force_smoke_20260920",
+      "to": "outputs/pi05_force_sft_30k/pi05_force_smoke_20260920"
+    },
+    {
+      "from": "outputs/phase_audit_20260921_loss.json",
+      "to": "outputs/pi05_force_sft_30k/phase_audit_20260921_loss.json"
+    },
+    {
+      "from": "outputs/phase_audit_20260921_samples.json",
+      "to": "outputs/pi05_force_sft_30k/phase_audit_20260921_samples.json"
+    },
+    {
+      "from": "outputs/pi05_force_tavla_aligned_30k",
+      "to": "outputs/pi05_force_tavla_aligned_30k_resume/pi05_force_tavla_aligned_30k"
+    },
+    {
+      "from": "outputs/pi05_force_tavla_aligned_30k_resume.log",
+      "to": "outputs/pi05_force_tavla_aligned_30k_resume/pi05_force_tavla_aligned_30k_resume.log"
+    },
+    {
+      "from": "outputs/pi05_force_tavla_aligned_smoke",
+      "to": "outputs/pi05_force_tavla_aligned_30k_resume/pi05_force_tavla_aligned_smoke"
+    },
+    {
+      "from": "outputs/ta_vla_alignment_audit_20260921.md",
+      "to": "outputs/pi05_force_tavla_aligned_30k_resume/ta_vla_alignment_audit_20260921.md"
+    },
+    {
+      "from": "outputs/ta_vla_alignment_preflight_20260921.json",
+      "to": "outputs/pi05_force_tavla_aligned_30k_resume/ta_vla_alignment_preflight_20260921.json"
+    },
+    {
+      "from": "outputs/pi05_force_v3_run",
+      "to": "outputs/pi05_force_v3_resume_from_014000/pi05_force_v3_run"
+    },
+    {
+      "from": "outputs/force_vla_v3_train.log",
+      "to": "outputs/pi05_force_v3_resume_from_014000/force_vla_v3_train.log"
+    },
+    {
+      "from": "outputs/force_vla_v3_resume_train.log",
+      "to": "outputs/pi05_force_v3_resume_from_014000/force_vla_v3_resume_train.log"
+    },
+    {
+      "from": "outputs/force_vla_v3_resume.pid",
+      "to": "outputs/pi05_force_v3_resume_from_014000/force_vla_v3_resume.pid"
+    },
+    {
+      "from": "outputs/realtime_execute_v3_continuous.jsonl",
+      "to": "outputs/pi05_force_v3_resume_from_014000/realtime_execute_v3_continuous.jsonl"
+    },
+    {
+      "from": "outputs/realtime_execute_v3_step1_retry.jsonl",
+      "to": "outputs/pi05_force_v3_resume_from_014000/realtime_execute_v3_step1_retry.jsonl"
+    },
+    {
+      "from": "outputs/pi05_stage_measured_3k.log",
+      "to": "outputs/pi05_stage_measured_3k/pi05_stage_measured_3k.log"
+    },
+    {
+      "from": "outputs/stage_A_analysis_20261019",
+      "to": "outputs/pi05_stage_measured_3k/stage_A_analysis_20261019"
+    },
+    {
+      "from": "outputs/realtime_A_diagnosis_20261019",
+      "to": "outputs/pi05_stage_measured_3k/realtime_A_diagnosis_20261019"
+    },
+    {
+      "from": "outputs/realtime_check_stage_A_3000_20261019.log",
+      "to": "outputs/pi05_stage_measured_3k/realtime_check_stage_A_3000_20261019.log"
+    },
+    {
+      "from": "outputs/realtime_stage_A_3000.jsonl",
+      "to": "outputs/pi05_stage_measured_3k/realtime_stage_A_3000.jsonl"
+    },
+    {
+      "from": "outputs/pi05_external_success_30k.log",
+      "to": "outputs/pi05_external_success_30k/pi05_external_success_30k.log"
+    },
+    {
+      "from": "outputs/pi05_external_success_30k.exit",
+      "to": "outputs/pi05_external_success_30k/pi05_external_success_30k.exit"
+    },
+    {
+      "from": "outputs/external_success_30k_prepared",
+      "to": "outputs/pi05_external_success_30k/external_success_30k_prepared"
+    },
+    {
+      "from": "outputs/external_success_analysis_20261020",
+      "to": "outputs/pi05_external_success_30k/external_success_analysis_20261020"
+    },
+    {
+      "from": "outputs/grasp_review_20261020",
+      "to": "outputs/pi05_external_success_30k/grasp_review_20261020"
+    },
+    {
+      "from": "outputs/realtime_external_success_30k_20261020_102833.jsonl",
+      "to": "outputs/pi05_external_success_30k/realtime_external_success_30k_20261020_102833.jsonl"
+    },
+    {
+      "from": "outputs/realtime_external_success_30k_20261020_103246.jsonl",
+      "to": "outputs/pi05_external_success_30k/realtime_external_success_30k_20261020_103246.jsonl"
+    },
+    {
+      "from": "outputs/realtime_external_success_30k_20261020_103525.jsonl",
+      "to": "outputs/pi05_external_success_30k/realtime_external_success_30k_20261020_103525.jsonl"
+    },
+    {
+      "from": "outputs/realtime_external_success_30k_assist_20261020_104857.jsonl",
+      "to": "outputs/pi05_external_success_30k/realtime_external_success_30k_assist_20261020_104857.jsonl"
+    },
+    {
+      "from": "outputs/realtime_external_success_30k_assist_20261020_110449.jsonl",
+      "to": "outputs/pi05_external_success_30k/realtime_external_success_30k_assist_20261020_110449.jsonl"
+    }
+  ],
+  "verification": {
+    "moved_artifacts": 32,
+    "moved_files": 232,
+    "moved_bytes": 5483874481,
+    "all_moved_files_sha256_equal_before_path_edits": true,
+    "path_only_edits_after_move": [
+      "outputs/pi05_external_success_30k/external_success_30k_prepared/config.json",
+      "outputs/pi05_external_success_30k/external_success_analysis_20261020/analyze.py",
+      "outputs/pi05_external_success_30k/grasp_review_20261020/analyze.py",
+      "outputs/pi05_stage_measured_3k/realtime_A_diagnosis_20261019/analyze.py"
+    ]
+  }
 }

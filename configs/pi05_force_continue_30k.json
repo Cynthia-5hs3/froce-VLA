@@ -1,5 +1,5 @@
 {
-  "source_checkpoint": "outputs/pi05_force_sft_v1/checkpoint-003000",
+  "source_checkpoint": "outputs/pi05_force_sft_30k/pi05_force_sft_v1/checkpoint-003000",
   "total_steps": 30000,
   "micro_batch_size": 1,
   "gradient_accumulation_steps": 4,

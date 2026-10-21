@@ -4,7 +4,7 @@
 
 当前已有的30k模型是 **adapter/projection 微调**：约548万参数更新，Transformer 主体冻结；不是全量微调，也没有 LoRA。新代码提供独立 torque/state token、编码器与解码器 LoRA 的训练配置，但尚未运行这组训练，也未验证其真机效果。旧模型权重、原始数据、Evo-RLT和Conda环境保持不变。
 
-完整架构的meta张量预检确认：旧checkpoint的16个可训练张量、5,483,559个参数名与形状完全匹配；新配置520个可训练张量、37,907,495个参数，其中两侧Transformer各252个LoRA张量。记录见 `outputs/ta_vla_alignment_preflight_20260921.json`；该预检没有加载大模型权重执行前向，也没有使用GPU。
+完整架构的meta张量预检确认：旧checkpoint的16个可训练张量、5,483,559个参数名与形状完全匹配；新配置520个可训练张量、37,907,495个参数，其中两侧Transformer各252个LoRA张量。记录见 `outputs/pi05_force_tavla_aligned_30k_resume/ta_vla_alignment_preflight_20260921.json`；该预检没有加载大模型权重执行前向，也没有使用GPU。
 
 本次推理时间对齐可直接用于旧模型：独立30Hz观测、过去2秒10点力矩缓存、最多8Hz异步推理请求、按30Hz动作时间轴消费50步输出。依据观测时间补偿已发生的延迟，不反复执行第0步。默认3步块间位姿过渡，夹爪采用新块当前目标而非平均。预测力矩不作为电机力矩命令。
 
@@ -40,7 +40,7 @@
 cd /data0/wx/force-VLA
 bash scripts/train_force_pi05.sh --smoke --steps 2 \
   --config configs/pi05_force_tavla_aligned.json \
-  --output outputs/pi05_force_tavla_aligned_smoke
+  --output outputs/pi05_force_tavla_aligned_30k_resume/pi05_force_tavla_aligned_smoke
 
 bash scripts/train_force_pi05.sh --train \
   --config configs/pi05_force_tavla_aligned.json \
@@ -60,7 +60,7 @@ bash scripts/run.sh python -m force_vla.pi05.phase_evaluation \
   --output outputs/phase_loss_regrouped.json
 ```
 
-本次已生成 `outputs/phase_audit_20260921_loss.json` 和 `outputs/phase_audit_20260921_samples.json`。原320个loss验证窗口中只有20个关键标记窗口、覆盖7条轨迹；其宏平均torque_loss约2.052，未标记组约1.409。样本数量与轨迹组成不同，不可视为控制变量对比或“标记导致更差”；但说明总体均值不能代表关键阶段。
+本次已生成 `outputs/pi05_force_sft_30k/phase_audit_20260921_loss.json` 和 `outputs/pi05_force_sft_30k/phase_audit_20260921_samples.json`。原320个loss验证窗口中只有20个关键标记窗口、覆盖7条轨迹；其宏平均torque_loss约2.052，未标记组约1.409。样本数量与轨迹组成不同，不可视为控制变量对比或“标记导致更差”；但说明总体均值不能代表关键阶段。
 
 重新做保证关键阶段覆盖的独立评估时（以下命令尚未运行）：
 

@@ -183,7 +183,7 @@ def publish(destination, payload):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--log", type=Path, default=Path("outputs/realtime_stage_A_3000.jsonl"))
+    parser.add_argument("--log", type=Path, default=Path("outputs/pi05_stage_measured_3k/realtime_stage_A_3000.jsonl"))
     parser.add_argument("--output", type=Path, default=Path("outputs/realtime_dashboard"))
     parser.add_argument("--points", type=int, default=900)
     parser.add_argument("--refresh-s", type=float, default=.25)
