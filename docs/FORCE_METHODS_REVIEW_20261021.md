@@ -107,12 +107,12 @@
 
 ## 6. 本轮整理与清理边界
 
-新建的 `experiments/README.md` 是统一入口；七组manifest对应早期适配器、旧LoRA、后采v3、阶段A、旧成功外力、待训练阶段B和冒烟预检。`experiments/datasets.json`记录三个窗口版本、完整episode集合、已重算哈希和数据来源。
+当前统一入口为 `outputs/README.md`，机器可读分类见 `outputs/model_classification.json`，对应早期适配器、旧LoRA、后采v3、阶段A、旧成功外力五版已训练模型；待训练阶段B和冒烟预检单独标识。原运行目录中的 `run.json`、训练数据合同和窗口 `metadata.json`仍是训练划分与数据来源的依据。旧实验清单目录已按用户要求删除。
 
 窗口依赖原始视频，配置/合同依赖绝对路径，因此采用分类索引，没有搬动原数据或权重；相同数据被多个实验引用时不复制成多份。
 
 清理前整理校验通过：3份窗口文件哈希、11次已记录运行的轨迹划分/窗口计数/完成标记、B组未训练状态、287个本地路径引用；239个清理候选文件哈希与清单一致。路径存在性不等于重新解码全部视频或验证真机能力。
 
-用户确认后，`experiments/cleanup_candidates.json`中的239个UI/草稿/网页输出文件（约59MiB）已归档后删除；归档还含6个本次修改文件的清理前版本，共245个文件，逐文件SHA-256与大小校验通过。备份为`archives/stage_cleanup_20261021/before_cleanup.tar.gz`，恢复说明在同目录README。原始数据、模型、训练合同、已确认标签及故障日志保留。
+用户确认后，239个UI/草稿/网页输出文件（约59MiB）已归档后删除，本地归档清单见 `archives/stage_cleanup_20261021/manifest.json`；归档还含6个本次修改文件的清理前版本，共245个文件，逐文件SHA-256与大小校验通过。备份为`archives/stage_cleanup_20261021/before_cleanup.tar.gz`，恢复说明在同目录README。原始数据、模型、训练合同、已确认标签及故障日志保留。
 
 代码依赖 `training.py → stage_sampling.py → stage_annotations.py`及外部力矩入口保持完整。仅移除网页生成实现，旧`prepare`命令明确提示已退役并指向恢复说明；标签导入、校验、索引和训练采样继续保留。完全取消阶段训练不是本次清理范围。

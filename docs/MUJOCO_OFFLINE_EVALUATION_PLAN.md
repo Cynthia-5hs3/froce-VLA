@@ -11,7 +11,7 @@
 | 首选基线 | `outputs/pi05_force_tavla_aligned_30k_resume/checkpoint-030000` | 旧101条成功示范，7维实测力矩历史 |
 | 放置/释放对照 | `outputs/pi05_stage_measured_3k/checkpoint-003000` | 后采v3 30k初始化，已批准阶段窗口继续训练3k，7维实测力矩历史 |
 
-这是人工实际测试反馈，不是已控制初始条件的成功率统计。不要把早期仅适配器30k当成此处的第一版，也不要把14维外部力矩success_30k当成阶段A。其余模型通过`experiments/`清单确认，所有对照固定各自checkpoint和归一化，执行配置保持相同。
+这是人工实际测试反馈，不是已控制初始条件的成功率统计。不要把早期仅适配器30k当成此处的第一版，也不要把14维外部力矩success_30k当成阶段A。其余模型通过`outputs/model_classification.json`清单确认，所有对照固定各自checkpoint和归一化，执行配置保持相同。
 
 ## 建议先做什么
 
