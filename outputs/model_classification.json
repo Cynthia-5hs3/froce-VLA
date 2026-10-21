@@ -1,0 +1,384 @@
+{
+  "schema": "force_vla_outputs_classification_v1",
+  "date": "2026-10-21",
+  "organization": "in_place_index_only",
+  "description": "Existing files and directories remain at their original outputs paths. No grouping directories or compatibility symlinks. Weights and logs are local-only; this file is a classification index.",
+  "model_count": 5,
+  "models": [
+    {
+      "id": "legacy_adapter_30k",
+      "name": "早期适配器30k（历史基线）",
+      "checkpoint": "outputs/pi05_force_sft_30k/checkpoint-030000",
+      "artifacts": [
+        {
+          "path": "outputs/pi05_force_sft_v1",
+          "kind": "training_run",
+          "files": 32,
+          "bytes": 396239669,
+          "tree_sha256": "e42752b546ec73a6fdd8be178b77f3e08c1ebb208c099dccc9423c298812b53b"
+        },
+        {
+          "path": "outputs/pi05_force_sft_30k",
+          "kind": "training_run",
+          "files": 184,
+          "bytes": 1860960713,
+          "tree_sha256": "2eba29e6fff1ca999a44c158a8ff627fe14add50f0e666d2f4aaadd1c7c6ee94"
+        },
+        {
+          "path": "outputs/pi05_force_sft_30k.console.log",
+          "kind": "log_or_process_record",
+          "files": 1,
+          "bytes": 762659,
+          "tree_sha256": "db78d463811e72f9a08f587c36e3e25c89c4e421d5d1968ce2887790460d7ba5"
+        },
+        {
+          "path": "outputs/pi05_force_30k_preflight",
+          "kind": "technical_check",
+          "files": 15,
+          "bytes": 131676399,
+          "tree_sha256": "0fd5d815c120d68de40b71052e2058b17880293e513cbbe67b2f02046e119dda"
+        },
+        {
+          "path": "outputs/pi05_force_smoke_20260920",
+          "kind": "technical_check",
+          "files": 10,
+          "bytes": 65837601,
+          "tree_sha256": "0c259c3e393a731b0ae23fac622d8981e236762da773152486d2582f3f1dd797"
+        },
+        {
+          "path": "outputs/phase_audit_20260921_loss.json",
+          "kind": "analysis_or_evaluation",
+          "files": 1,
+          "bytes": 3826,
+          "tree_sha256": "4dbd9917b470a198a54a586251edfe1f3f50080aeef3b662e5a0e6ebec7c6e91"
+        },
+        {
+          "path": "outputs/phase_audit_20260921_samples.json",
+          "kind": "analysis_or_evaluation",
+          "files": 1,
+          "bytes": 38538,
+          "tree_sha256": "116b24617db08ff0086450a8e79476c0a1a8bb0c0a9c36b60a82651c4049c3b1"
+        }
+      ]
+    },
+    {
+      "id": "success_lora_30k",
+      "name": "旧成功LoRA 30k（用户反馈最佳基线）",
+      "checkpoint": "outputs/pi05_force_tavla_aligned_30k_resume/checkpoint-030000",
+      "artifacts": [
+        {
+          "path": "outputs/pi05_force_tavla_aligned_30k",
+          "kind": "training_run",
+          "files": 20,
+          "bytes": 754033492,
+          "tree_sha256": "b48e040adfc7d9a64e6e2c63807f5179c9d9fc6148e8be275c873867d82d4a57"
+        },
+        {
+          "path": "outputs/pi05_force_tavla_aligned_30k_resume",
+          "kind": "training_run",
+          "files": 164,
+          "bytes": 6783839665,
+          "tree_sha256": "149079fa038c1736d802a65caf32457b4a64a196df10a79fbfbab994cc04c6b8"
+        },
+        {
+          "path": "outputs/pi05_force_tavla_aligned_30k_resume.log",
+          "kind": "log_or_process_record",
+          "files": 1,
+          "bytes": 4874507,
+          "tree_sha256": "818f16f9546c678819a6b4c4e0033dc3b5bdf69cc99f7a3ecf89978e5b582646"
+        },
+        {
+          "path": "outputs/pi05_force_tavla_aligned_smoke",
+          "kind": "technical_check",
+          "files": 10,
+          "bytes": 250795259,
+          "tree_sha256": "b21588a96636e07964df466203865d24c41fe68348bb8ec0232d032f091a0d12"
+        },
+        {
+          "path": "outputs/ta_vla_alignment_audit_20260921.md",
+          "kind": "analysis_or_evaluation",
+          "files": 1,
+          "bytes": 11465,
+          "tree_sha256": "4a6423ad5fa877435bdd7b0f1d243947878f1b4403241a56a372d441964ef1f5"
+        },
+        {
+          "path": "outputs/ta_vla_alignment_preflight_20260921.json",
+          "kind": "technical_check",
+          "files": 1,
+          "bytes": 538,
+          "tree_sha256": "70d2541f42e75d842e81fa0267f1da8fcc8ee14a6277481db127af51616fa579"
+        }
+      ]
+    },
+    {
+      "id": "correction_lora_30k",
+      "name": "纠偏v3 LoRA 30k",
+      "checkpoint": "outputs/pi05_force_v3_resume_from_014000/checkpoint-030000",
+      "artifacts": [
+        {
+          "path": "outputs/pi05_force_v3_run",
+          "kind": "training_run",
+          "files": 86,
+          "bytes": 3516979028,
+          "tree_sha256": "49644208642a7b12e52663fe4bb6b85e8e2dd06747dd2e217d51a39d4deea4f3"
+        },
+        {
+          "path": "outputs/pi05_force_v3_resume_from_014000",
+          "kind": "training_run",
+          "files": 98,
+          "bytes": 4019417761,
+          "tree_sha256": "0694ee850e0c835a3d8e272ee956b6025bc0c92fd6ba8518361847747c2dbb37"
+        },
+        {
+          "path": "outputs/force_vla_v3_train.log",
+          "kind": "log_or_process_record",
+          "files": 1,
+          "bytes": 2500343,
+          "tree_sha256": "202f7cbe8497411574fa2a9913a638e09022eb21272340bdbf9fe12ca370ebf4"
+        },
+        {
+          "path": "outputs/force_vla_v3_resume_train.log",
+          "kind": "log_or_process_record",
+          "files": 1,
+          "bytes": 2873995,
+          "tree_sha256": "3affd4c3c1383cb59ac345a040576184a96f776458d0b399f4a6b3b9653174c1"
+        },
+        {
+          "path": "outputs/force_vla_v3_resume.pid",
+          "kind": "log_or_process_record",
+          "files": 1,
+          "bytes": 8,
+          "tree_sha256": "8b5f75878d30e3fff95acc3b900e69295c017bae4bebe71ebdccc0ed0030b0e4"
+        },
+        {
+          "path": "outputs/realtime_execute_v3_continuous.jsonl",
+          "kind": "deployment_log",
+          "files": 1,
+          "bytes": 104610577,
+          "tree_sha256": "3d1de65780fff76efb7899d78d9cbbbddefb25da2909bb28a805b1e5a7588abc"
+        },
+        {
+          "path": "outputs/realtime_execute_v3_step1_retry.jsonl",
+          "kind": "deployment_log",
+          "files": 1,
+          "bytes": 86076,
+          "tree_sha256": "ec5284b84f6d79d81108a5b582ec56ced3b1bcee6172227ad45c1ee2097f2761"
+        }
+      ]
+    },
+    {
+      "id": "stage_a_3k",
+      "name": "阶段A 3k（放置/释放对照）",
+      "checkpoint": "outputs/pi05_stage_measured_3k/checkpoint-003000",
+      "artifacts": [
+        {
+          "path": "outputs/pi05_stage_measured_3k",
+          "kind": "training_run",
+          "files": 44,
+          "bytes": 1506184189,
+          "tree_sha256": "1e543976e35e228207a7a53bfbec502101784eb0b76fb83adcba042117f824d8"
+        },
+        {
+          "path": "outputs/pi05_stage_measured_3k.log",
+          "kind": "log_or_process_record",
+          "files": 1,
+          "bytes": 546710,
+          "tree_sha256": "716b5c08fddb7c1cfd9a5b4079e7e621dfa4e628f947fe4a5cc19851110aac57"
+        },
+        {
+          "path": "outputs/stage_A_analysis_20261019",
+          "kind": "analysis_or_evaluation",
+          "files": 7,
+          "bytes": 1942844,
+          "tree_sha256": "edb0a25021def707b6de140d33e709ec4b9bcfdb3a6ee26ccae8b0a5895647b8"
+        },
+        {
+          "path": "outputs/realtime_A_diagnosis_20261019",
+          "kind": "analysis_or_evaluation",
+          "files": 8,
+          "bytes": 5709803,
+          "tree_sha256": "38d9cd5a0e1d5d53d06f1791bbcf406ba0488c63c80b80b3b0a20c63d98ace7e"
+        },
+        {
+          "path": "outputs/realtime_check_stage_A_3000_20261019.log",
+          "kind": "log_or_process_record",
+          "files": 1,
+          "bytes": 582,
+          "tree_sha256": "4058f8f583f166a751d7049cecad290598fe83d5ca55ad5b6e6ef26ef1810926"
+        },
+        {
+          "path": "outputs/realtime_stage_A_3000.jsonl",
+          "kind": "deployment_log",
+          "files": 1,
+          "bytes": 144374403,
+          "tree_sha256": "35fe2b8182dd82e8d52b07615bd281fed1f72e1766339d998052f32e3f9c53b2"
+        }
+      ]
+    },
+    {
+      "id": "success_external_30k",
+      "name": "旧成功＋外部力矩LoRA 30k",
+      "checkpoint": "outputs/pi05_external_success_30k/checkpoint-030000",
+      "artifacts": [
+        {
+          "path": "outputs/pi05_external_success_30k",
+          "kind": "training_run",
+          "files": 182,
+          "bytes": 7589231442,
+          "tree_sha256": "86b8f6f5f3be4c94579f2b1eb5bebe019509533b930c383652a8776a5f1b5fe3"
+        },
+        {
+          "path": "outputs/pi05_external_success_30k.log",
+          "kind": "log_or_process_record",
+          "files": 1,
+          "bytes": 5411578,
+          "tree_sha256": "eba8773d9bdb09925674effa514645f7672c10d4a67793fda6dcbf4f09587627"
+        },
+        {
+          "path": "outputs/pi05_external_success_30k.exit",
+          "kind": "log_or_process_record",
+          "files": 1,
+          "bytes": 2,
+          "tree_sha256": "c624acd7a492e04a0311c9c37efd6a258f30b6095bdf33fc3bdd82fe2c173a75"
+        },
+        {
+          "path": "outputs/external_success_30k_prepared",
+          "kind": "preparation",
+          "files": 3,
+          "bytes": 5987,
+          "tree_sha256": "ae738d4ffdcd3cdbb528ae87ecc7af0dd76eb7bdb42034f6c7ffc3a9c78baed6"
+        },
+        {
+          "path": "outputs/external_success_analysis_20261020",
+          "kind": "analysis_or_evaluation",
+          "files": 16,
+          "bytes": 8830386,
+          "tree_sha256": "b3fd6c3627f6141ba13ee2a3e07c0d868e33c455258f1d52f749a63ba3cb2457"
+        },
+        {
+          "path": "outputs/grasp_review_20261020",
+          "kind": "analysis_or_evaluation",
+          "files": 4,
+          "bytes": 58456,
+          "tree_sha256": "537405c4f44fc35a8bc8f887d52270be50fc9a20eb11cbb3eaa5343854bffb7b"
+        },
+        {
+          "path": "outputs/realtime_external_success_30k_20261020_102833.jsonl",
+          "kind": "deployment_log",
+          "files": 1,
+          "bytes": 8696746,
+          "tree_sha256": "13247fb256fbdc14a3fcda53d81e9b8fded9afc45812348693b07952738af695"
+        },
+        {
+          "path": "outputs/realtime_external_success_30k_20261020_103246.jsonl",
+          "kind": "deployment_log",
+          "files": 1,
+          "bytes": 2898045,
+          "tree_sha256": "7981ce756a1b8fd6b518014b6fa68ae504203e726aee3fb4a29750d1549141ac"
+        },
+        {
+          "path": "outputs/realtime_external_success_30k_20261020_103525.jsonl",
+          "kind": "deployment_log",
+          "files": 1,
+          "bytes": 3131919,
+          "tree_sha256": "8c7ea0af88c00c23d26065905d48bfb497080ee66c6c88b299ba3573d71bd2df"
+        },
+        {
+          "path": "outputs/realtime_external_success_30k_assist_20261020_104857.jsonl",
+          "kind": "deployment_log",
+          "files": 1,
+          "bytes": 61512967,
+          "tree_sha256": "e96cefc8d674a68ede9a742500a6f31cfdae2631fc95364dc16c6e0e13cac686"
+        },
+        {
+          "path": "outputs/realtime_external_success_30k_assist_20261020_110449.jsonl",
+          "kind": "deployment_log",
+          "files": 1,
+          "bytes": 9430073,
+          "tree_sha256": "c51562037cbc4b4f59a709c87244fd485d8b623d218022d325a07776396cb730"
+        }
+      ]
+    }
+  ],
+  "shared_and_unconfirmed": [
+    {
+      "id": "shared_data_and_contracts",
+      "title": "共享数据窗口、训练合同和数据审查",
+      "paths": [
+        "outputs/classification_31d_update.txt",
+        "outputs/data_readiness.json",
+        "outputs/force_vla_31d_v2_torque_report",
+        "outputs/force_vla_31d_windows",
+        "outputs/force_vla_31d_windows_v2",
+        "outputs/force_vla_31d_windows_v3",
+        "outputs/force_vla_prepared_v2",
+        "outputs/force_vla_prepared_v3",
+        "outputs/label_audit.txt",
+        "outputs/pi05_force_prepared",
+        "outputs/stage_external_ab_20261016",
+        "outputs/stage_index_v3_20261016",
+        "outputs/stage_index_v3_20261016_round2"
+      ]
+    },
+    {
+      "id": "stage_b_not_trained",
+      "title": "阶段B准备文件（尚未训练，不计入五版）",
+      "paths": [
+        "outputs/external_stage_b_prepared"
+      ]
+    },
+    {
+      "id": "cross_model_evaluation",
+      "title": "旧成功LoRA与纠偏v3的跨模型评估",
+      "paths": [
+        "outputs/hover_ab_20261012",
+        "outputs/hover_ab_20261012.log",
+        "outputs/hover_ab_20261012_summary.log"
+      ]
+    },
+    {
+      "id": "environment_backup_and_monitoring",
+      "title": "环境检查、历史备份、通用监控与冒烟检查",
+      "paths": [
+        "outputs/environment",
+        "outputs/environment_check.json",
+        "outputs/force_smoke_1789355844063981384.json",
+        "outputs/git_pre_alignment_20260921",
+        "outputs/realtime_dashboard",
+        "outputs/realtime_dashboard_monitor.log",
+        "outputs/torque_monitor_smoke.txt",
+        "outputs/verification.json"
+      ]
+    },
+    {
+      "id": "unconfirmed_deployment_logs",
+      "title": "缺少明确checkpoint元数据的历史推理日志",
+      "reason": "不凭日期或简写把日志断定为某个模型；保留原文件待核对。",
+      "paths": [
+        "outputs/realtime_async_teleop_8hz.jsonl",
+        "outputs/realtime_execute_030000_continuous.jsonl",
+        "outputs/realtime_execute_030000_open_continuous.jsonl",
+        "outputs/realtime_execute_030000_speed_test.jsonl",
+        "outputs/realtime_execute_030000_step1_20260922.jsonl",
+        "outputs/realtime_execute_030000_step1_20260922_retry.jsonl",
+        "outputs/realtime_execute_030000_step1_manual.jsonl",
+        "outputs/realtime_execute_async_8hz.jsonl",
+        "outputs/realtime_execute_continuous.jsonl",
+        "outputs/realtime_execute_gripper_open.jsonl",
+        "outputs/realtime_execute_motion_test.jsonl",
+        "outputs/realtime_execute_smooth_test.jsonl",
+        "outputs/realtime_execute_speed_test.jsonl",
+        "outputs/realtime_execute_step1.jsonl",
+        "outputs/realtime_execute_step3.jsonl",
+        "outputs/realtime_observe_027000.jsonl",
+        "outputs/realtime_observe_manual.jsonl"
+      ]
+    }
+  ],
+  "notes": [
+    "旧成功LoRA30k是用户反馈抓取和下降放置较好的基线，早期适配器30k不是同一版本。",
+    "阶段A3k放置较准确但松爪问题待离线核对。",
+    "技术冒烟/预检、未训练B组和跨模型对照不单列为已完成模型。",
+    "GitHub只保存本分类清单和说明，不包含outputs里的训练权重、视频或日志。"
+  ]
+}

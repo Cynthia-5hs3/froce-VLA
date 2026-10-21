@@ -2,9 +2,11 @@
 
 工作目录：`/data0/wx/force-VLA`。目标是在PI0.5中加入力历史输入和未来力预测辅助损失。
 
+本地训练结果按五版模型在[outputs原位分类](outputs/README.md)，文件和目录保持原路径；[分类清单](outputs/model_classification.json)记录训练、日志和评估产物，不新增分类目录。
+
 减少真机试错：[真实观测回放、松爪诊断与MuJoCo仿真方案](docs/MUJOCO_OFFLINE_EVALUATION_PLAN.md)。已确认旧成功LoRA30k为优先基线，阶段A3k为放置/释放对照；仿真尚未实施。
 
-2026-10-21整理入口：[各组训练数据与模型清单](experiments/README.md)、[抓放判断与ForceVLA/ForceVLA2复现评估](docs/FORCE_METHODS_REVIEW_20261021.md)。清单按原路径归类，不迁移数据或权重；标注网页、草稿工具和临时审阅产物已归档后删除，训练依赖与已确认标注保留。[归档与恢复说明](archives/stage_cleanup_20261021/README.md)。
+2026-10-21整理入口：[各组训练产物分类](outputs/README.md)、[抓放判断与ForceVLA/ForceVLA2复现评估](docs/FORCE_METHODS_REVIEW_20261021.md)。清单按原路径归类，不迁移数据或权重；标注网页、草稿工具和临时审阅产物已归档后删除，训练依赖与已确认标注保留。[归档与恢复说明](archives/stage_cleanup_20261021/README.md)。
 
 外部关节力矩实验`success_30k`已于2026-10-20完成30k训练，模型在`outputs/pi05_external_success_30k/checkpoint-030000`；18k为本轮验证动作loss最低的候选。它沿用旧101条成功示范，从PI0.5基座重训；`stage_b`保留A组的已批准纠偏窗口和初始化，计划3k，尚未启动。两者输入过去2秒10点的`tau_J + tau_ext_hat_filtered`（10×14），未来输出仍为50×10动作和50×7实测力矩。完整模型检查命令为`bash scripts/force_external.sh success_30k model-check`（占用GPU，不连接机器人）。部署时选择整个checkpoint目录，入口自动加载14维历史与归一化，不单独替换权重文件；参数说明、18k/30k测试指令见 [两套外部力矩实验](docs/EXTERNAL_TORQUE_VARIANTS.md)。仅检查数据可运行`bash scripts/force_external.sh success_30k check`或`bash scripts/force_external.sh stage_b check`。
 

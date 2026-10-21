@@ -4,7 +4,9 @@
 /data/
 /datasets/
 /reference/
-/outputs/
+/outputs/*
+!/outputs/README.md
+!/outputs/model_classification.json
 /archives/
 /.environment-ready
 /third_party/archives/
