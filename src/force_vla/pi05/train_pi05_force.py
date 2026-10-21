@@ -65,8 +65,10 @@ def make_force_loader(
     batch_size: int = 1,
     shuffle: bool = True,
     include_images: bool = False,
+    use_external_torque: bool = False,
 ) -> DataLoader:
-    dataset = ForceVLAWindowDataset(parquet_path, include_images=include_images)
+    dataset = ForceVLAWindowDataset(parquet_path, include_images=include_images,
+                                   use_external_torque=use_external_torque)
     return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, collate_fn=collate_force_windows)
 
 
@@ -78,10 +80,12 @@ def build_force_policy(config: ForcePI05Config, checkpoint_dir: str | Path | Non
     return policy, report
 
 
-def check_window_contract(parquet_path: str | Path, batch_size: int = 2) -> dict[str, Any]:
-    loader = make_force_loader(parquet_path, batch_size=batch_size, shuffle=False)
+def check_window_contract(parquet_path: str | Path, batch_size: int = 2,
+                          use_external_torque: bool = False) -> dict[str, Any]:
+    loader = make_force_loader(parquet_path, batch_size=batch_size, shuffle=False,
+                               use_external_torque=use_external_torque)
     batch = next(iter(loader))
-    validate_force_window_batch(batch)
+    validate_force_window_batch(batch, use_external_torque=use_external_torque)
     return {
         "rows": len(loader.dataset),
         "batch_size": int(batch["action"].shape[0]),

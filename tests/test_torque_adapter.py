@@ -26,9 +26,11 @@ class TorqueAdapterTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             adapter(torch.randn(2, 9, 7))
 
-    def test_config_rejects_external_torque_first_version(self):
-        with self.assertRaises(ValueError):
-            ForcePI05Config(use_external_torque=True)
+    def test_external_history_does_not_expand_future_torque_targets(self):
+        config = ForcePI05Config(use_external_torque=True)
+        self.assertEqual(config.torque_history_dim, 14)
+        self.assertEqual(config.torque_dim, 7)
+        self.assertEqual(ForcePI05Config().torque_history_dim, 7)
 
     def test_window_batch_contract(self):
         batch = {

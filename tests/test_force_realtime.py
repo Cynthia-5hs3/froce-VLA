@@ -16,6 +16,7 @@ class RealtimeSafetyTests(unittest.TestCase):
     def setUp(self):
         self.snapshot = SimpleNamespace(policy_state=np.array(
             [0.4, 0.0, 0.3, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.5], dtype=np.float32))
+        self.snapshot.observed_at_ns = time.monotonic_ns()
         self.config = SimpleNamespace(workspace_min=(0.1, -0.5, 0.05), workspace_max=(0.8, 0.5, 0.75))
 
     def action(self):
@@ -64,7 +65,8 @@ class RealtimeSafetyTests(unittest.TestCase):
         stream = MagicMock()
         with patch("force_vla.pi05.realtime_control.ObservationSampler") as sampler, \
              patch("force_vla.pi05.realtime_control.AsyncInferenceWorker") as worker, \
-             patch("force_vla.pi05.realtime.KeyboardStop") as keyboard:
+             patch("force_vla.pi05.realtime.KeyboardStop") as keyboard, \
+             patch("builtins.print") as output:
             sampler.return_value.latest.return_value = self.snapshot
             worker.return_value.get_latest.return_value = result
             keyboard.return_value.__enter__.return_value.requested.return_value = False
@@ -76,6 +78,12 @@ class RealtimeSafetyTests(unittest.TestCase):
         record = json.loads(stream.write.call_args[0][0])
         self.assertGreaterEqual(record["action_index"], 5)
         self.assertFalse(record["motion_sent"])
+        self.assertIsNone(record["sent_xyz"])
+        self.assertIsNone(record["sent_gripper"])
+        self.assertFalse(record["gripper_command_sent"])
+        self.assertEqual(len(record["model_action"]), 10)
+        self.assertEqual(len(record["measured_state"]), 10)
+        self.assertFalse(any(str(call.args[0]).startswith("{") for call in output.call_args_list))
 
     def test_teleop_pause_discards_prediction_already_in_flight(self):
         entered, release = threading.Event(), threading.Event()
@@ -135,6 +143,12 @@ class RealtimeSafetyTests(unittest.TestCase):
                                observation_retry_timeout_s=2., observation_retry_interval_s=.02)
         robot = MagicMock(config=self.config)
         robot.drain_motion_events.return_value = []
+        robot.command_debug_snapshot.return_value = {
+            "motion_command_sent": True, "effective_xyz": [.4005, 0., .3],
+            "commanded_gripper": 0., "gripper_command_sent": False,
+        }
+        self.snapshot.observed_at_ns = time.monotonic_ns()
+        stream = MagicMock()
         with patch("force_vla.pi05.realtime_control.ObservationSampler") as sampler, \
              patch("force_vla.pi05.realtime_control.AsyncInferenceWorker") as worker, \
              patch("force_vla.pi05.realtime.KeyboardStop") as keyboard, \
@@ -142,20 +156,69 @@ class RealtimeSafetyTests(unittest.TestCase):
              patch("force_vla.pi05.teleop_assist.assist_action_from_state", return_value=self.action()) as convert:
             sampler.return_value.latest.return_value = self.snapshot
             worker.return_value.get_latest.return_value = None
-            assist.return_value.command.return_value = SimpleNamespace(active=True)
+            assist.return_value.command.return_value = SimpleNamespace(
+                active=True, linear_velocity=np.zeros(3), angular_velocity=np.zeros(3), gripper_target=None)
             keyboard.return_value.__enter__.return_value.requested.return_value = False
             keyboard.return_value.__enter__.return_value.restart_requested.return_value = False
             keyboard.return_value.__enter__.return_value.wait.return_value = False
-            run_control(args, robot, None, None, None, "task", None, None)
+            run_control(args, robot, None, None, None, "task", None, stream)
             self.assertEqual(convert.call_args[0][-1], .15)
             worker.return_value.set_paused.assert_called_with(True)
         robot.send_action.assert_called_once()
+        record = json.loads(stream.write.call_args[0][0])
+        self.assertEqual(record["requested_gripper"], 1.)
+        self.assertEqual(record["sent_gripper"], 0.)
+        self.assertEqual(record["sent_xyz"], [.4005, 0., .3])
+        self.assertNotEqual(record["sent_xyz"], record["requested_xyz"])
 
     def test_hold_preserves_gripper_intent_during_partial_opening(self):
         self.snapshot.gripper_open_fraction = .5
         action = hold_action(self.snapshot, gripper_target=1.)
         self.assertEqual(action[9], 1.)
         np.testing.assert_array_equal(action[:9], self.snapshot.policy_state[:9])
+
+    def test_teleop_release_waits_for_new_history_without_replaying_old_chunk(self):
+        self.config.velocity_tracking_tau_s = .25
+        self.snapshot.joint_torques = np.zeros(7)
+        self.snapshot.gripper_open_fraction = 1.
+        self.snapshot.image_timestamps = {"base": 1., "left_wrist": 1.}
+        args = SimpleNamespace(mode="execute", rate_hz=8., chunk_blend_steps=3,
+                               teleop_assist=True, teleop_latched=True, continuous=True, max_steps=1,
+                               max_position_jump=.03, max_rotation_jump=.2, hold_after_steps=False,
+                               inference_steps=10, teleop_device="mock", teleop_linear_speed=.02,
+                               teleop_angular_speed=.15, observation_retry_timeout_s=2.,
+                               observation_retry_interval_s=.02)
+        robot = MagicMock(config=self.config)
+        robot.drain_motion_events.return_value = []
+        robot.command_debug_snapshot.return_value = {}
+        command = SimpleNamespace(active=True, linear_velocity=np.zeros(3),
+                                  angular_velocity=np.zeros(3), gripper_target=None)
+        stale = {"sequence": 1, "anchor_ns": time.monotonic_ns() - 180_000_000,
+                 "actions": np.tile(self.action(), (50, 1)), "torques": np.zeros((50, 7)),
+                 "inference_ms": 180., "history_timestamps_ns": [1] * 10}
+        stream = MagicMock()
+        with patch("force_vla.pi05.realtime_control.ObservationSampler") as sampler, \
+             patch("force_vla.pi05.realtime_control.AsyncInferenceWorker") as worker, \
+             patch("force_vla.pi05.realtime.KeyboardStop") as keyboard, \
+             patch("force_vla.pi05.teleop_assist.XboxAssist") as assist, \
+             patch("force_vla.pi05.teleop_assist.assist_action_from_state", return_value=self.action()):
+            sampler.return_value.latest.return_value = self.snapshot
+            worker.return_value.get_latest.return_value = stale
+            assist.return_value.command.side_effect = [command, command, SimpleNamespace(active=False)]
+            controls = keyboard.return_value.__enter__.return_value
+            controls.requested.return_value = False
+            controls.restart_requested.return_value = False
+            controls.wait.side_effect = [False, False, True]
+            run_control(args, robot, None, None, None, "task", None, stream)
+            self.assertTrue(assist.call_args.kwargs["latched"])
+            self.assertEqual([call.args[0] for call in worker.return_value.set_paused.call_args_list], [True, False])
+            sampler.return_value.reset_history.assert_called_once()
+        self.assertEqual(robot.send_action.call_count, 2)
+        records = [json.loads(call.args[0]) for call in stream.write.call_args_list]
+        self.assertEqual([record["event"] for record in records if "event" in record],
+                         ["teleop_takeover", "teleop_release"])
+        self.assertEqual(records[-1]["status"], "waiting_for_history_or_chunk")
+        self.assertIsNone(records[-1]["model_action"])
 
     def test_warmup_sends_no_actions_and_keyboard_stop_precedes_thread_join(self):
         self.snapshot.joint_torques = np.zeros(7)

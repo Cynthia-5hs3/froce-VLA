@@ -1,0 +1,92 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 16,
+    "frame_count": 2391,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-016.parquet",
+    "data_sha256": "7d896efa5d88c1f12de10fc30d4e54cde19d71f2f46e4fc46765ace4360ee5b7",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-016.mp4",
+        "sha256": "d3e04dda3e294d34fbe57bff192c4a7337ab399fad3a4bcb50a9da3b8bad4934"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-016.mp4",
+        "sha256": "91bfc37528ae4ff4d460bd449b75cf584f54fe56ce5ed240ae3093c3de6295ed"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 865,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "调整夹爪位置和角度抓取物料，搬运至治具上方再细调节角度"
+    },
+    {
+      "start_frame": 865,
+      "end_frame": 964,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "下降搬运物料装配进治具中，该过程关节力矩没有明显波动"
+    },
+    {
+      "start_frame": 964,
+      "end_frame": 1020,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "装配角度有偏差，物料顶到治具边缘，力矩曲线产生波动"
+    },
+    {
+      "start_frame": 1020,
+      "end_frame": 1359,
+      "stage": "correction",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "物料装配失败，重新调整夹爪姿态夹取物料纠偏；由于夹取过程中刮到治具产生摩擦，外部力矩波动较大，关节力矩有出现增减变化"
+    },
+    {
+      "start_frame": 1359,
+      "end_frame": 1504,
+      "stage": "aligned_press",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "位置未对准，产生轻微碰撞，各关节外部力矩数值减少"
+    },
+    {
+      "start_frame": 1504,
+      "end_frame": 1882,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "抬升高度后进行纠偏"
+    },
+    {
+      "start_frame": 1882,
+      "end_frame": 1953,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "纠偏后下放，放置成功，力矩曲线没有产生波动"
+    },
+    {
+      "start_frame": 1953,
+      "end_frame": 2391,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "任务完成回归原位"
+    }
+  ],
+  "keyframes": []
+}

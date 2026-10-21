@@ -1,6 +1,66 @@
 # Force-VLA 真机推理测试
 
-实时入口是 `src/force_vla/pi05/realtime.py`，只在 `/data0/wx/force-VLA` 内运行。它读取 `tau_J`，按过去2秒的固定10个时间点构建7维力矩历史，接收两路224×224 RGB图像，预测50步10D TCP/夹爪动作。预测的7D未来力矩只用于日志，不发送给机器人。
+## 实时可视化界面
+
+现在默认不在推理终端逐帧打印动作JSON，完整遥测仍写入 `--log` 指定的文件。启动、重启、观测异常和退出信息保留。需要恢复逐帧打印时增加 `--verbose-actions`。正在运行的旧推理进程不会热更新，须由操作者停止并重新启动后才生效。
+
+另开终端启动只读监视器，日志路径与推理命令保持一致：
+
+```bash
+cd /data0/wx/force-VLA
+bash scripts/run.sh python -m force_vla.pi05.telemetry_dashboard \
+  --log outputs/realtime_stage_A_3000.jsonl \
+  --output outputs/realtime_dashboard
+```
+
+在这台电脑的桌面终端打开浏览器：
+
+```bash
+xdg-open /data0/wx/force-VLA/outputs/realtime_dashboard/index.html
+```
+
+也可直接在浏览器打开该HTML。页面从同目录的 `telemetry.js` 更新曲线，不需要HTTP服务、网络、额外Python包或GPU。监视器默认每0.25秒刷新，保留最近900条记录，正常30Hz时约30秒；需要更长历史可加 `--points 1800`。页面可选显示时间窗口、暂停画面、切换页签。
+
+- 预测动作10D：XYZ、rotation6D六个分量、夹爪开度。区分原始模型预测、请求目标和实测反馈；请求目标不等于底层实际执行位置。
+- 实测/预测力矩：七个关节分别绘制tau_J和当前选中动作索引对应的预测力矩，单位Nm。预测和实测不是严格同一物理时刻的误差配对。
+- 外部关节力矩：七个tau_ext_hat_filtered估计值，单位Nm。A组不使用它作为模型输入，此处只展示传感器侧信息。
+
+动作页展示50步块中当前选中动作的时间曲线，不是完整50步未来轨迹；面板同时显示当前索引、推理耗时及日志年龄。旋转6D不是欧拉角，夹爪实测使用开度比例，不拿状态向量里的米制宽度直接比较。旧日志没有的字段留空，不用请求动作冒充原始预测。
+
+监视器不导入机器人模块、不连接设备、不发送动作。关闭页面、暂停画面或Ctrl+C结束监视器均不会停止机器人。停止机械臂请回到推理终端按q/x/Esc；面板停更超过2秒会提示过期，不能把静止旧曲线当作机器人实时状态。
+
+实现与验证：`src/force_vla/pi05/telemetry_dashboard.py` 和 `dashboard_assets/`。覆盖增量JSONL读取、半行写入、日志重启/截断/替换、缺失字段、单位、停止更新提示、页签与暂停交互测试。浏览器交互采用模拟DOM验证；本环境无桌面浏览器自动化，首次打开请确认页签和曲线能正常刷新。
+
+## 当前A组模型（2026-10-19）
+
+推理入口默认checkpoint已切换为 `outputs/pi05_stage_measured_3k/checkpoint-003000`。本轮仍输入7维实测tau_J历史，10D状态和两路图像保持与训练一致；归一化从checkpoint的run.json加载。下面的旧30k段落与指标是历史记录，不代表A组的真机测试结果。
+
+不连接硬件的加载检查：
+
+```bash
+cd /data0/wx/force-VLA
+bash scripts/run_force_realtime.sh --check \
+  --checkpoint outputs/pi05_stage_measured_3k/checkpoint-003000 \
+  --robot-config configs/deployment_force_vla_smooth_test.yaml --device cuda:0
+```
+
+操作者在交互终端启动A组测试：
+
+```bash
+cd /data0/wx/force-VLA
+FORCE_VLA_HARDWARE=1 bash scripts/run_force_realtime.sh \
+  --mode execute --allow-hardware --startup-open --continuous \
+  --checkpoint outputs/pi05_stage_measured_3k/checkpoint-003000 \
+  --robot-config configs/deployment_force_vla_smooth_test.yaml \
+  --device cuda:0 --rate-hz 8 --inference-steps 10 \
+  --log outputs/realtime_stage_A_3000.jsonl
+```
+
+连接后先打开夹爪，再提示输入ARM；输入后等待完整2秒历史再发送策略动作。按q/x/Esc或Ctrl+C退出；按r作废旧预测、清空历史并重新等待，r不重载模型。可另加 `--teleop-assist` 启用原手柄接管。控制频率目标30Hz，异步推理请求上限8Hz，实际推理频率受模型耗时影响。
+
+本次仅切换模型来源，未改运动限位、速度、动作平滑或停止逻辑。对比早期动作loss最低的候选时，将checkpoint改为 `checkpoint-000500`，日志改为 `outputs/realtime_stage_A_500.jsonl`，其余参数保持相同。A组没有加入外部力矩。2026-10-19更新：入口可按checkpoint配置选择7维或14维同步历史，外部力矩两套实验的测试指令见 [外部力矩实验](EXTERNAL_TORQUE_VARIANTS.md)；此代码支持尚不代表外部力矩模型完成真机验证。
+
+实时入口是 `src/force_vla/pi05/realtime.py`，只在 `/data0/wx/force-VLA` 内运行。它按过去2秒的固定10个时间点构建力矩历史：旧模型使用7维`tau_J`，外部力矩模型使用每点先7维`tau_J`再7维`tau_ext_hat_filtered`。两路224×224 RGB图像和10D状态不变，预测50步10D TCP/夹爪动作。预测的7D未来力矩只用于日志，不发送给机器人。外部历史来自同一次快照，缺失/非有限值直接报错，不用零值代替。
 
 实时日志由启动命令的 `--log` 指定。每个策略控制周期记录当前7维实测力矩 `measured_tau_J`，以及当前动作索引对应的7维预测力矩 `predicted_tau_J`。在第二个终端中可实时查看两组曲线：
 

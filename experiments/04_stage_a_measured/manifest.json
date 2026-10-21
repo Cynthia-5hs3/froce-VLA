@@ -1,0 +1,130 @@
+{
+  "schema": "force_vla_experiment_catalog_v1",
+  "audit_date": "2026-10-21",
+  "workspace": "/data0/wx/force-VLA",
+  "title": "阶段A：已批准窗口，实测7维历史",
+  "id": "04_stage_a_measured",
+  "organization": "catalog_only; original artifacts remain at recorded paths",
+  "runs": [
+    {
+      "name": "pi05_stage_measured_3k",
+      "run_metadata": "outputs/pi05_stage_measured_3k/run.json",
+      "checkpoint": "outputs/pi05_stage_measured_3k/checkpoint-003000",
+      "last_saved_step": 3000,
+      "declared_total_steps": 3000,
+      "training_settings": {
+        "model_type": "pi05_force",
+        "base_checkpoint": "models/pi05_sft",
+        "tokenizer": "models/tokenizer",
+        "dataset_windows": "/data0/wx/force-VLA/outputs/force_vla_31d_windows_v3/windows.parquet",
+        "conditioning_layout": "separate",
+        "state_dim": 10,
+        "torque_dim": 7,
+        "torque_history_steps": 10,
+        "future_steps": 50,
+        "max_action_dim": 32,
+        "action_dim": 10,
+        "future_torque_loss_weight": 0.1,
+        "use_external_torque": false,
+        "training": {
+          "initialize_from_pi05": true,
+          "freeze_vision_encoder": true,
+          "train_expert_only": false,
+          "trainable": "lora",
+          "lora_rank": 16,
+          "lora_alpha": 16,
+          "lora_expert_rank": 32,
+          "lora_expert_alpha": 32,
+          "phase_balanced_evaluation": true,
+          "steps": 3000,
+          "seed": 42,
+          "validation_every": 250,
+          "validation_windows_per_episode": 16,
+          "save_every": 500,
+          "gradient_checkpointing": true,
+          "compile_model": false,
+          "dtype": "bfloat16",
+          "learning_rate": 0.000005,
+          "batch_size": 4
+        },
+        "initialize_checkpoint": "/data0/wx/force-VLA/outputs/pi05_force_v3_resume_from_014000/checkpoint-030000",
+        "data_contract": "/data0/wx/force-VLA/outputs/stage_external_ab_20261016/contract_measured.json"
+      },
+      "source_checkpoint": null,
+      "recorded_initialization": {
+        "checkpoint": "/data0/wx/force-VLA/outputs/pi05_force_v3_resume_from_014000/checkpoint-030000",
+        "adapter_sha256": "da55a97e60c88e7414b1abb6dfa45a53211ae23eff3efa771f30814af63dddfc",
+        "expanded_zero_external_columns": [],
+        "optimizer_restored": false
+      },
+      "data_contract_snapshot": {
+        "windows": "/data0/wx/force-VLA/outputs/force_vla_31d_windows_v3/windows.parquet",
+        "sha256": "a747285ca7f5803b0a3def6f39ca2eb89509a84a3a27bf8d893d7029c088687c",
+        "train_episodes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          13,
+          14,
+          15,
+          16,
+          17,
+          19,
+          21,
+          25,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          34,
+          35,
+          37,
+          38
+        ],
+        "validation_episodes": [
+          7,
+          18,
+          39
+        ],
+        "seed": 42,
+        "train_windows": 51718,
+        "validation_windows": 5644,
+        "normalization_source": "training episodes only",
+        "sampling_plan": {
+          "path": "/data0/wx/force-VLA/outputs/stage_external_ab_20261016/sampling_plan.parquet",
+          "sha256": "2e956037b1c35ddaad1a0539d472782e3a7e93c3c825c53b2c8b29e50eed4a12",
+          "annotation_index": "/data0/wx/force-VLA/outputs/stage_index_v3_20261016_round2",
+          "index_summary_sha256": "cdc211d936b3f5d064d826d4fafa00c3f9ee16f07e78a80d72c7900cd3bfc619",
+          "one_pass_candidates": [
+            15,
+            25,
+            28
+          ],
+          "one_pass_fraction": 0.25,
+          "stage_weights": {
+            "approach": 1,
+            "correction": 1.5,
+            "aligned_press": 3,
+            "seated_hold": 1.5,
+            "release_retreat": 1,
+            "idle": 0.1
+          },
+          "episode_balanced_within_group": true,
+          "selection": "all 50 future actions approved; replacement sampling; no RB oversampling"
+        },
+        "selected_train_windows": 45101
+      },
+      "normalization": "Use the full statistics in this run's checkpoint/data contract; do not substitute another group's statistics.",
+      "settings_windows_match_contract": true
+    }
+  ]
+}

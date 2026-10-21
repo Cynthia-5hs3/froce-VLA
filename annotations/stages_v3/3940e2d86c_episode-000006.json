@@ -1,0 +1,103 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 6,
+    "frame_count": 2192,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-006.parquet",
+    "data_sha256": "7d6a6894226196455cae250ee2479009fd3e1b72b61430aacadd3a96ebabcd70",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-006.mp4",
+        "sha256": "8a0c31441e89e0fbd7e520f8da3f2f9ebb4c4cf5f1b2dc06c37bfeddd414e471"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-006.mp4",
+        "sha256": "df4b4bc18816969c306248b28d60119c4108d1f7632a8b8fa5b5a150c3fe3b80"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 388,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "粗略定位物料上方位置后，调整角度并抓取"
+    },
+    {
+      "start_frame": 388,
+      "end_frame": 724,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "搬运物料至治具上方"
+    },
+    {
+      "start_frame": 724,
+      "end_frame": 859,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "下降放置物料"
+    },
+    {
+      "start_frame": 859,
+      "end_frame": 940,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "顶边后松开夹爪；关节、外部力矩曲线产生波动；"
+    },
+    {
+      "start_frame": 940,
+      "end_frame": 1602,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "调整夹爪抓取姿态后，重新抓取物料纠偏并在此放置"
+    },
+    {
+      "start_frame": 1602,
+      "end_frame": 1664,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "对准位置后下放物料"
+    },
+    {
+      "start_frame": 1664,
+      "end_frame": 1684,
+      "stage": "seated_hold",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "放置到治具上后下压到底，产生装配瞬时阻力"
+    },
+    {
+      "start_frame": 1684,
+      "end_frame": 2192,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "任务完成回归原位"
+    }
+  ],
+  "keyframes": [
+    {
+      "frame": 880,
+      "event": "contact",
+      "note": "错误姿态下发生顶边碰撞"
+    },
+    {
+      "frame": 1683,
+      "event": "contact",
+      "note": "下压装配到底后产生阻力"
+    }
+  ]
+}

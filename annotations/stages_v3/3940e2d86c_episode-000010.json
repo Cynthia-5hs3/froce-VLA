@@ -1,0 +1,103 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 10,
+    "frame_count": 1459,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-010.parquet",
+    "data_sha256": "a4a5c7a8681fa8b2b1e513b43d6e8414a7ddd99d0e83e234b49fe00f82184b5d",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-010.mp4",
+        "sha256": "4a1bcc8b23b46f0503094a1596e4ea969729ea0be23879ec1f1cf29534235228"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-010.mp4",
+        "sha256": "63297090bf19af131c57f4de48560d0cfcc267e882f98e1461296d23efb19d7c"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 466,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "TCP-Z轴高度保持不变时，粗略定位位置，下降后精细调整抓取位置及角度；该过程中没有受到外部阻力，关节力矩曲线变化平缓"
+    },
+    {
+      "start_frame": 466,
+      "end_frame": 759,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "搬运物料到治具上方位置，调整摆放位置时，外部力矩有轻微波动"
+    },
+    {
+      "start_frame": 759,
+      "end_frame": 857,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "对准位置后下降到治具上方"
+    },
+    {
+      "start_frame": 857,
+      "end_frame": 935,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "触碰到治具边缘，各关节力矩和外部力矩产生波动；"
+    },
+    {
+      "start_frame": 935,
+      "end_frame": 1157,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "调整姿态重新放置；夹取物料时J2,J4关节产生波动，其他关节的曲线波动较小或接近；"
+    },
+    {
+      "start_frame": 1157,
+      "end_frame": 1212,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "对准位置后下放装配"
+    },
+    {
+      "start_frame": 1212,
+      "end_frame": 1250,
+      "stage": "seated_hold",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "装配到位，物料顶到至具底部，产生对抗力，产生瞬时波动"
+    },
+    {
+      "start_frame": 1250,
+      "end_frame": 1459,
+      "stage": "seated_hold",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "装配完成，回到原位"
+    }
+  ],
+  "keyframes": [
+    {
+      "frame": 877,
+      "event": "contact",
+      "note": "放置失败，顶边"
+    },
+    {
+      "frame": 1223,
+      "event": "seated",
+      "note": "装配到位，顶到底部"
+    }
+  ]
+}

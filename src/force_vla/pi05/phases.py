@@ -12,9 +12,16 @@ def phase_values(dataset):
     return values
 
 
-def training_epoch_order(indices, seed, phases=None, critical_fraction=None):
+def training_epoch_order(indices, seed, phases=None, critical_fraction=None, probabilities=None):
     indices = np.asarray(indices, dtype=np.int64)
     rng = np.random.default_rng(seed)
+    if probabilities is not None:
+        probabilities = np.asarray(probabilities, dtype=np.float64)
+        if (critical_fraction is not None or probabilities.shape != indices.shape or not len(indices)
+                or not np.isfinite(probabilities).all() or (probabilities <= 0).any()
+                or not np.isclose(probabilities.sum(), 1.)):
+            raise ValueError("Stage sampling requires valid probabilities and disables RB oversampling")
+        return rng.choice(indices, len(indices), replace=True, p=probabilities / probabilities.sum())
     if critical_fraction is None:
         return rng.permutation(indices)
     if not 0 < critical_fraction < 1 or phases is None:

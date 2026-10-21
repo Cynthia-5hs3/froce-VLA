@@ -38,5 +38,9 @@ class ForcePI05Config(PI05Config):
             raise ValueError("state_dim, torque_dim, and torque_history_steps must be positive")
         if self.future_torque_loss_weight < 0:
             raise ValueError("future_torque_loss_weight must be non-negative")
-        if self.use_external_torque:
-            raise ValueError("external torque is reserved for a separate ablation")
+        if self.use_external_torque and self.torque_dim != 7:
+            raise ValueError("External torque conditioning requires seven Franka joints")
+
+    @property
+    def torque_history_dim(self) -> int:
+        return self.torque_dim * (2 if self.use_external_torque else 1)

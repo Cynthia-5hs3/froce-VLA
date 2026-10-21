@@ -59,17 +59,27 @@ class XboxAssist:
     BUTTON_B = 305
     BUTTON_X = 307
     BUTTON_Y = 308
+    BUTTON_LB = 310
+    BUTTON_RB = 311
 
     def __init__(self, device_path: str, *, deadzone: float = 0.08,
-                 linear_speed: float = 0.02, angular_speed: float = 0.15):
+                 linear_speed: float = 0.02, angular_speed: float = 0.15,
+                 latched: bool = False):
         if not 0 < deadzone < 1 or linear_speed <= 0 or angular_speed <= 0:
             raise ValueError("invalid Xbox assist limits")
         self.device_path = device_path
         self.deadzone = deadzone
         self.linear_speed = linear_speed
         self.angular_speed = angular_speed
+        self.latched = latched
+        self._manual = False
+        self._resume_requested = False
+        self._takeover_requested = False
+        self._error = None
         self._lock = threading.Lock()
         self._axes = {code: 0.0 for code in range(6)}
+        self._axes[self.AXIS_LT] = -1.0
+        self._axes[self.AXIS_RT] = -1.0
         self._buttons: set[int] = set()
         self._stop = threading.Event()
         self._device = None
@@ -79,9 +89,41 @@ class XboxAssist:
         from evdev import InputDevice
 
         self._device = InputDevice(self.device_path)
-        self._device.grab()
+        try:
+            self._device.grab()
+            for code in self._axes:
+                info = self._device.absinfo(code)
+                self._axes[code] = self._normalize_axis(info.value, info)
+            self._buttons = set(self._device.active_keys())
+        except Exception:
+            self.close()
+            raise
         self._thread = threading.Thread(target=self._read_loop, name="force-vla-xbox-assist", daemon=True)
         self._thread.start()
+
+    @staticmethod
+    def _normalize_axis(value, info):
+        span = max(1, info.max - info.min)
+        return float(np.clip(2.0 * (value - info.min) / span - 1.0, -1.0, 1.0))
+
+    def _update_event(self, event):
+        if event.type == 0 and event.code == 3:
+            raise OSError("Gamepad event stream lost synchronization")
+        with self._lock:
+            if event.type == 3 and event.code in self._axes:
+                self._axes[event.code] = self._normalize_axis(event.value, self._device.absinfo(event.code))
+            elif event.type == 1 and event.code in {
+                self.BUTTON_A, self.BUTTON_B, self.BUTTON_X, self.BUTTON_Y,
+                self.BUTTON_LB, self.BUTTON_RB,
+            }:
+                if event.value:
+                    self._buttons.add(event.code)
+                else:
+                    self._buttons.discard(event.code)
+                if event.code == self.BUTTON_RB and event.value == 1:
+                    self._resume_requested = True
+                if event.code == self.BUTTON_LB and event.value == 1:
+                    self._takeover_requested = True
 
     def _read_loop(self):
         try:
@@ -90,27 +132,23 @@ class XboxAssist:
                 if not readable:
                     continue
                 for event in self._device.read():
-                    with self._lock:
-                        if event.type == 3 and event.code in self._axes:
-                            info = self._device.absinfo(event.code)
-                            span = max(1, info.max - info.min)
-                            normalized = 2.0 * (event.value - info.min) / span - 1.0
-                            self._axes[event.code] = float(np.clip(normalized, -1.0, 1.0))
-                        elif event.type == 1 and event.code in {
-                            self.BUTTON_A, self.BUTTON_B, self.BUTTON_X, self.BUTTON_Y,
-                        }:
-                            if event.value:
-                                self._buttons.add(event.code)
-                            else:
-                                self._buttons.discard(event.code)
-        except (OSError, AttributeError):
+                    self._update_event(event)
+        except Exception as error:
             if not self._stop.is_set():
+                with self._lock:
+                    self._error = error
                 self._stop.set()
 
     def command(self) -> AssistCommand:
         with self._lock:
+            if self._error is not None:
+                raise RuntimeError("Gamepad input failed; stale commands cannot be used") from self._error
             axes = dict(self._axes)
             buttons = set(self._buttons)
+            resume_requested = self._resume_requested
+            self._resume_requested = False
+            takeover_requested = self._takeover_requested
+            self._takeover_requested = False
         left_x = _deadzone(axes[self.AXIS_X], self.deadzone)
         left_y = _deadzone(axes[self.AXIS_Y], self.deadzone)
         right_x = _deadzone(axes[self.AXIS_RX], self.deadzone)
@@ -129,6 +167,12 @@ class XboxAssist:
         rt = max(0.0, (axes[self.AXIS_RT] + 1.0) * 0.5)
         gripper_target = 1.0 if lt - rt > self.deadzone else 0.0 if rt - lt > self.deadzone else None
         active = bool(np.linalg.norm(linear) > 0 or np.linalg.norm(angular) > 0 or gripper_target is not None)
+        if self.latched:
+            if active or self.BUTTON_LB in buttons or takeover_requested:
+                self._manual = True
+            elif resume_requested:
+                self._manual = False
+            active = self._manual
         return AssistCommand(linear, angular, gripper_target, active)
 
     def close(self):

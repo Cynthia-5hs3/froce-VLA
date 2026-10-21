@@ -16,7 +16,7 @@ import numpy as np
 import torch
 import yaml
 
-from .preparation import local_path
+from .preparation import digest, local_path
 from .temporal import HISTORY_OFFSETS, SAMPLE_RATE_HZ
 from .training import restore_for_inference
 
@@ -121,9 +121,12 @@ def configure_threads(values: dict):
 
 def prepare_realtime_batch(snapshot, history, task, normalizer, tokenizer, device):
     state_raw = torch.from_numpy(np.asarray(snapshot.policy_state, dtype=np.float32)).reshape(1, 10)
-    torque_raw = torch.from_numpy(np.asarray(history, dtype=np.float32)).reshape(1, 10, 7)
+    history = np.asarray(history, dtype=np.float32)
+    if history.shape not in ((10, 7), (10, 14)) or not np.isfinite(history).all():
+        raise ValueError("Expected finite 10x7 or 10x14 synchronized torque history")
+    torque_raw = torch.from_numpy(history).unsqueeze(0)
     state = normalizer.transform(state_raw, "state")
-    torque = normalizer.transform(torque_raw, "torque")
+    torque = normalizer.transform_history(torque_raw)
     state_text = np.clip(state.numpy(), -1, 1)
     state_tokens = np.clip(
         np.digitize(state_text, np.linspace(-1, 1, 257)[:-1]) - 1, 0, 255
@@ -174,6 +177,9 @@ def safe_action(action, snapshot, robot_config, max_position_jump, max_rotation_
 
 
 def infer_chunk(policy, snapshot, history, task, normalizer, tokenizer, device, num_steps):
+    expected_dim = 14 if policy.config.use_external_torque else 7
+    if np.shape(history) != (10, expected_dim):
+        raise ValueError(f"Checkpoint requires torque history shape (10, {expected_dim})")
     batch = prepare_realtime_batch(snapshot, history, task, normalizer, tokenizer, device)
     images, image_masks = policy._preprocess_images(batch)
     started = time.perf_counter()
@@ -218,6 +224,17 @@ def run(args):
     if args.mode != "check":
         robot_config = load_robot_config(str(config_path))
     checkpoint = local_path(args.checkpoint)
+    settings = json.loads((checkpoint / "force_config.json").read_text())
+    use_external = bool(settings.get("use_external_torque", False))
+    if use_external:
+        run_info = json.loads((checkpoint / "run.json").read_text())
+        statistics = run_info["data_contract"]["statistics"].get("external_torque")
+        if statistics is None:
+            raise ValueError("External torque checkpoint is missing training normalization")
+        for field in ("offset", "scale"):
+            statistic_values = np.asarray(statistics[field])
+            if statistic_values.shape != (7,) or not np.isfinite(statistic_values).all() or (field == "scale" and (statistic_values <= 0).any()):
+                raise ValueError("Invalid external torque checkpoint normalization")
     validate_temporal_contract(checkpoint)
     policy, normalizer = restore_for_inference(checkpoint, device=str(device))
     tokenizer_path = local_path(json.loads((checkpoint / "force_config.json").read_text())["tokenizer"])
@@ -225,12 +242,27 @@ def run(args):
 
     tokenizer = AutoTokenizer.from_pretrained(str(tokenizer_path), local_files_only=True)
     task = load_task(str(config_path))
+    deployment = {
+        "event": "deployment_session", "telemetry_schema_version": 2,
+        "at_ns": time.monotonic_ns(), "wall_time_ns": time.time_ns(),
+        "checkpoint": str(checkpoint), "checkpoint_step": json.loads((checkpoint / "complete.json").read_text())["step"],
+        "adapter_sha256": digest(checkpoint / "adapter.safetensors"),
+        "robot_config": str(config_path), "robot_config_sha256": digest(config_path),
+        "robot_parameters": values["robot"], "mode": args.mode, "task": task, "device": str(device),
+        "torque_history": [10, 14 if use_external else 7],
+        "torque_history_fields": ["tau_J", "tau_ext_hat_filtered"] if use_external else ["tau_J"],
+        "max_position_jump_m": args.max_position_jump, "max_rotation_jump_rad": args.max_rotation_jump,
+        "inference_steps": args.inference_steps, "chunk_blend_steps": args.chunk_blend_steps,
+        "control_hz": SAMPLE_RATE_HZ, "inference_request_hz": args.rate_hz,
+        "startup_open": args.startup_open, "continuous": args.continuous, "max_steps": args.max_steps,
+        "history_offsets_seconds": [offset / SAMPLE_RATE_HZ for offset in HISTORY_OFFSETS],
+        "action_execution": "timestamped_chunks",
+        "teleop_assist": getattr(args, "teleop_assist", False),
+        "teleop_latched": getattr(args, "teleop_latched", False),
+        "sent_xyz_semantics": "smoothed pose reference used to compute Cartesian velocity; not measured TCP",
+    }
     if args.mode == "check":
-        print(json.dumps({"checkpoint": str(checkpoint), "task": task, "device": str(device),
-                          "hardware_connected": False, "action_dim": 10, "torque_history": [10, 7],
-                          "history_offsets_seconds": [offset / SAMPLE_RATE_HZ for offset in HISTORY_OFFSETS],
-                          "control_hz": SAMPLE_RATE_HZ, "inference_request_hz": args.rate_hz,
-                          "action_execution": "timestamped_chunks"}, indent=2))
+        print(json.dumps(dict(deployment, hardware_connected=False, action_dim=10), indent=2))
         return 0
 
     if not args.allow_hardware:
@@ -241,6 +273,9 @@ def run(args):
     log_path = Path(args.log).resolve() if args.log else None
     stream = log_path.open("a", encoding="utf-8") if log_path else None
     try:
+        if stream:
+            stream.write(json.dumps(deployment, ensure_ascii=False) + "\n")
+            stream.flush()
         print(f"Connecting observation path to {robot_config.robot_ip}; no robot motion is requested.", flush=True)
         robot.connect()
         if args.startup_open:
@@ -270,7 +305,7 @@ def run(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mode", choices=("check", "observe", "execute"), default="check")
-    parser.add_argument("--checkpoint", default="outputs/pi05_force_sft_30k/checkpoint-027000")
+    parser.add_argument("--checkpoint", default="outputs/pi05_stage_measured_3k/checkpoint-003000")
     parser.add_argument("--robot-config", default="configs/deployment_force_vla.yaml")
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--allow-hardware", action="store_true")
@@ -278,6 +313,8 @@ def main():
     parser.add_argument("--async-inference", action="store_true", help="Compatibility flag; execution is always asynchronous")
     parser.add_argument("--chunk-blend-steps", type=int, default=3)
     parser.add_argument("--teleop-assist", action="store_true")
+    parser.add_argument("--teleop-latched", action="store_true",
+                        help="Keep manual control until RB is pressed with all motion controls neutral")
     parser.add_argument(
         "--teleop-device",
         default="/dev/input/by-id/usb-Microsoft_Controller_3039373130303635393336353232-event-joystick",
@@ -290,8 +327,9 @@ def main():
     parser.add_argument("--rate-hz", type=float, default=8.0, help="Requested inference rate; control follows the 30 Hz dataset")
     parser.add_argument("--inference-steps", type=int, default=10)
     parser.add_argument("--max-position-jump", type=float, default=0.08)
-    parser.add_argument("--max-rotation-jump", type=float, default=0.20)
+    parser.add_argument("--max-rotation-jump", type=float, default=0.35)
     parser.add_argument("--log")
+    parser.add_argument("--verbose-actions", action="store_true", help="Print each action to the terminal; disabled for dashboard use")
     parser.add_argument("--observation-retry-timeout-s", type=float, default=2.0)
     parser.add_argument("--observation-retry-interval-s", type=float, default=0.02)
     args = parser.parse_args()
@@ -301,6 +339,8 @@ def main():
         parser.error("continuous mode requires --mode execute")
     if (args.teleop_assist or args.startup_open) and args.mode != "execute":
         parser.error("teleop assist and startup-open require execute mode")
+    if args.teleop_latched and not args.teleop_assist:
+        parser.error("teleop-latched requires --teleop-assist")
     if args.chunk_blend_steps < 0 or args.chunk_blend_steps >= 50:
         parser.error("chunk-blend-steps must be between 0 and 49")
     if args.teleop_linear_speed <= 0 or args.teleop_angular_speed <= 0:

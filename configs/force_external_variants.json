@@ -1,0 +1,24 @@
+{
+  "success_30k": {
+    "reference_checkpoint": "outputs/pi05_force_tavla_aligned_30k_resume/checkpoint-030000",
+    "source_contract": "outputs/pi05_force_prepared/data_contract.json",
+    "initialize_checkpoint": null,
+    "preparation_output": "outputs/external_success_30k_prepared",
+    "training_output": "outputs/pi05_external_success_30k",
+    "evaluation_output": "outputs/eval_external_success_30k",
+    "log": "outputs/realtime_external_success_30k.jsonl",
+    "steps": 30000,
+    "description": "Original successful demonstrations only; repeat aligned LoRA training from the PI0.5 base with external history."
+  },
+  "stage_b": {
+    "reference_checkpoint": "outputs/pi05_stage_measured_3k/checkpoint-003000",
+    "source_contract": "outputs/stage_external_ab_20261016/contract_measured_external.json",
+    "initialize_checkpoint": "outputs/pi05_force_v3_resume_from_014000/checkpoint-030000",
+    "preparation_output": "outputs/external_stage_b_prepared",
+    "training_output": "outputs/pi05_external_stage_b_3k",
+    "evaluation_output": "outputs/eval_external_stage_b",
+    "log": "outputs/realtime_external_stage_b.jsonl",
+    "steps": 3000,
+    "description": "Paired B experiment against stage A: same approved correction windows, initialization and budget; add external history."
+  }
+}

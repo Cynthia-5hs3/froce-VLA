@@ -83,12 +83,22 @@ class ForceNormalizer:
             raise ValueError("Invalid normalization scale")
         return tensor * scale + offset if inverse else (tensor - offset) / scale
 
+    def transform_history(self, tensor):
+        if tensor.shape[-1] == 7:
+            return self.transform(tensor, "torque")
+        if tensor.shape[-1] != 14 or "external_torque" not in self.statistics:
+            raise ValueError("14D history requires separate external torque normalization")
+        return torch.cat((self.transform(tensor[..., :7], "torque"),
+                          self.transform(tensor[..., 7:], "external_torque")), dim=-1)
+
     def __call__(self, batch):
         result = dict(batch)
         for key, name in (("observation.state", "state"), ("action", "action"),
-                          ("joint_torque_history", "torque"), ("future_joint_torque", "torque")):
+                          ("future_joint_torque", "torque")):
             if key in batch:
                 result[key] = self.transform(batch[key], name)
+        if "joint_torque_history" in batch:
+            result["joint_torque_history"] = self.transform_history(batch["joint_torque_history"])
         return result
 
 

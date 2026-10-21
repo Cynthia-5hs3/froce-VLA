@@ -1,0 +1,98 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 14,
+    "frame_count": 2082,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-014.parquet",
+    "data_sha256": "1e7cc73ad8a562a4766375dd6cd98d49e69013d17ac570f0b3e0904ad5c92082",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-014.mp4",
+        "sha256": "26e538923e1a8e2fb07a4b339bd91eecf46ed39943e2d25bf0850270aa9e4d97"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-014.mp4",
+        "sha256": "6dedb0b3aea4ab1b1dbbae882f9a2bf974b23e22380cf80d1cc7289abc6b32c2"
+      }
+    }
+  },
+  "annotator": "wx + Codex补标草稿（新增段待人工复核）",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 259,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "移动下降到物料上方约30mm处，精细调整确定物料位置"
+    },
+    {
+      "start_frame": 259,
+      "end_frame": 572,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "调整夹爪位置、角度和高度，确保夹爪抓取位置在物料中间部位"
+    },
+    {
+      "start_frame": 572,
+      "end_frame": 968,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "搬运物料至治具上方位置，精细调整夹爪位置、角度和高度，调整过程中外部力矩存在波动"
+    },
+    {
+      "start_frame": 968,
+      "end_frame": 1089,
+      "stage": "aligned_press",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "下降高度，放置物料到治具中"
+    },
+    {
+      "start_frame": 1089,
+      "end_frame": 1136,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "发生碰撞，力矩曲线发生明显波动，J2外部关节力矩产生约5Nm"
+    },
+    {
+      "start_frame": 1136,
+      "end_frame": 1734,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "夹取治具上放置失败的物料，重新调整姿态，该过程中的关节力矩波动来源于重新抓取物料和调整姿态"
+    },
+    {
+      "start_frame": 1734,
+      "end_frame": 1890,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "调整位姿后下放物料，放置姿态较准确，但装配过程中存在轻微触碰治具产生摩擦"
+    },
+    {
+      "start_frame": 1890,
+      "end_frame": 2082,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "1890帧夹爪已张开，物料留在治具上；随后空爪上升并横向回撤。不能把这里当成再次纠偏，装配牢固。 数值辅助：Z 0.281–0.382m，夹爪 84.0–84.0mm，七维外部关节力矩范数最大2.84Nm（帧1998）。"
+    }
+  ],
+  "keyframes": [
+    {
+      "frame": 1890,
+      "event": "other",
+      "note": "[AI候选关键帧，需人工复核] 末尾补标起点：已开爪，之后空爪撤离；释放实际早于该帧，不新增错误的释放起点。"
+    }
+  ]
+}

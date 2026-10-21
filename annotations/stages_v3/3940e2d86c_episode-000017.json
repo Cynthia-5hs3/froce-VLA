@@ -1,0 +1,68 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 17,
+    "frame_count": 1515,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-017.parquet",
+    "data_sha256": "37dd4b014128c2471037247965f11549ac5a456b59074b9bcb6d6326dca5dccb",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-017.mp4",
+        "sha256": "fcd3330a802cfeb672d3f80cf013d6772a8d1103f346f1f564e0ad94b2a00f7a"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-017.mp4",
+        "sha256": "61d944d97d6ce5dc2439f74245edf1c36e7ae5de38af02bfc14712e4bfeddd16"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 264,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "移动并下降至物料上方位置"
+    },
+    {
+      "start_frame": 264,
+      "end_frame": 647,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "精细调整物料角度和位置进行抓取，调整过程中外部力矩曲线波动较大"
+    },
+    {
+      "start_frame": 647,
+      "end_frame": 944,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "搬运至治具上方的过程中，精细调整下放角度"
+    },
+    {
+      "start_frame": 944,
+      "end_frame": 1264,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "下降过程中调节位置和角度"
+    },
+    {
+      "start_frame": 1264,
+      "end_frame": 1515,
+      "stage": "release_retreat",
+      "imitation": "review",
+      "confidence": "confirmed",
+      "note": "任务完成回归原位"
+    }
+  ],
+  "keyframes": []
+}

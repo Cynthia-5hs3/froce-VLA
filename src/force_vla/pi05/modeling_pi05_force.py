@@ -43,7 +43,7 @@ class ForcePI05Model(PI05Pytorch):
         flow_dim = config.max_action_dim + config.torque_dim
         self.torque_adapter = TorqueAdapter(
             history_steps=config.torque_history_steps,
-            torque_dim=config.torque_dim,
+            torque_dim=config.torque_history_dim,
             token_dim=width,
         )
         self.state_proj = nn.Linear(config.state_dim, width)
@@ -73,7 +73,7 @@ class ForcePI05Model(PI05Pytorch):
             raise ValueError(
                 f"state must have shape [B, {self.config.state_dim}], got {tuple(state.shape)}"
             )
-        expected = (self.config.torque_history_steps, self.config.torque_dim)
+        expected = (self.config.torque_history_steps, self.config.torque_history_dim)
         if torque_history.ndim != 3 or tuple(torque_history.shape[1:]) != expected:
             raise ValueError(
                 f"torque_history must have shape [B, {expected[0]}, {expected[1]}], "

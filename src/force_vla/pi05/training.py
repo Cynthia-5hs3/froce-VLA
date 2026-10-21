@@ -14,6 +14,7 @@ from .train_pi05_force import build_force_policy, check_window_contract, load_fo
 from .window_dataset import ForceVLAWindowDataset, attach_visual_language_inputs, collate_force_windows
 from .lora import install_lora
 from .phases import phase_values, training_epoch_order
+from .stage_sampling import initialize_stage_checkpoint, load_sampling_plan
 
 TRAINABLE_PREFIXES = ("torque_adapter.", "state_proj.", "state_torque_fusion.", "flow_in_proj.",
                       "flow_action_out_proj.", "torque_out_proj.")
@@ -121,11 +122,15 @@ def run_training(args, dataset):
         raise RuntimeError("CUDA unavailable; invoke scripts/run.sh --gpu")
     contract = load_contract(dataset, args.contract)
     episodes = np.asarray(dataset.table["episode_index"])
-    train_rows = np.flatnonzero(np.isin(episodes, contract["train_episodes"]))
+    train_rows, probabilities = load_sampling_plan(dataset, contract)
+    if bool(settings.get("use_external_torque", False)) != dataset.use_external_torque:
+        raise ValueError("Dataset and model torque inputs differ")
+    if dataset.use_external_torque and "external_torque" not in contract["statistics"]:
+        raise ValueError("Missing train-only external torque normalization")
     validation_rows = np.flatnonzero(np.isin(episodes, contract["validation_episodes"]))
     phases = phase_values(dataset)
     critical_fraction = options.get("critical_sample_fraction")
-    training_epoch_order(train_rows, options["seed"], phases, critical_fraction)
+    training_epoch_order(train_rows, options["seed"], phases, critical_fraction, probabilities)
     destination = output_path(args.output)
     destination.mkdir(parents=True, exist_ok=False)
     torch.set_num_threads(4)
@@ -143,13 +148,17 @@ def run_training(args, dataset):
                 "base_sha256": digest(local_path(settings["base_checkpoint"]) / "model.safetensors"),
                 "data_contract": contract, "loading": loading, "total_steps": total_steps,
                 "trainable_parameters": sum(value.numel() for value in parameters.values())}
+    if settings.get("initialize_checkpoint"):
+        run_info["initialization"] = initialize_stage_checkpoint(policy, settings["initialize_checkpoint"],
+            contract, run_info["base_sha256"])
+        torch.manual_seed(options["seed"])
     write_json(destination / "run.json", run_info)
     progress = {"step": 0, "epoch": 0, "cursor": 0}
     if args.resume:
         checkpoint = local_path(args.resume)
         previous = json.loads((checkpoint / "run.json").read_text())
-        for key in ("settings", "base_sha256", "data_contract", "total_steps"):
-            if previous[key] != run_info[key]:
+        for key in ("settings", "base_sha256", "data_contract", "total_steps", "initialization"):
+            if previous.get(key) != run_info.get(key):
                 raise ValueError(f"Resume contract differs: {key}")
         progress = restore_training_state(policy, optimizer, scheduler, checkpoint)
         if progress["step"] >= total_steps:
@@ -158,7 +167,8 @@ def run_training(args, dataset):
     policy.train()
     print(f"Training {len(train_rows)} windows; {run_info['trainable_parameters']} trainable parameters", flush=True)
     while progress["step"] < total_steps:
-        order = training_epoch_order(train_rows, options["seed"] + progress["epoch"], phases, critical_fraction)
+        order = training_epoch_order(train_rows, options["seed"] + progress["epoch"], phases, critical_fraction,
+                                     probabilities)
         if progress["cursor"] >= len(order):
             progress["epoch"] += 1
             progress["cursor"] = 0
@@ -242,21 +252,26 @@ def main():
     mode.add_argument("--train", action="store_true")
     parser.add_argument("--config", default="configs/pi05_force_sft.json")
     parser.add_argument("--windows")
-    parser.add_argument("--contract", default="outputs/pi05_force_prepared/data_contract.json")
+    parser.add_argument("--contract")
     parser.add_argument("--output")
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--steps", type=int)
     parser.add_argument("--resume")
     args = parser.parse_args()
     settings = json.loads(local_path(args.config).read_text())
+    args.contract = args.contract or settings.get("data_contract", "outputs/pi05_force_prepared/data_contract.json")
     windows = local_path(args.windows or settings["dataset_windows"])
     if args.check_data:
-        print(json.dumps(check_window_contract(windows), indent=2))
+        print(json.dumps(check_window_contract(windows,
+            use_external_torque=settings.get("use_external_torque", False)), indent=2))
         return
     if args.output is None:
         args.output = "outputs/pi05_force_prepared" if args.prepare else "outputs/pi05_force_sft"
-    dataset = ForceVLAWindowDataset(windows, include_images=True)
+    dataset = ForceVLAWindowDataset(windows, include_images=True,
+                                   use_external_torque=settings.get("use_external_torque", False))
     if args.prepare:
+        if dataset.use_external_torque:
+            raise ValueError("Use stage_sampling to prepare the fixed-split external torque experiment")
         contract = prepare(dataset, args.output, settings["training"]["seed"])
         print(json.dumps({key: value for key, value in contract.items() if key != "statistics"}, indent=2))
         return

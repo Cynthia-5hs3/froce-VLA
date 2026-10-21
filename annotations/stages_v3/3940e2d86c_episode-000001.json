@@ -1,0 +1,98 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 1,
+    "frame_count": 2292,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-001.parquet",
+    "data_sha256": "13261eda64b78ea0ffc15e658c556c4ce87078d6d0444237339f24a19aba0471",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-001.mp4",
+        "sha256": "e16fbcf0fbab7350beb68ae0d3cbea020b206590e16b4f2e5da2fcb9a3aa3305"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-001.mp4",
+        "sha256": "d5e5a8b5f59191e5d8acbd1a375b9b0c0bdc9f21a4f38f5ced2e3cc977e924be"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 292,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "下降调整位置到物料上方，等待调整角度"
+    },
+    {
+      "start_frame": 292,
+      "end_frame": 646,
+      "stage": "approach",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "调整抓取角度，但调整时间过长"
+    },
+    {
+      "start_frame": 646,
+      "end_frame": 1053,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "调整放置角度，搬运至治具上方位置"
+    },
+    {
+      "start_frame": 1053,
+      "end_frame": 1191,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "下降放置物料，顶到治具，关节、外部力矩曲线产生波峰波谷大幅波动，放置失败"
+    },
+    {
+      "start_frame": 1191,
+      "end_frame": 1306,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "放置失败，松开夹爪，TCP-Z轴不变"
+    },
+    {
+      "start_frame": 1306,
+      "end_frame": 1856,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "重新抓取物料，调整位姿进行二次校准，TCP高度抬升约30mm进行姿态角度校正"
+    },
+    {
+      "start_frame": 1856,
+      "end_frame": 1944,
+      "stage": "aligned_press",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "校准后放置物料，轻微触碰到治具，力矩曲线波动斜率和波动变化差值要小于失败时候的值"
+    },
+    {
+      "start_frame": 1944,
+      "end_frame": 2292,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "任务完成回到原位"
+    }
+  ],
+  "keyframes": [
+    {
+      "frame": 1155,
+      "event": "contact",
+      "note": "顶边"
+    }
+  ]
+}

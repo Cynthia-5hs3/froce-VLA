@@ -1,0 +1,127 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 3,
+    "frame_count": 2621,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-003.parquet",
+    "data_sha256": "ed168431a6b874f7f2424fc331078631df0495384d8daf4303167599ff1dcb7d",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-003.mp4",
+        "sha256": "2b7daee63191eb5d7a3cbe3d867e185d5e4b79048a23882f7f06d2e9821fec33"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-003.mp4",
+        "sha256": "4a975fc77d32f4abb63789be580b0cf4d4807f43edb3e624d2223967df38dc9c"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 104,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "初始高度粗略横向移动到物料上方"
+    },
+    {
+      "start_frame": 104,
+      "end_frame": 381,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "下降接近物料，夹爪在物料中间部位的两侧，夹取"
+    },
+    {
+      "start_frame": 381,
+      "end_frame": 803,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "搬运到治具上方"
+    },
+    {
+      "start_frame": 803,
+      "end_frame": 904,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "位置未对准，下降时触碰到治具；J2J4关节、外部力矩有明显波动"
+    },
+    {
+      "start_frame": 904,
+      "end_frame": 1249,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "调整物料位姿，使得其灰色边缘基本与绿色橡胶圈边缘保持平行"
+    },
+    {
+      "start_frame": 1249,
+      "end_frame": 1310,
+      "stage": "aligned_press",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "再次下降放置"
+    },
+    {
+      "start_frame": 1310,
+      "end_frame": 1394,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "再次放置失败，物料顶到治具边缘，力矩曲线发生瞬时大幅波动"
+    },
+    {
+      "start_frame": 1394,
+      "end_frame": 1514,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "重新调整姿态抓取物料，夹爪水平姿态与物料保持水平，位姿调整时力矩曲线发生振荡波动"
+    },
+    {
+      "start_frame": 1514,
+      "end_frame": 1925,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "重新抓取物料后，调整放置位姿"
+    },
+    {
+      "start_frame": 1925,
+      "end_frame": 2079,
+      "stage": "aligned_press",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "放置过程中发生物料与治具的轻微触碰和摩擦"
+    },
+    {
+      "start_frame": 2079,
+      "end_frame": 2621,
+      "stage": "release_retreat",
+      "imitation": "review",
+      "confidence": "confirmed",
+      "note": "任务完成回归原位"
+    }
+  ],
+  "keyframes": [
+    {
+      "frame": 842,
+      "event": "contact",
+      "note": "发生失败姿态下的治具碰撞"
+    },
+    {
+      "frame": 1344,
+      "event": "contact",
+      "note": "发生失败姿态下的治具碰撞"
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 30,
+    "frame_count": 2199,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-030.parquet",
+    "data_sha256": "ee35f10318266aba1fc39f09a1096a927bd310128d4ac7c3ea8e559f52a411a0",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-030.mp4",
+        "sha256": "5037bd53c97a833c59ef84b196f5d67bca5929847574f79df555fdf459a89b8a"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-030.mp4",
+        "sha256": "c4798dcd4c6f82063fde287e9b19b96df31270a1a6873258e811c9e27d14e34a"
+      }
+    }
+  },
+  "annotator": "Codex草稿（待人工复核）",
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 565,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "接近物料并调角，291–306帧闭爪，抬升搬运至治具上方。 数值辅助：Z 0.242–0.359m，夹爪 50.3–84.0mm，七维外部关节力矩范数最大2.65Nm（帧372）。"
+    },
+    {
+      "start_frame": 565,
+      "end_frame": 670,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "第一次下降接近治具，在明显接触前仍为接近动作；接触起点需回放660–680帧。 数值辅助：Z 0.290–0.324m，夹爪 50.3–50.3mm，七维外部关节力矩范数最大3.32Nm（帧669）。"
+    },
+    {
+      "start_frame": 670,
+      "end_frame": 750,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "首次顶压：约675–722帧外部关节力矩持续明显升高，J2/J4变化突出，画面中物料姿态偏斜，722–738帧开爪后力矩回落。 数值辅助：Z 0.279–0.289m，夹爪 50.3–84.0mm，七维外部关节力矩范数最大15.72Nm（帧697）。"
+    },
+    {
+      "start_frame": 750,
+      "end_frame": 1365,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "空爪调整后921–934帧重新抓取，抬升、旋转和微调，再次下降尝试。 数值辅助：Z 0.279–0.296m，夹爪 51.0–84.0mm，七维外部关节力矩范数最大3.87Nm（帧951）。"
+    },
+    {
+      "start_frame": 1365,
+      "end_frame": 1410,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "第二次下降末端有外部力矩变化，1378–1392帧开爪，之后第三次抓取。确定错误下压顶边。 数值辅助：Z 0.281–0.284m，夹爪 51.0–84.0mm，七维外部关节力矩范数最大5.17Nm（帧1372）。"
+    },
+    {
+      "start_frame": 1410,
+      "end_frame": 1875,
+      "stage": "correction",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "错误放置后，1500–1514帧再次闭爪，抬升并进行第三轮姿态调整，为最终下放准备。 数值辅助：Z 0.281–0.297m，夹爪 50.7–84.0mm，七维外部关节力矩范数最大3.03Nm（帧1552）。"
+    },
+    {
+      "start_frame": 1875,
+      "end_frame": 1915,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "最终一轮连续下降，物料随后留在治具且未再抓取；有效下放，力矩曲线平缓无明显波动。 数值辅助：Z 0.286–0.297m，夹爪 50.7–51.0mm，七维外部关节力矩范数最大2.42Nm（帧1877）。"
+    },
+    {
+      "start_frame": 1915,
+      "end_frame": 2199,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "1915–1930帧开爪，随后空爪回升和返回。没有人为添加未观察到的长压紧保持阶段。 数值辅助：Z 0.286–0.373m，夹爪 52.0–84.0mm，七维外部关节力矩范数最大3.15Nm（帧2104）。"
+    }
+  ],
+  "keyframes": [
+    {
+      "frame": 291,
+      "event": "other",
+      "note": "[AI候选关键帧，需人工复核] 首次取料闭爪。"
+    },
+    {
+      "frame": 670,
+      "event": "contact",
+      "note": "[AI候选关键帧，需人工复核] 首次明显接触候选；检查660–680帧。"
+    },
+    {
+      "frame": 697,
+      "event": "other",
+      "note": "[AI候选关键帧，需人工复核] 外部关节力矩范数峰值附近，不是末端力牛顿值，也不是自动失败标签。"
+    },
+    {
+      "frame": 750,
+      "event": "correction_start",
+      "note": "[AI候选关键帧，需人工复核] 第一次释放后的恢复候选起点。"
+    },
+    {
+      "frame": 1365,
+      "event": "contact",
+      "note": "[AI候选关键帧，需人工复核] 第二次接触候选。"
+    },
+    {
+      "frame": 1410,
+      "event": "correction_start",
+      "note": "[AI候选关键帧，需人工复核] 第二次释放后的恢复候选起点。"
+    },
+    {
+      "frame": 1875,
+      "event": "aligned_press_start",
+      "note": "[AI候选关键帧，需人工复核] 第三轮最终下降候选。"
+    },
+    {
+      "frame": 1915,
+      "event": "release",
+      "note": "[AI候选关键帧，需人工复核] 最终开爪。"
+    }
+  ],
+  "complete": false
+}

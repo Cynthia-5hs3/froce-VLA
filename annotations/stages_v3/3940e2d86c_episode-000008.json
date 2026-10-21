@@ -1,0 +1,103 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 8,
+    "frame_count": 2424,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-008.parquet",
+    "data_sha256": "1646d556fccde7fb6eb2e7133faa0724b3a50626e9b83b37cc495b9b4c525b4c",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-008.mp4",
+        "sha256": "373275b0d15aab7e75246c01b6354752b05acda0d398edd7d8c85043c74d9193"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-008.mp4",
+        "sha256": "5220851fe3979f50724d07d890e2d980b6f18517e9237da7c3d2a0677e62a85f"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 710,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "确认调整好物料位置和角度后进行抓取"
+    },
+    {
+      "start_frame": 710,
+      "end_frame": 1095,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "搬运物料至治具上方"
+    },
+    {
+      "start_frame": 1095,
+      "end_frame": 1175,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "精细调整位置，下放物料"
+    },
+    {
+      "start_frame": 1175,
+      "end_frame": 1204,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "位置不精准，发生顶边碰撞；外部力矩产生较大峰值；关节力矩产生波动"
+    },
+    {
+      "start_frame": 1204,
+      "end_frame": 1240,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "放置完成后，无论成功与失败都松开夹爪"
+    },
+    {
+      "start_frame": 1240,
+      "end_frame": 1903,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "夹取放置失败的物料，进行位姿修正"
+    },
+    {
+      "start_frame": 1903,
+      "end_frame": 2053,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "放置物料成功；物料与治具之间存在轻微摩擦，外部力矩曲线存在波动"
+    },
+    {
+      "start_frame": 2053,
+      "end_frame": 2424,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "任务完成回到原位"
+    }
+  ],
+  "keyframes": [
+    {
+      "frame": 1175,
+      "event": "contact",
+      "note": "错误位置放置"
+    },
+    {
+      "frame": 2052,
+      "event": "seated",
+      "note": ""
+    }
+  ]
+}

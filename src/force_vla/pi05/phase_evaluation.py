@@ -53,7 +53,8 @@ def main():
         from .training import restore_for_inference
         from .window_dataset import ForceVLAWindowDataset
 
-        dataset = ForceVLAWindowDataset(windows, include_images=True)
+        dataset = ForceVLAWindowDataset(windows, include_images=True,
+            use_external_torque=run["settings"].get("use_external_torque", False))
         indices = np.flatnonzero(np.isin(np.asarray(dataset.table["episode_index"]),
                                          run["data_contract"]["validation_episodes"]))
         policy, normalizer = restore_for_inference(checkpoint, args.device)

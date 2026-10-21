@@ -1,0 +1,100 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 5,
+    "frame_count": 1986,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-005.parquet",
+    "data_sha256": "c5a052d87f6b895f9e49be7806e86f6625d021cfd7735141fca2513338a95d9c",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-005.mp4",
+        "sha256": "4dfe1cb64c045cb26f448481416dc43f2962079928f41a08d05c51ee5bfcf4d6"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-005.mp4",
+        "sha256": "02bd296f1fd350a0c5fe68fa71bab0580b11c48a9f4020745f880f9c2a432eae"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 448,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "下降过程中调整夹爪角度，使得夹爪与物料水平方向保持平行；改过程没有明显力矩数值变化"
+    },
+    {
+      "start_frame": 448,
+      "end_frame": 885,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "搬运至治具上方位置，精细调整位姿"
+    },
+    {
+      "start_frame": 885,
+      "end_frame": 979,
+      "stage": "aligned_press",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "搬运至治具上方位置，精细调整位姿"
+    },
+    {
+      "start_frame": 979,
+      "end_frame": 1042,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "放置失败，物料与治具发生顶撞，力矩曲线发生明显波动"
+    },
+    {
+      "start_frame": 1042,
+      "end_frame": 1275,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "夹具调整姿态重新抓取物料进行纠偏"
+    },
+    {
+      "start_frame": 1275,
+      "end_frame": 1502,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "重新调整物料姿态进行纠偏"
+    },
+    {
+      "start_frame": 1502,
+      "end_frame": 1566,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "再次放置物料，力矩曲线无明显波动，TCP-Z轴高度下降"
+    },
+    {
+      "start_frame": 1566,
+      "end_frame": 1593,
+      "stage": "seated_hold",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "TCP-Z轴高度下降至治具底部，装配就位，底部有触碰，力矩曲线产生波动"
+    },
+    {
+      "start_frame": 1593,
+      "end_frame": 1986,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "任务完成回归原位"
+    }
+  ],
+  "keyframes": []
+}

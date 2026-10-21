@@ -18,10 +18,12 @@ from .preparation import local_path
 class ForceVLAWindowDataset(Dataset):
     """Read one causal state/action/torque window without crossing episodes."""
 
-    def __init__(self, parquet_path: str | Path, include_images: bool = False) -> None:
+    def __init__(self, parquet_path: str | Path, include_images: bool = False,
+                 use_external_torque: bool = False) -> None:
         self.parquet_path = local_path(parquet_path)
         self.table = pq.read_table(self.parquet_path)
         self.include_images = include_images
+        self.use_external_torque = use_external_torque
         metadata_path = self.parquet_path.with_name("metadata.json")
         metadata = {}
         if metadata_path.is_file():
@@ -36,6 +38,8 @@ class ForceVLAWindowDataset(Dataset):
             "future_joint_torque",
             "task_text",
         }
+        if use_external_torque:
+            required.add("external_joint_torque_history")
         missing = required.difference(self.table.column_names)
         if missing:
             raise ValueError(f"windows parquet is missing fields: {sorted(missing)}")
@@ -65,6 +69,9 @@ class ForceVLAWindowDataset(Dataset):
             "anchor_phase": float(self.table["anchor_phase"][index].as_py())
             if "anchor_phase" in self.table.column_names else 0.0,
         }
+        if self.use_external_torque:
+            item["joint_torque_history"] = torch.cat((item["joint_torque_history"],
+                self._array("external_joint_torque_history", index, (10, 7))), dim=-1)
         if self.include_images:
             for camera in ("base", "left_wrist"):
                 path = Path(self.table[f"{camera}_video_path"][index].as_py())
@@ -97,11 +104,11 @@ def collate_force_windows(items: list[dict[str, Any]]) -> dict[str, Any]:
     return batch
 
 
-def validate_force_window_batch(batch: dict[str, Any]) -> None:
+def validate_force_window_batch(batch: dict[str, Any], use_external_torque: bool = False) -> None:
     """Fail early if a loader drops the temporal force contract."""
     expected = {
         "observation.state": (10,),
-        "joint_torque_history": (10, 7),
+        "joint_torque_history": (10, 14 if use_external_torque else 7),
         "action": (50, 10),
         "future_joint_torque": (50, 7),
     }

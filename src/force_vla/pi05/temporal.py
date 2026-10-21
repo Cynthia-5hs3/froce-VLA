@@ -15,7 +15,10 @@ class HistoryNotReady(RuntimeError):
 
 
 class TorqueHistory:
-    def __init__(self, fps=SAMPLE_RATE_HZ, offsets=HISTORY_OFFSETS):
+    def __init__(self, fps=SAMPLE_RATE_HZ, offsets=HISTORY_OFFSETS, torque_dim=7):
+        if torque_dim not in (7, 14):
+            raise ValueError("Torque history must contain seven measured or fourteen combined values")
+        self.torque_dim = torque_dim
         self.offsets_ns = np.rint(np.asarray(offsets) * 1e9 / fps).astype(np.int64)
         if len(offsets) != 10 or offsets[-1] != 0 or np.any(np.diff(offsets) <= 0):
             raise ValueError("Expected ten increasing causal offsets ending at zero")
@@ -27,7 +30,7 @@ class TorqueHistory:
 
     def append(self, timestamp_ns, torque):
         value = np.asarray(torque, dtype=np.float32)
-        if timestamp_ns <= 0 or value.shape != (7,) or not np.isfinite(value).all():
+        if timestamp_ns <= 0 or value.shape != (self.torque_dim,) or not np.isfinite(value).all():
             raise ValueError("Invalid timestamped joint torque")
         if self.samples and timestamp_ns <= self.samples[-1][0]:
             raise ValueError("Torque timestamps must increase")

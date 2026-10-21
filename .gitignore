@@ -5,6 +5,7 @@
 /datasets/
 /reference/
 /outputs/
+/archives/
 /.environment-ready
 /third_party/archives/
 /third_party/lerobot_6674e36/tests/data/

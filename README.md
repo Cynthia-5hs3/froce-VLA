@@ -2,6 +2,12 @@
 
 工作目录：`/data0/wx/force-VLA`。目标是在PI0.5中加入力历史输入和未来力预测辅助损失。
 
+减少真机试错：[真实观测回放、松爪诊断与MuJoCo仿真方案](docs/MUJOCO_OFFLINE_EVALUATION_PLAN.md)。已确认旧成功LoRA30k为优先基线，阶段A3k为放置/释放对照；仿真尚未实施。
+
+2026-10-21整理入口：[各组训练数据与模型清单](experiments/README.md)、[抓放判断与ForceVLA/ForceVLA2复现评估](docs/FORCE_METHODS_REVIEW_20261021.md)。清单按原路径归类，不迁移数据或权重；标注网页、草稿工具和临时审阅产物已归档后删除，训练依赖与已确认标注保留。[归档与恢复说明](archives/stage_cleanup_20261021/README.md)。
+
+外部关节力矩实验`success_30k`已于2026-10-20完成30k训练，模型在`outputs/pi05_external_success_30k/checkpoint-030000`；18k为本轮验证动作loss最低的候选。它沿用旧101条成功示范，从PI0.5基座重训；`stage_b`保留A组的已批准纠偏窗口和初始化，计划3k，尚未启动。两者输入过去2秒10点的`tau_J + tau_ext_hat_filtered`（10×14），未来输出仍为50×10动作和50×7实测力矩。完整模型检查命令为`bash scripts/force_external.sh success_30k model-check`（占用GPU，不连接机器人）。部署时选择整个checkpoint目录，入口自动加载14维历史与归一化，不单独替换权重文件；参数说明、18k/30k测试指令见 [两套外部力矩实验](docs/EXTERNAL_TORQUE_VARIANTS.md)。仅检查数据可运行`bash scripts/force_external.sh success_30k check`或`bash scripts/force_external.sh stage_b check`。
+
 累计30000步扩展训练使用独立入口 `scripts/train_force_pi05_30k.sh`，继承第3000步并增加轨迹均衡验证、完整采样推理及力矩历史对照。预算、启动和指标解释见 [三万步训练说明](docs/FORCE_TRAINING_30K.md)。训练结束不自动等同于真机部署就绪。
 
 真机测试使用独立的观测/动作入口，步骤和安全门控见 [实时部署说明](docs/FORCE_REALTIME_DEPLOYMENT.md)。原 Evo-RLT 部署器不直接加载 force adapter checkpoint。
@@ -70,19 +76,22 @@ bash scripts/train_force_pi05.sh \
 
 ### 4. 真机推理测试
 
+需要手柄纠正高度或对准时，在下方execute命令追加`--teleop-assist --teleop-latched --teleop-linear-speed 0.02 --teleop-angular-speed 0.10`。按LB或操作手柄接管，松手仍保持人工模式；控件回中后按RB交回模型，再等待2秒新力矩历史。Y/A升高/降低，左摇杆调整XY，LT/RT请求开/闭爪。仅记录运行日志，不微调模型；完整指令和按键见[外部力矩部署步骤](docs/EXTERNAL_TORQUE_VARIANTS.md)。
+
+实时曲线界面：另开终端运行 `bash scripts/run.sh python -m force_vla.pi05.telemetry_dashboard --log outputs/realtime_external_success_30k_test_20261020.jsonl --points 1800`，在本机浏览器打开 `outputs/realtime_dashboard/index.html`。请把`--log`改成当前推理实际使用的文件。页面可查看毫米级TCP位置、Roll/Pitch/Yaw角度、7个关节角、10D动作、7维实测/预测力矩和外部关节力矩，人工接管区间以淡橙色背景标识；推理终端不逐帧刷数字。关节角需更新后重新启动推理才能记录，旧日志缺失项留空。完整操作及最近日志选择命令见[外部力矩部署步骤](docs/EXTERNAL_TORQUE_VARIANTS.md)。
+
 训练完成后先使用 `--mode observe` 验证相机、状态和模型加载，再执行动作。下面的命令会先打开夹爪，输入 `ARM` 后持续推理；按 `q`、`x` 或 `Esc` 停止。`FORCE_VLA_HARDWARE=1` 是硬件访问开关，部署命令不要在机器人未准备好时执行：
 
 ```bash
 cd /data0/wx/force-VLA
-FORCE_VLA_HARDWARE=1 bash scripts/run_force_realtime.sh \
-  --mode execute --allow-hardware --startup-open --continuous \
-  --checkpoint outputs/pi05_force_new_run/checkpoint-030000 \
-  --robot-config configs/deployment_force_vla_speed_test.yaml \
-  --device cuda --rate-hz 8 --inference-steps 10 \
-  --log outputs/realtime_execute_new_run.jsonl
+bash scripts/force_external.sh success_30k model-check
+FORCE_VLA_HARDWARE=1 bash scripts/force_external.sh success_30k observe --max-steps 300
+FORCE_VLA_HARDWARE=1 bash scripts/force_external.sh success_30k execute \
+  --startup-open --continuous --rate-hz 8 --inference-steps 10 \
+  --log outputs/realtime_external_success_30k_test_20261020.jsonl
 ```
 
-推理的 `checkpoint` 必须替换为实际保存的完整checkpoint目录。模型预测的未来力矩只用于辅助输出和日志，不直接发送为力控命令；实时观测异常会暂停重试，超过安全超时才退出。真机测试前应先用短时 `--max-steps 1` 或 `3` 验证方向、幅度和夹爪行为，再使用 `--continuous`。
+上述命令明确选择外部力矩success_30k模型：两路图像、任务文本、10D状态、过去2秒10点14维实测＋外部关节力矩，归一化从该checkpoint自动加载。直接调用旧`run_force_realtime.sh`且不传checkpoint时仍默认A组7维模型，不能与本命令混淆。模型预测的未来力矩只用于辅助输出和日志，不直接发送为力控命令；实时观测异常会暂停重试，超过安全超时才退出。`--startup-open` 会在输入ARM前打开夹爪。持续模式由操作者按 `q`、`x`、`Esc` 或 `Ctrl+C` 结束；按 `r` 清空旧动作和历史并重新等待2秒。短时测试可把 `--continuous` 换成 `--max-steps 30 --hold-after-steps`。18k候选通过`--checkpoint outputs/pi05_external_success_30k/checkpoint-018000`选择，并使用独立日志。
 
 ## 当前31D采集与仓库范围（2026-09-15）
 
@@ -91,7 +100,7 @@ FORCE_VLA_HARDWARE=1 bash scripts/run_force_realtime.sh \
 `third_party/lerobot_6674e36/tests/data/` 的上游测试样本仅保留本地，不纳入Git；其中LFS文件仅有来源归档内的指针文本，没有对应实体。测试源码仍保留，运行依赖这些样本的上游测试前需另行从上游获取实体；来源清单描述的是下载归档，不代表测试样本已上传至本仓库。
 克隆仓库不会自动获得上述本地资产；原文件位置见下表、`configs/collection_31d/PROVENANCE.md` 和 `provenance/`。运行 `scripts/run.sh` 前需独立准备本地环境和所需数据、模型及参考目录。
 
-最新清洗后的31D数据曾位于 `data/franka_single_left_31d`，复制自 `/data0/sht/Evo-RLT/datacollection/franka_robotiq_single_left/rollout_dataset_franky_31d`；该目录及其数据文件已按重新采集要求清理，不作为当前可用数据资产。新采样应写入上文的 `data/franka_single_left_31d_v2`。
+旧31D数据位于 `data/franka_single_left_31d`，来源为 `/data0/sht/Evo-RLT/datacollection/franka_robotiq_single_left/rollout_dataset_franky_31d`。历史上按重新采集要求做过清理；2026-10-19重新检查确认旧成功窗口及其引用的202个视频文件存在，可用于上述`success_30k`实验，不能据此认定原184条轨迹全部仍完整。新采样应写入上文的 `data/franka_single_left_31d_v2`。
 历史元信息记录184条、177384帧、30Hz，两路RGB视频、31D状态与10D动作，包含成功、失败及控制中断记录；分类清单保留原始追溯信息，训练前仍需完成视频、时间戳和力矩同步检查。
 31D状态：TCP位置3 + rot6d姿态6 + 夹爪宽度1（米）+ measured joint torque 7（Nm）+ external joint torque 7（Nm）+ joint velocity 7（rad/s）。动作的夹爪通道为开度比例。
 对齐论文力矩路线时，按时间戳构建过去约2秒的10个力矩样本以及未来50步动作/力矩目标，不跨episode边界；采集时间同步与可用窗口仍需验证。
@@ -147,6 +156,8 @@ PI0.5把状态离散化为文本，简单改成22D/29D不等价于论文方案�
 - 必须经`scripts/run.sh`运行：原工作区和原环境强制只读，清除ROS/Python环境继承，默认断网并隐藏机器人设备。副本数据、模型和参考源码在实验时也只读。
 
 ## 检查与训练连通性测试
+
+复核28条阶段标注后的采样规则，以及“实测关节力矩 / 实测+外部关节力矩”独立训练配置与指令，见[阶段标注与外部力矩A/B实验](docs/STAGE_EXTERNAL_TORQUE_AB_20261016.md)。第14条已补全；新实验尚未启动。
 
 ```bash
 cd /data0/wx/force-VLA

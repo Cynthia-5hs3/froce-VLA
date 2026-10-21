@@ -153,12 +153,12 @@ def evaluate_samples(policy, dataset, indices, normalizer, tokenizer, device, op
                 history = batch["joint_torque_history"]
                 alternate = {}
                 if "zero_nm" in variants:
-                    alternate["zero_nm"] = normalizer.transform(torch.zeros_like(history), "torque")
+                    alternate["zero_nm"] = normalizer.transform_history(torch.zeros_like(history))
                 if "other_episode" in variants:
                     donor = next(int(candidate) for candidate in np.roll(selected, -ordinal - 1)
                                  if episodes[candidate] != episodes[index])
                     donor_history = dataset[donor]["joint_torque_history"].unsqueeze(0).to(device)
-                    alternate["other_episode"] = normalizer.transform(donor_history, "torque")
+                    alternate["other_episode"] = normalizer.transform_history(donor_history)
                 if devices:
                     torch.cuda.synchronize(device)
                 preparation_ms = 1000 * (time.perf_counter() - started)

@@ -89,6 +89,8 @@ def main():
     source = local_path(options["source_checkpoint"])
     previous = json.loads((source / "run.json").read_text())
     settings = previous["settings"]
+    if previous["data_contract"].get("sampling_plan") or settings.get("use_external_torque"):
+        raise ValueError("Use the annotation-aware training entrypoint; this extension does not apply stage sampling")
     settings = json.loads(json.dumps(settings))
     settings["training"]["learning_rate"] = options["learning_rate"]
     settings["training"]["steps"] = options["total_steps"]

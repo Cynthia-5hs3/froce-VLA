@@ -1,0 +1,132 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 13,
+    "frame_count": 2674,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-013.parquet",
+    "data_sha256": "37128a4f8c02f27016e10c5b63a3dead020ad0fcb6f3cd020c0e6acce644d4fe",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-013.mp4",
+        "sha256": "5b686622b1d10b9cb4cc48cfde96ce445a0deca4d5c689a9b868bf9692276c8f"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-013.mp4",
+        "sha256": "4547971df079145e5f904df33050deea1d7fb2b20dadf5b86e04aa263b3d239d"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 662,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "夹取物料后搬运至治具上方位置，移动过程中存在轻微波动"
+    },
+    {
+      "start_frame": 662,
+      "end_frame": 754,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "调整位置后下降放置物料"
+    },
+    {
+      "start_frame": 754,
+      "end_frame": 803,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "位置不准确，物料顶到治具边缘，J2,J5力矩产生明显瞬时波峰波谷，其他关节变化波动不明显"
+    },
+    {
+      "start_frame": 803,
+      "end_frame": 973,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "重新调整夹爪姿态抓取摆放失败的物料"
+    },
+    {
+      "start_frame": 973,
+      "end_frame": 1237,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "抬升夹爪后调整物料位姿，夹取物料时的力矩波动主要在J2J5关节"
+    },
+    {
+      "start_frame": 1237,
+      "end_frame": 1340,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "抬升夹爪后调整物料位姿，夹取物料时的力矩波动主要在J2J5关节"
+    },
+    {
+      "start_frame": 1340,
+      "end_frame": 1733,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "二次调整夹爪位姿夹取物料后，调整物料位姿进行二次纠偏"
+    },
+    {
+      "start_frame": 1733,
+      "end_frame": 1925,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "调整位姿后进行二次放置"
+    },
+    {
+      "start_frame": 1925,
+      "end_frame": 2001,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "二次放置顶边，产生力矩波动，幅度较小"
+    },
+    {
+      "start_frame": 2001,
+      "end_frame": 2290,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "第二次调整夹爪位姿夹取物料后，调整物料位姿进行第三次纠偏"
+    },
+    {
+      "start_frame": 2290,
+      "end_frame": 2390,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "位置对准后下放物料，该过程中无明显力矩曲线波动"
+    },
+    {
+      "start_frame": 2390,
+      "end_frame": 2436,
+      "stage": "seated_hold",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "位置对准后下放物料，高度没有顶到治具底部，没有产生明显力矩曲线波峰波谷"
+    },
+    {
+      "start_frame": 2436,
+      "end_frame": 2674,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "任务完成回到原位"
+    }
+  ],
+  "keyframes": []
+}

@@ -1,0 +1,184 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 37,
+    "frame_count": 1362,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-037.parquet",
+    "data_sha256": "b57ea1e32d3a1a5e236bc4757ed55812add042f88a42bd93d2370b5242fcf2ee",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-037.mp4",
+        "sha256": "0f6946ada14a4bfa4daefb2aa010250d76d8bbd50cf4642506599cc7f527c7ec"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-037.mp4",
+        "sha256": "9025a5181429122d6f07ac847ce499754814c9f7e957aa117e2a251cb39d648e"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 37,
+      "stage": "idle",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "启动静止状态，无明显TCP力矩变化"
+    },
+    {
+      "start_frame": 37,
+      "end_frame": 99,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "固定高度横向移动至物料上方，未明显TCP变化，移动过程中外部力矩有波动"
+    },
+    {
+      "start_frame": 99,
+      "end_frame": 225,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "下降并接近物料，TCP呈下降趋势，移动过程中外部力矩有波动"
+    },
+    {
+      "start_frame": 225,
+      "end_frame": 351,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "精细调整位置及夹爪角度，视频中有旋转趋势"
+    },
+    {
+      "start_frame": 351,
+      "end_frame": 380,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "夹取物料，外部力矩J2产生明显波峰"
+    },
+    {
+      "start_frame": 380,
+      "end_frame": 461,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "夹取物料后抬升，TCP-Z轴上升，外部力矩有部分关节波动"
+    },
+    {
+      "start_frame": 461,
+      "end_frame": 618,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "夹取搬运并粗略调整夹爪姿态角度，移动至治具上方点"
+    },
+    {
+      "start_frame": 618,
+      "end_frame": 700,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "放置失败，外部力矩感受到治具阻力，关节J2，J4力矩有波动"
+    },
+    {
+      "start_frame": 700,
+      "end_frame": 788,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "放置物料后，无论成功失败，释放物料松开夹爪，TCP-Z轴高度不变"
+    },
+    {
+      "start_frame": 788,
+      "end_frame": 823,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "夹取放置失败物料，准备抬升进行纠偏"
+    },
+    {
+      "start_frame": 823,
+      "end_frame": 911,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "抬升到一定高度，准备调整姿态纠偏"
+    },
+    {
+      "start_frame": 911,
+      "end_frame": 1020,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "纠偏，J7外部力矩有明显波动，Z轴高度不变"
+    },
+    {
+      "start_frame": 1020,
+      "end_frame": 1105,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": ""
+    },
+    {
+      "start_frame": 1105,
+      "end_frame": 1145,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "放置成功，松开夹爪"
+    },
+    {
+      "start_frame": 1145,
+      "end_frame": 1362,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "抬升移动回到初始位置"
+    }
+  ],
+  "keyframes": [
+    {
+      "frame": 368,
+      "event": "other",
+      "note": "成功夹取物料"
+    },
+    {
+      "frame": 618,
+      "event": "aligned_press_start",
+      "note": "到达治具上方并下降"
+    },
+    {
+      "frame": 822,
+      "event": "contact",
+      "note": "夹取放置失败的物料"
+    },
+    {
+      "frame": 895,
+      "event": "correction_start",
+      "note": "纠正失败姿态"
+    },
+    {
+      "frame": 1022,
+      "event": "aligned_press_start",
+      "note": "纠偏后二次放置"
+    },
+    {
+      "frame": 1102,
+      "event": "seated",
+      "note": ""
+    },
+    {
+      "frame": 1108,
+      "event": "release",
+      "note": ""
+    }
+  ]
+}

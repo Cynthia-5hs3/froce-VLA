@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Force-VLA 实时动作与力矩</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <header>
+    <div><div class="eyebrow">FORCE-VLA · 只读监视</div><h1>动作与力矩</h1></div>
+    <span id="freshness" class="badge waiting">等待监视程序</span>
+  </header>
+  <p class="intro">曲线来自推理日志。关闭此页面或暂停显示不会停止机械臂；停止请回到推理终端按 q / x / Esc。</p>
+  <section class="metrics">
+    <div><span>控制状态</span><strong id="control-status">—</strong></div>
+    <div><span>当前步</span><strong id="step">—</strong></div>
+    <div><span>动作索引 / 50步</span><strong id="action-index">—</strong></div>
+    <div><span>推理耗时</span><strong id="latency">—</strong></div>
+    <div><span>日志年龄</span><strong id="age">—</strong></div>
+  </section>
+  <div class="toolbar">
+    <nav aria-label="曲线类型">
+      <button class="active" data-tab="position">TCP位置 · mm</button>
+      <button data-tab="orientation">姿态角 · °</button>
+      <button data-tab="joints">关节角 · °</button>
+      <button data-tab="action">预测动作 10D</button>
+      <button data-tab="torque">实测 / 预测力矩</button>
+      <button data-tab="external">外部关节力矩</button>
+    </nav>
+    <div class="controls"><label>时间窗口 <select id="window"><option value="10">10秒</option><option value="30" selected>30秒</option><option value="60">60秒</option></select></label><button id="pause">暂停画面</button></div>
+  </div>
+  <p id="description"></p>
+  <div id="legend"></div>
+  <p id="warning" class="warning" hidden></p>
+  <main id="charts"></main>
+  <footer><div id="log-path">等待日志路径…</div><p>缺失数据留空，不补零。淡橙色背景表示人工接管。姿态角由rotation6D转换，仅用于显示，R = Rz(yaw) Ry(pitch) Rx(roll)；±180°处断线，pitch接近±90°时角度不唯一。外部关节力矩是估计量，单位Nm，不是末端接触力N。</p></footer>
+  <script src="dashboard.js"></script>
+</body>
+</html>

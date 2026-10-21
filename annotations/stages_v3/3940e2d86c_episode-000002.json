@@ -1,0 +1,84 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 2,
+    "frame_count": 2037,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-002.parquet",
+    "data_sha256": "c1fc1b339380fc29e108db5c45a26f68b542a823bc836cbdab7da3c238feb183",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-002.mp4",
+        "sha256": "6755e048e9231c224f2944c9ed2c45dc48c83f029a339c3b87fa406a33524a8e"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-002.mp4",
+        "sha256": "4d2602944afb2eeb235ff8ee50dd4d1a4b61e72c8eb9aaaec8cf9499b5cbd79e"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 575,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "下降抓取"
+    },
+    {
+      "start_frame": 575,
+      "end_frame": 907,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "抓取物料至治具上方"
+    },
+    {
+      "start_frame": 907,
+      "end_frame": 1024,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "下降放置物料，力矩曲线平缓，无明显波动"
+    },
+    {
+      "start_frame": 1024,
+      "end_frame": 1071,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "放置失败，物料顶到治具，力矩曲线产生明显波动"
+    },
+    {
+      "start_frame": 1071,
+      "end_frame": 1343,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "重新抓取物料并调整位姿"
+    },
+    {
+      "start_frame": 1343,
+      "end_frame": 1487,
+      "stage": "aligned_press",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "物料边缘擦到治具边缘，发生抵触，但经过精度调整成功放置，关节力矩的波动幅度小但波动过程较失败时多"
+    },
+    {
+      "start_frame": 1487,
+      "end_frame": 2037,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "任务完成，夹爪回到原位"
+    }
+  ],
+  "keyframes": []
+}

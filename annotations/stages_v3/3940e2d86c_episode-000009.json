@@ -1,0 +1,143 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 9,
+    "frame_count": 2955,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-009.parquet",
+    "data_sha256": "40e8a724be4b3f85d8d1afd8c54f90aea9d13b70628060ffd25c6afb2b864b99",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-009.mp4",
+        "sha256": "6074a845aee911818ddf379bd81eb821d0b829e1ca23cde8ffb6e6072152cebf"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-009.mp4",
+        "sha256": "0ab8fde9f0e372e64d27158c0746d477205cf5f784e5f026ac40e8aff5cd68c2"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 412,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "定位物料位置和角度进行抓取"
+    },
+    {
+      "start_frame": 412,
+      "end_frame": 781,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "搬运物料至治具上方位置"
+    },
+    {
+      "start_frame": 781,
+      "end_frame": 919,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "位置未对准，放置失败，物料顶到治具边缘；产生大幅度瞬时外部阻力，关节力矩存在较大波动"
+    },
+    {
+      "start_frame": 919,
+      "end_frame": 1106,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "调整夹爪位姿重新抓取物料"
+    },
+    {
+      "start_frame": 1106,
+      "end_frame": 1217,
+      "stage": "approach",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "夹取物料失败，夹到治具；J3J5的关节力矩相较于顶边碰撞时的波动较大，但外部力矩波动幅度比顶边时小，部分关节波动浮动与顶边时不同"
+    },
+    {
+      "start_frame": 1217,
+      "end_frame": 1535,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "重新调整夹爪姿态抓取物料进行第一次纠偏"
+    },
+    {
+      "start_frame": 1535,
+      "end_frame": 1851,
+      "stage": "correction",
+      "imitation": "review",
+      "confidence": "confirmed",
+      "note": "重新调整夹取位姿"
+    },
+    {
+      "start_frame": 1851,
+      "end_frame": 1918,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "调整位姿后下降放置装配"
+    },
+    {
+      "start_frame": 1918,
+      "end_frame": 1989,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "第二次放置失败，物料顶到治具边缘；产生大幅度瞬时外部阻力，关节力矩存在较大波动"
+    },
+    {
+      "start_frame": 1989,
+      "end_frame": 2293,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "重新调整夹爪姿态，第二次抓取物料进行纠偏"
+    },
+    {
+      "start_frame": 2293,
+      "end_frame": 2530,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "抓取物料进行二次纠偏"
+    },
+    {
+      "start_frame": 2530,
+      "end_frame": 2688,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "位置放置正确，没有产生明显力矩波动，无明显物理摩擦碰撞"
+    },
+    {
+      "start_frame": 2688,
+      "end_frame": 2955,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "任务完成回归原位"
+    }
+  ],
+  "keyframes": [
+    {
+      "frame": 853,
+      "event": "contact",
+      "note": "错误放置、顶到治具边缘"
+    },
+    {
+      "frame": 1947,
+      "event": "contact",
+      "note": "错误放置、顶到治具边缘"
+    }
+  ]
+}

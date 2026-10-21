@@ -1,0 +1,102 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 31,
+    "frame_count": 1168,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-031.parquet",
+    "data_sha256": "c9f2d1797618d854f06614fbabc401f9aaa3c9a87651c4acab52e42619da55c5",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-031.mp4",
+        "sha256": "d59726d685d106b2cda4058c97ae8c4cf9c63ac6a88d054b7518422922a3eb07"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-031.mp4",
+        "sha256": "a767b543c32f78c938a210ba350ddea1f21decfcc69a0d6715b54da3b720c9a7"
+      }
+    }
+  },
+  "annotator": "Codex草稿（待人工复核）",
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 590,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "接近物料并调整方向，335–350帧闭爪，抬升搬运至治具上方。 数值辅助：Z 0.238–0.373m，夹爪 50.7–84.0mm，七维外部关节力矩范数最大2.76Nm（帧418）。"
+    },
+    {
+      "start_frame": 590,
+      "end_frame": 710,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "第一次下降接近，710帧附近接触候选；不要把前段尚有间隙的下降全部排除。 数值辅助：Z 0.288–0.328m，夹爪 50.7–50.7mm，七维外部关节力矩范数最大2.54Nm（帧662）。"
+    },
+    {
+      "start_frame": 710,
+      "end_frame": 760,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "首次触碰治具产生阻力，外部力矩增加，723–739帧张爪后准备再次抓取纠偏，确认错误顶压或松爪后才exclude。 数值辅助：Z 0.284–0.288m，夹爪 50.7–84.0mm，七维外部关节力矩范数最大3.68Nm（帧722）。"
+    },
+    {
+      "start_frame": 760,
+      "end_frame": 920,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "重新调整夹爪位姿，797–812帧夹取后抬升恢复，调整姿态再下放。 数值辅助：Z 0.284–0.307m，夹爪 50.3–84.0mm，七维外部关节力矩范数最大2.43Nm（帧883）。"
+    },
+    {
+      "start_frame": 920,
+      "end_frame": 970,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "第二次下降，画面中物料靠近治具配合位置；有效下放，最终放置成功。 数值辅助：Z 0.288–0.305m，夹爪 50.3–50.3mm，七维外部关节力矩范数最大1.82Nm（帧939）。"
+    },
+    {
+      "start_frame": 970,
+      "end_frame": 1168,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "放置成功后970–985帧张爪，随后空爪回升撤离，物料留在治具。 数值辅助：Z 0.288–0.353m，夹爪 51.3–84.0mm，七维外部关节力矩范数最大3.37Nm（帧1097）。"
+    }
+  ],
+  "keyframes": [
+    {
+      "frame": 335,
+      "event": "other",
+      "note": "[AI候选关键帧，需人工复核] 取料闭爪。"
+    },
+    {
+      "frame": 710,
+      "event": "contact",
+      "note": "[AI候选关键帧，需人工复核] 首次接触候选，检查705–725帧。"
+    },
+    {
+      "frame": 760,
+      "event": "correction_start",
+      "note": "[AI候选关键帧，需人工复核] 第一次释放后的恢复候选。"
+    },
+    {
+      "frame": 920,
+      "event": "aligned_press_start",
+      "note": "[AI候选关键帧，需人工复核] 第二次下放起点候选。"
+    },
+    {
+      "frame": 970,
+      "event": "release",
+      "note": "[AI候选关键帧，需人工复核] 最后开爪。"
+    }
+  ],
+  "complete": false
+}

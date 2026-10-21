@@ -1,0 +1,92 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 19,
+    "frame_count": 2238,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-019.parquet",
+    "data_sha256": "6214393503d4ff8f13c5d56c1150421ed4a2b20f455eaba6d846991769497ad8",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-019.mp4",
+        "sha256": "3b41f5efda0a57d0f0615dab787162f924100297de14abb38bd769a5843c87de"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-019.mp4",
+        "sha256": "a36c54cf58acad9fffed7364a16ae1de7e6d26b1d8c9bca27c98ce4bd53c30e8"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 717,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "下降抓取物料后搬运至治具上方"
+    },
+    {
+      "start_frame": 717,
+      "end_frame": 893,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "调整放置角度和位置进行下放"
+    },
+    {
+      "start_frame": 893,
+      "end_frame": 980,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "物料顶边产生碰撞，力矩波动产生瞬时峰值，释放物料"
+    },
+    {
+      "start_frame": 980,
+      "end_frame": 1429,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "调整夹爪姿态进行二次抓取，纠正位姿"
+    },
+    {
+      "start_frame": 1429,
+      "end_frame": 1624,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "顶边后释放，顶边时力矩产生较大波峰"
+    },
+    {
+      "start_frame": 1624,
+      "end_frame": 1893,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "放置失败后在此纠正抓取调整姿态，力矩波动较大"
+    },
+    {
+      "start_frame": 1893,
+      "end_frame": 2044,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "对准位置后下降装配"
+    },
+    {
+      "start_frame": 2044,
+      "end_frame": 2238,
+      "stage": "release_retreat",
+      "imitation": "review",
+      "confidence": "confirmed",
+      "note": "任务完成后回归原位"
+    }
+  ],
+  "keyframes": []
+}

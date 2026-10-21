@@ -17,13 +17,14 @@ def is_retryable_observation_error(error):
 
 
 class ObservationSampler:
-    def __init__(self, robot, retry_timeout_s=2.0, retry_interval_s=0.02):   ##观测线程
+    def __init__(self, robot, retry_timeout_s=2.0, retry_interval_s=0.02, use_external_torque=False):
         if retry_timeout_s <= 0 or retry_interval_s <= 0:
             raise ValueError("observation retry timeouts must be positive")
         self.robot = robot
         self.retry_timeout_s = float(retry_timeout_s)
         self.retry_interval_s = float(retry_interval_s)
-        self.history = TorqueHistory()
+        self.use_external_torque = use_external_torque
+        self.history = TorqueHistory(torque_dim=14 if use_external_torque else 7)
         self.lock = threading.Lock()
         self.stop_event = threading.Event()
         self.snapshot = None
@@ -56,8 +57,9 @@ class ObservationSampler:
                     from .teleop_assist import pose_matrix
 
                     snapshot = replace(snapshot, pose=pose_matrix(snapshot.robot_state.O_T_EE))
+                torque = snapshot_torque(snapshot, self.use_external_torque)
                 with self.lock:
-                    self.history.append(snapshot.observed_at_ns, snapshot.joint_torques)
+                    self.history.append(snapshot.observed_at_ns, torque)
                     self.snapshot = snapshot
                 retry_started = None
                 deadline = max(deadline + 1 / SAMPLE_RATE_HZ, time.monotonic())
@@ -90,6 +92,18 @@ class ObservationSampler:
         self.thread.join(timeout=5.)
         if self.thread.is_alive():
             raise RuntimeError("Observation sampler did not stop")
+
+
+def snapshot_torque(snapshot, use_external_torque=False):
+    measured = np.asarray(snapshot.joint_torques, dtype=np.float32)
+    if measured.shape != (7,) or not np.isfinite(measured).all():
+        raise ValueError("Measured joint torque must be a finite seven-vector")
+    if not use_external_torque:
+        return measured
+    external = np.asarray(getattr(snapshot, "external_joint_torques", None), dtype=np.float32)
+    if external.shape != (7,) or not np.isfinite(external).all():
+        raise ValueError("External torque policy requires finite synchronized external_joint_torques")
+    return np.concatenate((measured, external))
 
 
 class AsyncInferenceWorker:
@@ -182,6 +196,7 @@ def run_control(args, robot, policy, normalizer, tokenizer, task, device, stream
         robot,
         retry_timeout_s=args.observation_retry_timeout_s,
         retry_interval_s=args.observation_retry_interval_s,
+        use_external_torque=bool(getattr(getattr(policy, "config", None), "use_external_torque", False)),
     )
     worker = AsyncInferenceWorker(
         observations,
@@ -204,8 +219,12 @@ def run_control(args, robot, policy, normalizer, tokenizer, task, device, stream
     try:
         if args.teleop_assist:
             assist = XboxAssist(args.teleop_device, linear_speed=args.teleop_linear_speed,
-                               angular_speed=args.teleop_angular_speed)
+                               angular_speed=args.teleop_angular_speed,
+                               latched=getattr(args, "teleop_latched", False))
             assist.start()
+            if getattr(args, "teleop_latched", False):
+                print("Gamepad: LB or movement takes control; release controls to hold. "
+                      "With controls neutral, press RB to resume policy after fresh history.", flush=True)
         print(f"Sampling/control: {SAMPLE_RATE_HZ:g} Hz; inference request: {args.rate_hz:g} Hz. "
               "Waiting for two seconds of real torque history.", flush=True)
         with KeyboardStop() as keyboard:
@@ -248,6 +267,15 @@ def run_control(args, robot, policy, normalizer, tokenizer, task, device, stream
                         observations.reset_history()
                     worker.set_paused(assisting)
                     was_assisting = assisting
+                    if stream:
+                        stream.write(json.dumps({
+                            "event": "teleop_takeover" if assisting else "teleop_release",
+                            "at_ns": now_ns,
+                            "next_action": "human_control" if assisting else "wait_for_two_seconds_of_fresh_torque_history",
+                        }) + "\n")
+                        stream.flush()
+                    print("Human control active; policy paused." if assisting else
+                          "Policy resume requested; waiting for two seconds of fresh history.", flush=True)
                 result = worker.get_latest()
                 if not assisting:
                     chunks.install(result, now_ns, fallback)
@@ -280,24 +308,40 @@ def run_control(args, robot, policy, normalizer, tokenizer, task, device, stream
                     "skipped_steps_on_arrival": selected["skipped_steps_on_arrival"] if selected else None,
                     "history_timestamps_ns": selected["history_timestamps_ns"] if selected else None,
                     "inference_ms": selected["inference_ms"] if selected else None,
+                    "model_action": model_action.tolist() if model_action is not None else None,
+                    "measured_state": snapshot.policy_state.tolist(),
+                    "measured_joint_positions": np.asarray(snapshot.joint_positions).tolist()
+                    if hasattr(snapshot, "joint_positions") else None,
+                    "observation_at_ns": snapshot.observed_at_ns,
                     "model_xyz": model_action[:3].tolist() if model_action is not None else None,
                     "model_gripper": float(model_action[9]) if model_action is not None else None,
                     "predicted_tau_J": selected["predicted_torque"].tolist() if selected else None,
                     "measured_tau_J": snapshot.joint_torques.tolist(),
+                    "measured_tau_ext": snapshot.external_joint_torques.tolist()
+                    if hasattr(snapshot, "external_joint_torques") else None,
                     "measured_gripper_open_fraction": float(snapshot.gripper_open_fraction),
-                    "action": action.tolist(), "sent_xyz": action[:3].tolist(),
-                    "sent_gripper": float(action[9]), "camera_timestamps": snapshot.image_timestamps,
+                    "telemetry_schema_version": 2,
+                    "action": action.tolist(), "requested_xyz": action[:3].tolist(),
+                    "requested_gripper": float(action[9]),
+                    "sent_xyz": command_debug.get("effective_xyz") if command_debug.get("motion_command_sent") else None,
+                    "sent_gripper": command_debug.get("commanded_gripper"),
+                    "gripper_command_sent": bool(command_debug.get("gripper_command_sent", False)),
+                    "camera_timestamps": snapshot.image_timestamps,
                     "motion_sent": args.mode == "execute" and bool(command_debug.get("motion_command_sent", False)),
                     "teleop_active": assisting, "command_debug": command_debug,
+                    "teleop_linear_velocity": command.linear_velocity.tolist() if assisting else None,
+                    "teleop_angular_velocity": command.angular_velocity.tolist() if assisting else None,
+                    "teleop_gripper_target": command.gripper_target if assisting else None,
                     "motion_events": robot.drain_motion_events() if hasattr(robot, "drain_motion_events") else [],
                 }
                 if stream:
                     stream.write(json.dumps(record, ensure_ascii=False) + "\n")
                     stream.flush()
                 if selected is not None or assisting:
-                    print(json.dumps({key: record[key] for key in (
-                        "step", "status", "inference_sequence", "action_index", "chunk_age_ms",
-                        "model_xyz", "sent_xyz", "sent_gripper", "motion_sent")}), flush=True)
+                    if getattr(args, "verbose_actions", False):
+                        print(json.dumps({key: record[key] for key in (
+                            "step", "status", "inference_sequence", "action_index", "chunk_age_ms",
+                            "model_xyz", "sent_xyz", "sent_gripper", "motion_sent")}), flush=True)
                     step += 1
                 deadline = max(deadline + 1 / SAMPLE_RATE_HZ, time.monotonic())
                 if keyboard.wait(max(0., deadline - time.monotonic())):

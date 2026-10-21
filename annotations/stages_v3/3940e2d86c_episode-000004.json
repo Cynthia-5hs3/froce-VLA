@@ -1,0 +1,90 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 4,
+    "frame_count": 2058,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-004.parquet",
+    "data_sha256": "9bdd1f325352ebf92bb57b71e741770928a38df441ade117a4a52edcbeacdb59",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-004.mp4",
+        "sha256": "c735c39d93be602c18984f54143859dd56e7d8192fca778b5f9e8d4cfeb68a53"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-004.mp4",
+        "sha256": "78cf653ba5c5147ee60b6edddf271037631b912c0b04a50841fa08dc9a8c5b05"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 747,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "在初始高度粗略定位物料后下降，下降后夹爪与物料水平方向保持平行，且夹爪在物料中间部位；调整姿态时力矩曲线有小幅度波动"
+    },
+    {
+      "start_frame": 747,
+      "end_frame": 922,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "发生碰撞"
+    },
+    {
+      "start_frame": 922,
+      "end_frame": 1315,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "释放后，夹爪调整位姿倾斜角与物料水平方向保持水平，再次夹取物料并抬升；力矩波动表示抓取调整时物料与治具之间的阻力"
+    },
+    {
+      "start_frame": 1315,
+      "end_frame": 1466,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "重新调整位姿进行修正"
+    },
+    {
+      "start_frame": 1466,
+      "end_frame": 1584,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "夹爪下降，物料与治具有轻微摩擦"
+    },
+    {
+      "start_frame": 1584,
+      "end_frame": 1625,
+      "stage": "seated_hold",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "下降到位发生瞬时接触阻力，关节力矩波动时长较短暂，外部力矩的曲线峰值较于失败时较小"
+    },
+    {
+      "start_frame": 1625,
+      "end_frame": 2058,
+      "stage": "release_retreat",
+      "imitation": "review",
+      "confidence": "confirmed",
+      "note": "任务完成回到原位"
+    }
+  ],
+  "keyframes": [
+    {
+      "frame": 883,
+      "event": "contact",
+      "note": "发生碰撞"
+    }
+  ]
+}

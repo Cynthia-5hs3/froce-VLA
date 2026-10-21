@@ -1,0 +1,146 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 0,
+    "frame_count": 2308,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-000.parquet",
+    "data_sha256": "d5f1b1969e49592826837f885e370fab9592408bec6942480d9a86542c9ce1c7",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-000.mp4",
+        "sha256": "6fed4ef4035dc80b519c91867009e1d9dbb06918bd02ed8a8dbe826f6f3c89ee"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-000.mp4",
+        "sha256": "73b2742717605c7e6e25435daa3e6d00a27bd728667a0edb57600dfb88c70888"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 59,
+      "stage": "idle",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "初始位置等待抓取"
+    },
+    {
+      "start_frame": 59,
+      "end_frame": 219,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "下降至物料上方位置"
+    },
+    {
+      "start_frame": 219,
+      "end_frame": 268,
+      "stage": "idle",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "视频画面静止，且各力矩、Z轴高度无变化"
+    },
+    {
+      "start_frame": 268,
+      "end_frame": 531,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "精细调整夹爪角度和位置，图像中夹爪位于物料中间部分则夹取"
+    },
+    {
+      "start_frame": 531,
+      "end_frame": 636,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "Z轴上升至一定高度，夹住物料后出现小幅度力矩变化"
+    },
+    {
+      "start_frame": 636,
+      "end_frame": 921,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "Z轴上升至一定高度后搬运至治具上方，并在搬运途中粗略调整物料位姿，水平对齐治具"
+    },
+    {
+      "start_frame": 921,
+      "end_frame": 961,
+      "stage": "approach",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": "下降放置物料至治具上"
+    },
+    {
+      "start_frame": 961,
+      "end_frame": 990,
+      "stage": "misaligned_contact",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": "顶到治具，放置失败"
+    },
+    {
+      "start_frame": 990,
+      "end_frame": 1109,
+      "stage": "idle",
+      "imitation": "exclude",
+      "confidence": "confirmed",
+      "note": ""
+    },
+    {
+      "start_frame": 1109,
+      "end_frame": 1133,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "物料放置后，松开夹爪"
+    },
+    {
+      "start_frame": 1133,
+      "end_frame": 1174,
+      "stage": "idle",
+      "imitation": "downsample",
+      "confidence": "confirmed",
+      "note": ""
+    },
+    {
+      "start_frame": 1174,
+      "end_frame": 1662,
+      "stage": "correction",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "二次夹取物料进行搬运、抬升、纠偏；关节力矩波动对应夹取物料，纠偏过程中力矩曲线平整"
+    },
+    {
+      "start_frame": 1662,
+      "end_frame": 1756,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "下降放置"
+    },
+    {
+      "start_frame": 1756,
+      "end_frame": 2308,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "下降放置"
+    }
+  ],
+  "keyframes": [
+    {
+      "frame": 970,
+      "event": "contact",
+      "note": "发生碰撞，放置失败"
+    }
+  ]
+}

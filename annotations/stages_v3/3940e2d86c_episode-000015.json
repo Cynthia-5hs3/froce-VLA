@@ -1,0 +1,76 @@
+{
+  "schema": "force_vla_stage_annotations_v1",
+  "source": {
+    "dataset": "data/franka_single_left_31d_v2",
+    "episode_index": 15,
+    "frame_count": 1367,
+    "split": "train",
+    "contract": "outputs/force_vla_prepared_v3/data_contract.json",
+    "contract_sha256": "229a351d85247d59479d8f558ab675647f80328164663850e22ebbbc69ca59e5",
+    "data_path": "data/franka_single_left_31d_v2/data/chunk-000/file-015.parquet",
+    "data_sha256": "1603bf3fcd8b26e480415d4e0597ca8ef720b2e466e97bcbf7a4aa0b0a7a250b",
+    "videos": {
+      "base": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.base/chunk-000/file-015.mp4",
+        "sha256": "8bc06011794297d94d702754298a051fe7707bf2dd58c9565f02310bba2ccca0"
+      },
+      "left_wrist": {
+        "path": "data/franka_single_left_31d_v2/videos/observation.images.left_wrist/chunk-000/file-015.mp4",
+        "sha256": "bf33f6b93af8867c123e56469d259028ba540935a83c60e22ebd2596477e8929"
+      }
+    }
+  },
+  "annotator": "wx",
+  "complete": false,
+  "segments": [
+    {
+      "start_frame": 0,
+      "end_frame": 407,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "先水平方向移动位置到物料上方，确认粗略位置后下降接近物料，这个过程中关节力矩平滑无波动"
+    },
+    {
+      "start_frame": 407,
+      "end_frame": 623,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "调整角度后夹取物料"
+    },
+    {
+      "start_frame": 623,
+      "end_frame": 820,
+      "stage": "approach",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "夹取物料搬运至治具上方，没有进行角度调节，Z轴不变"
+    },
+    {
+      "start_frame": 820,
+      "end_frame": 1042,
+      "stage": "aligned_press",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "角度调节，画面中物料x水平方向与治具x水平方向保持平行"
+    },
+    {
+      "start_frame": 1042,
+      "end_frame": 1067,
+      "stage": "seated_hold",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "下压装配物料，外部关节力矩数值逐渐减小"
+    },
+    {
+      "start_frame": 1067,
+      "end_frame": 1367,
+      "stage": "release_retreat",
+      "imitation": "keep",
+      "confidence": "confirmed",
+      "note": "任务完成，回到原位"
+    }
+  ],
+  "keyframes": []
+}
